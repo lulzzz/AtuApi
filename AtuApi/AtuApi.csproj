@@ -5,14 +5,74 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+    <Compile Remove="Migrations\20200508101749_Fisrt.cs" />
+    <Compile Remove="Migrations\20200508101749_Fisrt.Designer.cs" />
+    <Compile Remove="Migrations\20200508101932_First.cs" />
+    <Compile Remove="Migrations\20200508101932_First.Designer.cs" />
+    <Compile Remove="Migrations\20200508102502_Firt.cs" />
+    <Compile Remove="Migrations\20200508102502_Firt.Designer.cs" />
+    <Compile Remove="Migrations\20200508102852_Firt.cs" />
+    <Compile Remove="Migrations\20200508102852_Firt.Designer.cs" />
+    <Compile Remove="Migrations\20200508103100_xz.cs" />
+    <Compile Remove="Migrations\20200508103100_xz.Designer.cs" />
+    <Compile Remove="Migrations\20200508104038_initial.cs" />
+    <Compile Remove="Migrations\20200508104038_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200508104905_Initial.cs" />
+    <Compile Remove="Migrations\20200508104905_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200508105448_addFirstName2.cs" />
+    <Compile Remove="Migrations\20200508105448_addFirstName2.Designer.cs" />
+    <Compile Remove="Migrations\20200508110410_First.cs" />
+    <Compile Remove="Migrations\20200508110410_First.Designer.cs" />
+    <Compile Remove="Migrations\20200508124633_second.cs" />
+    <Compile Remove="Migrations\20200508124633_second.Designer.cs" />
+    <Compile Remove="Migrations\20200508124752_second1.cs" />
+    <Compile Remove="Migrations\20200508124752_second1.Designer.cs" />
+    <Compile Remove="Migrations\20200508125013_zd.cs" />
+    <Compile Remove="Migrations\20200508125013_zd.Designer.cs" />
+    <Compile Remove="Migrations\20200508125310_FirstMig.cs" />
+    <Compile Remove="Migrations\20200508125310_FirstMig.Designer.cs" />
+    <Compile Remove="Migrations\20200508125534_FirstMig2.cs" />
+    <Compile Remove="Migrations\20200508125534_FirstMig2.Designer.cs" />
+    <Compile Remove="Migrations\20200508125939_First.cs" />
+    <Compile Remove="Migrations\20200508125939_First.Designer.cs" />
+    <Compile Remove="Migrations\20200508130232_First.cs" />
+    <Compile Remove="Migrations\20200508130232_First.Designer.cs" />
+    <Compile Remove="Migrations\20200508131829_First.cs" />
+    <Compile Remove="Migrations\20200508131829_First.Designer.cs" />
+    <Compile Remove="Migrations\20200510182455_first.cs" />
+    <Compile Remove="Migrations\20200510182455_first.Designer.cs" />
+    <Compile Remove="Migrations\20200510182743_first.cs" />
+    <Compile Remove="Migrations\20200510182743_first.Designer.cs" />
+    <Compile Remove="Migrations\20200510183346_first.cs" />
+    <Compile Remove="Migrations\20200510183346_first.Designer.cs" />
+    <Compile Remove="Migrations\20200510183651_first.cs" />
+    <Compile Remove="Migrations\20200510183651_first.Designer.cs" />
+    <Compile Remove="Migrations\20200510183823_second.cs" />
+    <Compile Remove="Migrations\20200510183823_second.Designer.cs" />
+    <Compile Remove="Migrations\20200510184031_new.cs" />
+    <Compile Remove="Migrations\20200510184031_new.Designer.cs" />
+    <Compile Remove="Migrations\20200510185640_first.cs" />
+    <Compile Remove="Migrations\20200510185640_first.Designer.cs" />
+    <Compile Remove="Migrations\20200510190522_first.cs" />
+    <Compile Remove="Migrations\20200510190522_first.Designer.cs" />
+    <Compile Remove="Migrations\20200510190713_first.cs" />
+    <Compile Remove="Migrations\20200510190713_first.Designer.cs" />
+    <Compile Remove="Migrations\20200510192955_first.cs" />
+    <Compile Remove="Migrations\20200510192955_first.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.1" />
   </ItemGroup>
 
 

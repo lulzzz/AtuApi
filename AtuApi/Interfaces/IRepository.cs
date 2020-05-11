@@ -10,7 +10,7 @@ namespace AtuApi.Interfaces
     public interface IRepository<TEntity> where TEntity : class
     {
         TEntity Get(int id);
-        IEnumerable<TEntity> GetAll(TEntity entity);
+        IEnumerable<TEntity> GetAll();
         TEntity Find(Expression<Func<TEntity, bool>> predicate);
         TEntity Update(TEntity entity);
 

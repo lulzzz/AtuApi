@@ -18,5 +18,6 @@ namespace AtuApi
         public string SmtpPort { get; set; }
         public string MailPassword { get; set; }
         public string FromMail { get; set; }
+        public string AdminPassword { get; set; }
     }
 }

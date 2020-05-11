@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AtuApi.Services
+namespace AtuApi.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository : IRepository<User>
     {
-        User Authenticate(string username, string password);
-        IEnumerable<User> GetAll(bool All, User user);
+        User Authenticate(string username, string password);       
         User GetById(int id);
-        Role GetByRoleId(int id);
         User Create(User user, string password);
         void Update(User user, string password = null);
         void Delete(int id);
