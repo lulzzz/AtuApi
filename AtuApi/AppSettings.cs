@@ -19,5 +19,10 @@ namespace AtuApi
         public string MailPassword { get; set; }
         public string FromMail { get; set; }
         public string AdminPassword { get; set; }
+        public string SapServerIp { get; set; }
+        public int SapDbServerType { get; set; }
+        public string SapUserName { get; set; }
+        public string SapPassword { get; set; }
+        public string SapCompanyDb { get; set; }
     }
 }

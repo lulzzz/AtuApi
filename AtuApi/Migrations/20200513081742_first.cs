@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AtuApi.Migrations
 {
-    public partial class fb : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -81,7 +81,7 @@ namespace AtuApi.Migrations
                     UserName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Position = table.Column<string>(nullable: true),
-                    BranchesId = table.Column<int>(nullable: false),
+                    BranchId = table.Column<int>(nullable: false),
                     RoleId = table.Column<int>(nullable: false),
                     PasswordHash = table.Column<byte[]>(nullable: true),
                     PasswordSalt = table.Column<byte[]>(nullable: true)
@@ -90,8 +90,8 @@ namespace AtuApi.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Branches_BranchesId",
-                        column: x => x.BranchesId,
+                        name: "FK_Users_Branches_BranchId",
+                        column: x => x.BranchId,
                         principalTable: "Branches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -139,8 +139,8 @@ namespace AtuApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "BranchesId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "UserName" },
-                values: new object[] { 1, -1, "Example@gamil.com", "Admin", "Admin", new byte[] { 10, 244, 165, 141, 213, 0, 148, 215, 229, 243, 88, 130, 129, 187, 189, 52, 60, 244, 67, 176, 252, 102, 50, 128, 182, 96, 48, 174, 180, 122, 214, 96, 137, 171, 89, 152, 6, 16, 179, 71, 70, 199, 152, 197, 142, 155, 196, 249, 218, 217, 157, 27, 48, 218, 130, 27, 30, 180, 192, 163, 200, 11, 31, 221 }, new byte[] { 165, 182, 0, 57, 163, 60, 221, 55, 252, 39, 225, 50, 0, 60, 9, 202, 71, 62, 43, 140, 120, 81, 107, 4, 32, 163, 68, 17, 70, 183, 41, 128, 80, 17, 22, 202, 228, 116, 219, 107, 68, 11, 185, 129, 1, 22, 227, 42, 169, 47, 181, 209, 141, 102, 220, 28, 40, 103, 11, 30, 140, 55, 188, 88, 180, 96, 240, 232, 43, 43, 19, 143, 43, 244, 137, 68, 235, 105, 107, 169, 253, 213, 45, 148, 215, 214, 136, 203, 120, 200, 38, 146, 127, 86, 36, 94, 246, 181, 78, 56, 39, 84, 204, 41, 203, 110, 166, 148, 185, 123, 187, 223, 145, 151, 189, 161, 151, 20, 79, 32, 77, 181, 178, 140, 149, 101, 48, 158 }, "Administraton", 1, "Admin" });
+                columns: new[] { "Id", "BranchId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "UserName" },
+                values: new object[] { 1, -1, "Example@gamil.com", "Admin", "Admin", new byte[] { 136, 45, 102, 177, 54, 115, 75, 175, 83, 254, 71, 209, 174, 234, 244, 163, 126, 204, 73, 164, 141, 72, 245, 215, 239, 254, 125, 135, 141, 38, 36, 108, 236, 25, 234, 1, 170, 212, 203, 85, 207, 12, 218, 170, 174, 191, 6, 1, 190, 250, 10, 144, 172, 208, 203, 110, 202, 111, 229, 197, 252, 106, 166, 225 }, new byte[] { 214, 23, 137, 175, 139, 104, 248, 248, 16, 130, 164, 17, 68, 182, 42, 41, 191, 73, 239, 199, 52, 39, 249, 112, 235, 142, 50, 154, 185, 161, 173, 136, 185, 155, 190, 152, 114, 17, 174, 190, 63, 42, 36, 240, 236, 68, 210, 241, 81, 108, 253, 101, 92, 178, 188, 249, 143, 58, 222, 8, 49, 61, 144, 9, 154, 0, 125, 43, 90, 181, 162, 78, 111, 234, 10, 34, 215, 222, 180, 136, 167, 14, 136, 75, 197, 110, 94, 188, 148, 53, 30, 195, 43, 123, 184, 140, 53, 33, 13, 150, 111, 9, 149, 28, 192, 166, 108, 4, 71, 70, 124, 138, 128, 230, 213, 43, 81, 0, 29, 158, 129, 248, 239, 220, 62, 96, 17, 77 }, "Administraton", 1, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PermissionRoles_RoleId",
@@ -148,9 +148,9 @@ namespace AtuApi.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_BranchesId",
+                name: "IX_Users_BranchId",
                 table: "Users",
-                column: "BranchesId");
+                column: "BranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",

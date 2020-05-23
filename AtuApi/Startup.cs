@@ -4,6 +4,7 @@ using AtuApi.Interfaces;
 using AtuApi.Repositories;
 using AutoMapper;
 using DataContextHelper;
+using DataModels.Iterfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using SapDataAccess;
 
 namespace AtuApi
 {
@@ -77,6 +79,7 @@ namespace AtuApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBranchRepository, BranchRepositry>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddSingleton<IDiManager>(x => new DiManager(appSettings.SqlServerHostName,appSettings.SapDbServerType, appSettings.SapUserName,appSettings.SapPassword, appSettings.SapCompanyDb));
 
         }
 

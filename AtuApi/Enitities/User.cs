@@ -14,9 +14,9 @@ namespace AtuApi.Models
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Position { get; set; }
-        public virtual Role Roles { get; set; }
-        public virtual Branch Branches { get; set; }
-        public int BranchesId { get; set; }
+        public virtual Role Role { get; set; }
+        public virtual Branch Branch { get; set; }
+        public int BranchId { get; set; }
         public int RoleId { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }

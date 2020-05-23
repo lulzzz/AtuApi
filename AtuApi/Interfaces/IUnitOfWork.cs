@@ -13,6 +13,8 @@ namespace AtuApi.Interfaces
         IRoleRepository RoleRepository { get; }
         IUserRepository UserRepository { get; }
         IPermissionRepository PermissionRepository { get; }
+        IItemRepository ItemRepository { get; }
+        IBusinessPartnerRepository BusinessPartnerRepository { get; }
 
     }
 }

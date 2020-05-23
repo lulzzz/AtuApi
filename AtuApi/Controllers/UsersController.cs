@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using AtuApi.Dtos;
 using AtuApi.Interfaces;
 using AtuApi.Models;
-
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -28,10 +23,8 @@ namespace AtuApi.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly AppSettings _appSettings;
-        private readonly UserManager<IdentityUser> _userManager;
-        public UsersController(IUnitOfWork unitOfWork, IMapper mapper, IOptions<AppSettings> appSettings, UserManager<IdentityUser> userManager)
+        public UsersController(IUnitOfWork unitOfWork, IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            _userManager = userManager;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _appSettings = appSettings.Value;
@@ -74,36 +67,37 @@ namespace AtuApi.Controllers
         [HttpPost("Register")]
         public IActionResult Register([FromBody]UserDto userDto)
         {
-            User user = _mapper.Map<User>(userDto);
+            // map dto to entity
+            var user = _mapper.Map<User>(userDto);
+            var userCreator = _unitOfWork.UserRepository.Get(int.Parse(User.Identity.Name));
+            var creatorRole = userCreator.Role.RoleName;
 
-            if (User.Identity.Name == null)
-            {
-                return Unauthorized();
+
+            Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
+            Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
+
+            user.Role = role;
+            user.Branch = branch;
+
+            var creatingRole = user.Role.RoleName;
+
+            if (creatingRole == "Admin" && creatorRole != "Admin")
+            { 
+                return BadRequest("არავალიდური ქმედება");
             }
-            var userCreator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
-
-
-
-            Role role = _unitOfWork.RoleRepository.Get(userDto.Role.Id);
-            Branch branch = _unitOfWork.BranchesRepository.Get(userDto.Branch.Id);
-
-
-            user.Branches = branch;
-
-
-
 
             try
             {
                 // save 
                 var userInDb = _unitOfWork.UserRepository.Create(user, userDto.Password);
-                return Accepted(user.Id);
+                return Accepted(userInDb.Id);
             }
             catch (Exception ex)
             {
                 // return error message if there was an exception
                 return BadRequest(ex.Message);
             }
+
         }
     }
 }

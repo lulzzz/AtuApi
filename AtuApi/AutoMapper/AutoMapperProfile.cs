@@ -1,4 +1,5 @@
 ﻿using AtuApi.Dtos;
+using AtuApi.Interfaces;
 using AtuApi.Models;
 using AutoMapper;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace AtuApi.AutoMapper
 {
     public class AutoMapperProfile : Profile
-    {
+    {  
         public AutoMapperProfile()
         {
             CreateMap<User, UserDto>();

@@ -63,7 +63,7 @@ namespace DataContextHelper
             }
 
             modelBuilder.Entity<User>().HasData(
-              new User { Id = 1, BranchesId = -1, FirstName = "Admin", LastName = "Admin", UserName = "Admin", RoleId = 1, Position = "Administraton", Email = "Example@gamil.com", PasswordHash = passwordHash, PasswordSalt = passwordSalt });
+              new User { Id = 1, BranchId = -1, FirstName = "Admin", LastName = "Admin", UserName = "Admin", RoleId = 1, Position = "Administraton", Email = "Example@gamil.com", PasswordHash = passwordHash, PasswordSalt = passwordSalt });
              
 
 

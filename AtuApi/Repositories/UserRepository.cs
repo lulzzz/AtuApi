@@ -29,9 +29,9 @@ namespace AtuApi.Repositories
             if (user == null)
                 return null;
 
-            // check if password is correct
-            //if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-            //    return null;
+            //check if password is correct
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+                    return null;
 
             // authentication successful
             return user;
@@ -97,7 +97,7 @@ namespace AtuApi.Repositories
                 user.Email = userParam.Email;
                 user.Position = userParam.Position;
                
-                user.Branches = userParam.Branches;
+                user.Branch = userParam.Branch;
 
 
                 // update password if it was entered
