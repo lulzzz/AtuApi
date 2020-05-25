@@ -10,10 +10,10 @@ namespace AtuApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BusinessPartnerController : ControllerBase
+    public class BusinessPartnersController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public BusinessPartnerController(IUnitOfWork unitOfWork)
+        public BusinessPartnersController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

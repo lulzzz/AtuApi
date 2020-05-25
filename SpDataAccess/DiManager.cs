@@ -86,7 +86,7 @@ namespace SapDataAccess
                 CardCode = businessPartners.CardCode,
                 CardName = businessPartners.CardName,
                 FederalTaxId = businessPartners.FederalTaxID,
-                GroupCode = businessPartners.GroupCode                
+                GroupCode = businessPartners.GroupCode
             };
             return !exists ? null : businessPartner;
         }
@@ -95,7 +95,7 @@ namespace SapDataAccess
         {
             List<BusinessPartner> BusinessPartners = new List<BusinessPartner>();
             Recordset itemsRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            itemsRecordSet.DoQuery($"SELECT ItemCode, ItemName, BuyUnitMsr From OITM");
+            itemsRecordSet.DoQuery($"SELECT CardCode, CardName, LicTradNum,GroupCode From OCRD");
             while (!itemsRecordSet.EoF)
             {
                 BusinessPartner BusinessPartner = new BusinessPartner
@@ -111,6 +111,75 @@ namespace SapDataAccess
             return BusinessPartners;
         }
 
-
+        public IEnumerable<Employee> GetEmployees()
+        {
+            List<Employee> Employees = new List<Employee>();
+            Recordset EmployeesRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            EmployeesRecordSet.DoQuery($@"SELECT FirstName, 
+                                               LastName,
+                                               position,
+                                               OHPS.name as [Position Name],
+                                               dept,
+                                               OUDP.Name as [Department Name],
+                                               govID,
+                                               EmpId
+                                        FROM OHEM
+                                             LEFT JOIN OUDP ON OUDP.Code = OHEM.dept
+                                             LEFT JOIN OHPS ON OHPS.posID = position");
+            while (!EmployeesRecordSet.EoF)
+            {
+                Employee Employee = new Employee
+                {
+                    FirstName = EmployeesRecordSet.Fields.Item("FirstName").Value.ToString(),
+                    LastName = EmployeesRecordSet.Fields.Item("LastName").Value.ToString(),
+                    Department = EmployeesRecordSet.Fields.Item("Department Name").Value.ToString(),
+                    Id = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
+                    Position = EmployeesRecordSet.Fields.Item("Position Name").Value.ToString(),
+                    PositionCode = (int)EmployeesRecordSet.Fields.Item("Position").Value,
+                    DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
+                    EmpId = (int)EmployeesRecordSet.Fields.Item("EmpId").Value,
+                };
+                Employees.Add(Employee);
+                EmployeesRecordSet.MoveNext();
+            }
+            return Employees;
+        }
+        /// <summary>
+        /// Returns Employee (Null if Not Exists)
+        /// </summary>
+        /// <param name="employeeCode"></param>
+        /// <returns></returns>
+        public Employee GetEmployee(int employeeCode)
+        {
+            Recordset EmployeesRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            EmployeesRecordSet.DoQuery($@"SELECT FirstName, 
+                                               LastName,
+                                               position,
+                                               OHPS.name as [Position Name],
+                                               dept,
+                                               OUDP.Name as [Department Name],
+                                               govID,
+                                               EmpId
+                                        FROM OHEM
+                                             LEFT JOIN OUDP ON OUDP.Code = OHEM.dept
+                                             LEFT JOIN OHPS ON OHPS.posID = position
+                                        WHERE EmpId = {employeeCode}");
+            if (!EmployeesRecordSet.EoF)
+            {
+                Employee Employee = new Employee
+                {
+                    FirstName = EmployeesRecordSet.Fields.Item("FirstName").Value.ToString(),
+                    LastName = EmployeesRecordSet.Fields.Item("LastName").Value.ToString(),
+                    Department = EmployeesRecordSet.Fields.Item("Department Name").Value.ToString(),
+                    Id = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
+                    Position = EmployeesRecordSet.Fields.Item("Position Name").Value.ToString(),
+                    PositionCode = (int)EmployeesRecordSet.Fields.Item("Position").Value,
+                    DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
+                    EmpId = (int)EmployeesRecordSet.Fields.Item("EmpId").Value,
+                };
+                return Employee;
+            }
+            return null;
+        }
     }
 }

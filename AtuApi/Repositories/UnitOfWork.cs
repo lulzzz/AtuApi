@@ -19,6 +19,8 @@ namespace AtuApi.Repositories
             UserRepository = new UserRepository(_dataContext);
             PermissionRepository = new PermissionRepository(_dataContext);
             ItemRepository = new ItemRepository(_dataContext, diManager);
+            BusinessPartnerRepository = new BusinessPartnerRepository(_dataContext, diManager);
+            EmployeeRepository = new EmployeeRepository(_dataContext, diManager);
         }
         public void SaveChanges()
         {
@@ -29,5 +31,7 @@ namespace AtuApi.Repositories
         public IUserRepository UserRepository { get; }
         public IPermissionRepository PermissionRepository { get; }
         public IItemRepository ItemRepository { get; }
+        public IBusinessPartnerRepository BusinessPartnerRepository { get; }
+        public IEmployeeRepository EmployeeRepository { get; }
     }
 }

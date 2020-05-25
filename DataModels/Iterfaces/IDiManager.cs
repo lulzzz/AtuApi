@@ -9,5 +9,7 @@ namespace DataModels.Iterfaces
         Item GetItem(string itemCode);
         BusinessPartner GetBusinessPartner(string bpCode);
         IEnumerable<BusinessPartner> GetBusinessPartners();
+        IEnumerable<Employee> GetEmployees();
+        Employee GetEmployee(int employeeCode);
     }
 }

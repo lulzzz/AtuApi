@@ -15,6 +15,7 @@ namespace AtuApi.Interfaces
         IPermissionRepository PermissionRepository { get; }
         IItemRepository ItemRepository { get; }
         IBusinessPartnerRepository BusinessPartnerRepository { get; }
+        IEmployeeRepository EmployeeRepository { get; }
 
     }
 }
