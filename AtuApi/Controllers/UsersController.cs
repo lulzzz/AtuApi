@@ -82,7 +82,7 @@ namespace AtuApi.Controllers
             var creatingRole = user.Role.RoleName;
 
             if (creatingRole == "Admin" && creatorRole != "Admin")
-            { 
+            {
                 return BadRequest("არავალიდური ქმედება");
             }
 
@@ -98,6 +98,40 @@ namespace AtuApi.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById([FromRoute] int id)
+        {
+            var user = _unitOfWork.UserRepository.Get(id);
+            var userDto = _mapper.Map<UserDto>(user);
+            return Ok(userDto);
+        }
+
+        [HttpPut]
+        public IActionResult Update([FromBody]UserDto userDto)
+        {
+            // map dto to entity and set id
+            var userToBeUpdated = _mapper.Map<User>(userDto);
+
+            //userToBeUpdated.Branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
+            //userToBeUpdated.Role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
+            //var userCreator = _unitOfWork.UserRepository.Get(int.Parse(User.Identity.Name));
+            //var creatorRole = userCreator.Role;
+           // var creatingRole = userToBeUpdated.Role;
+           // bool isHimself = userCreator.Id == userToBeUpdated.Id;
+
+            try
+            {
+                // save
+                _unitOfWork.UserRepository.Update(userToBeUpdated, userDto.Password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

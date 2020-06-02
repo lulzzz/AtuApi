@@ -1,13 +1,8 @@
-﻿using DataModels;
-using DataModels.Iterfaces;
+﻿using DataModels.Iterfaces;
 using DataModels.Models;
 using SAPbobsCOM;
-using SAPbouiCOM;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Items = SAPbobsCOM.Items;
 
 namespace SapDataAccess
@@ -36,7 +31,10 @@ namespace SapDataAccess
                                     $"CompanyDB : {_company.CompanyDB}");
             }
         }
-
+        /// <summary>
+        /// Returns Collection Of Items
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<DataModels.Item> GetItems()
         {
             List<DataModels.Item> items = new List<DataModels.Item>();
@@ -90,7 +88,10 @@ namespace SapDataAccess
             };
             return !exists ? null : businessPartner;
         }
-
+        /// <summary>
+        /// Returns Collection Of Business Partners
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<BusinessPartner> GetBusinessPartners()
         {
             List<BusinessPartner> BusinessPartners = new List<BusinessPartner>();
@@ -110,7 +111,10 @@ namespace SapDataAccess
             }
             return BusinessPartners;
         }
-
+        /// <summary>
+        /// Returns Collection Of Employees 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Employee> GetEmployees()
         {
             List<Employee> Employees = new List<Employee>();
@@ -133,7 +137,7 @@ namespace SapDataAccess
                     FirstName = EmployeesRecordSet.Fields.Item("FirstName").Value.ToString(),
                     LastName = EmployeesRecordSet.Fields.Item("LastName").Value.ToString(),
                     Department = EmployeesRecordSet.Fields.Item("Department Name").Value.ToString(),
-                    Id = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
+                    GovId = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
                     Position = EmployeesRecordSet.Fields.Item("Position Name").Value.ToString(),
                     PositionCode = (int)EmployeesRecordSet.Fields.Item("Position").Value,
                     DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
@@ -148,7 +152,7 @@ namespace SapDataAccess
         /// Returns Employee (Null if Not Exists)
         /// </summary>
         /// <param name="employeeCode"></param>
-        /// <returns></returns>
+        /// <returns></returns>       
         public Employee GetEmployee(int employeeCode)
         {
             Recordset EmployeesRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -171,7 +175,7 @@ namespace SapDataAccess
                     FirstName = EmployeesRecordSet.Fields.Item("FirstName").Value.ToString(),
                     LastName = EmployeesRecordSet.Fields.Item("LastName").Value.ToString(),
                     Department = EmployeesRecordSet.Fields.Item("Department Name").Value.ToString(),
-                    Id = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
+                    GovId = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
                     Position = EmployeesRecordSet.Fields.Item("Position Name").Value.ToString(),
                     PositionCode = (int)EmployeesRecordSet.Fields.Item("Position").Value,
                     DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
@@ -180,6 +184,55 @@ namespace SapDataAccess
                 return Employee;
             }
             return null;
+        }
+        /// <summary>
+        /// Returns Territory (Null if Not Exists)
+        /// </summary>
+        /// <param name="teritoryId"></param>
+        /// <returns></returns>
+        public Territory GetTerritory(int teritoryId)
+        {
+            Recordset TerritoryRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            TerritoryRecordSet.DoQuery($@"SELECT *
+                                        FROM OTER                                              
+                                        WHERE territryID = {teritoryId}");
+            if (!TerritoryRecordSet.EoF)
+            {
+                Territory Territory = new Territory
+                {
+                    Description = TerritoryRecordSet.Fields.Item("descript").Value.ToString(),
+                    TerritoryId = (int)TerritoryRecordSet.Fields.Item("territryID").Value,
+                    Lindex = (int)TerritoryRecordSet.Fields.Item("lindex").Value,
+                    Parent = (int)TerritoryRecordSet.Fields.Item("Parent").Value,
+                    Inactive = TerritoryRecordSet.Fields.Item("Inactive").Value.ToString(),
+                };
+                return Territory;
+            }
+            return null;
+        }
+        /// <summary>
+        /// Returns Collection Of Territories 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Territory> GetTerritories()
+        {
+            List<Territory> territories = new List<Territory>();
+            Recordset TerritoryRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            TerritoryRecordSet.DoQuery($@"SELECT * FROM OTER");
+            while (!TerritoryRecordSet.EoF)
+            {
+                Territory Territory = new Territory
+                {
+                    Description = TerritoryRecordSet.Fields.Item("descript").Value.ToString(),
+                    TerritoryId = (int)TerritoryRecordSet.Fields.Item("territryID").Value,
+                    Lindex = (int)TerritoryRecordSet.Fields.Item("lindex").Value,
+                    Parent = (int)TerritoryRecordSet.Fields.Item("Parent").Value,
+                    Inactive = TerritoryRecordSet.Fields.Item("Inactive").Value.ToString(),
+                };
+                territories.Add(Territory);
+                TerritoryRecordSet.MoveNext();
+            }
+            return territories;
         }
     }
 }

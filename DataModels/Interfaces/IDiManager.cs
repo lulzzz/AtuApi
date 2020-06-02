@@ -11,5 +11,7 @@ namespace DataModels.Iterfaces
         IEnumerable<BusinessPartner> GetBusinessPartners();
         IEnumerable<Employee> GetEmployees();
         Employee GetEmployee(int employeeCode);
+        Territory GetTerritory(int territoryId);
+        IEnumerable<Territory> GetTerritories();
     }
 }

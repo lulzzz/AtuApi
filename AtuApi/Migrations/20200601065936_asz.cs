@@ -3,10 +3,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AtuApi.Migrations
 {
-    public partial class first : Migration
+    public partial class asz : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ApprovalTemplates",
+                columns: table => new
+                {
+                    TemplateCode = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateName = table.Column<string>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApprovalTemplates", x => x.TemplateCode);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Branches",
                 columns: table => new
@@ -34,6 +48,23 @@ namespace AtuApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PurchaseRequests",
+                columns: table => new
+                {
+                    DocNum = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PostingDate = table.Column<DateTime>(nullable: false),
+                    CreategDate = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
+                    DueDate = table.Column<DateTime>(nullable: false),
+                    ProjectCode = table.Column<string>(nullable: true),
+                    ProjectName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchaseRequests", x => x.DocNum);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -44,6 +75,53 @@ namespace AtuApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApprovalsEmployees",
+                columns: table => new
+                {
+                    ApprovalCode = table.Column<int>(nullable: false),
+                    EmployeeCode = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApprovalsEmployees", x => new { x.ApprovalCode, x.EmployeeCode });
+                    table.ForeignKey(
+                        name: "FK_ApprovalsEmployees_ApprovalTemplates_ApprovalCode",
+                        column: x => x.ApprovalCode,
+                        principalTable: "ApprovalTemplates",
+                        principalColumn: "TemplateCode",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PurchaseRequestRows",
+                columns: table => new
+                {
+                    PurchaseRequestDocNum = table.Column<int>(nullable: false),
+                    LineNum = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemCode = table.Column<string>(nullable: true),
+                    BusinessPartnerCode = table.Column<string>(nullable: true),
+                    RequiredQuantity = table.Column<double>(nullable: false),
+                    DueDate = table.Column<DateTime>(nullable: false),
+                    Teritory = table.Column<string>(nullable: true),
+                    Remarks = table.Column<string>(nullable: true),
+                    InStockTotal = table.Column<double>(nullable: false),
+                    InStockInWhs = table.Column<double>(nullable: false),
+                    WareHouse = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchaseRequestRows", x => new { x.PurchaseRequestDocNum, x.LineNum });
+                    table.ForeignKey(
+                        name: "FK_PurchaseRequestRows_PurchaseRequests_PurchaseRequestDocNum",
+                        column: x => x.PurchaseRequestDocNum,
+                        principalTable: "PurchaseRequests",
+                        principalColumn: "DocNum",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,6 +161,7 @@ namespace AtuApi.Migrations
                     Position = table.Column<string>(nullable: true),
                     BranchId = table.Column<int>(nullable: false),
                     RoleId = table.Column<int>(nullable: false),
+                    ApprovalTemplateCode = table.Column<int>(nullable: false),
                     PasswordHash = table.Column<byte[]>(nullable: true),
                     PasswordSalt = table.Column<byte[]>(nullable: true)
                 },
@@ -139,8 +218,15 @@ namespace AtuApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "BranchId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "UserName" },
-                values: new object[] { 1, -1, "Example@gamil.com", "Admin", "Admin", new byte[] { 136, 45, 102, 177, 54, 115, 75, 175, 83, 254, 71, 209, 174, 234, 244, 163, 126, 204, 73, 164, 141, 72, 245, 215, 239, 254, 125, 135, 141, 38, 36, 108, 236, 25, 234, 1, 170, 212, 203, 85, 207, 12, 218, 170, 174, 191, 6, 1, 190, 250, 10, 144, 172, 208, 203, 110, 202, 111, 229, 197, 252, 106, 166, 225 }, new byte[] { 214, 23, 137, 175, 139, 104, 248, 248, 16, 130, 164, 17, 68, 182, 42, 41, 191, 73, 239, 199, 52, 39, 249, 112, 235, 142, 50, 154, 185, 161, 173, 136, 185, 155, 190, 152, 114, 17, 174, 190, 63, 42, 36, 240, 236, 68, 210, 241, 81, 108, 253, 101, 92, 178, 188, 249, 143, 58, 222, 8, 49, 61, 144, 9, 154, 0, 125, 43, 90, 181, 162, 78, 111, 234, 10, 34, 215, 222, 180, 136, 167, 14, 136, 75, 197, 110, 94, 188, 148, 53, 30, 195, 43, 123, 184, 140, 53, 33, 13, 150, 111, 9, 149, 28, 192, 166, 108, 4, 71, 70, 124, 138, 128, 230, 213, 43, 81, 0, 29, 158, 129, 248, 239, 220, 62, 96, 17, 77 }, "Administraton", 1, "Admin" });
+                columns: new[] { "Id", "ApprovalTemplateCode", "BranchId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "UserName" },
+                values: new object[] { 1, 0, -1, "Example@gamil.com", "Admin", "Admin", new byte[] { 166, 233, 83, 157, 135, 230, 180, 165, 100, 109, 161, 7, 234, 239, 58, 208, 13, 112, 66, 64, 173, 146, 235, 51, 119, 125, 171, 171, 235, 128, 11, 3, 20, 67, 119, 92, 34, 243, 45, 15, 115, 165, 128, 184, 139, 163, 225, 188, 201, 163, 195, 51, 194, 71, 171, 58, 70, 51, 174, 72, 69, 103, 220, 162 }, new byte[] { 109, 30, 35, 239, 155, 86, 114, 39, 51, 71, 48, 232, 125, 73, 163, 58, 68, 54, 12, 240, 183, 24, 170, 212, 176, 163, 194, 87, 157, 13, 36, 208, 77, 24, 85, 49, 4, 18, 133, 241, 49, 129, 115, 233, 106, 107, 53, 215, 190, 40, 221, 113, 107, 69, 64, 16, 85, 127, 3, 102, 60, 57, 25, 90, 19, 124, 204, 198, 47, 166, 145, 36, 160, 152, 103, 90, 72, 63, 48, 114, 9, 180, 20, 252, 254, 147, 11, 146, 164, 211, 134, 24, 116, 46, 236, 115, 115, 195, 96, 39, 172, 53, 61, 165, 48, 134, 160, 7, 107, 132, 184, 200, 79, 239, 254, 55, 201, 25, 73, 117, 81, 160, 57, 178, 56, 95, 221, 172 }, "Administraton", 1, "Admin" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApprovalTemplates_TemplateName",
+                table: "ApprovalTemplates",
+                column: "TemplateName",
+                unique: true,
+                filter: "[TemplateName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PermissionRoles_RoleId",
@@ -161,13 +247,25 @@ namespace AtuApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ApprovalsEmployees");
+
+            migrationBuilder.DropTable(
                 name: "PermissionRoles");
+
+            migrationBuilder.DropTable(
+                name: "PurchaseRequestRows");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
+                name: "ApprovalTemplates");
+
+            migrationBuilder.DropTable(
                 name: "Permissions");
+
+            migrationBuilder.DropTable(
+                name: "PurchaseRequests");
 
             migrationBuilder.DropTable(
                 name: "Branches");

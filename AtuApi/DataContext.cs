@@ -1,5 +1,6 @@
 ﻿using AtuApi.Controllers;
 using AtuApi.Models;
+using DataModels.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,10 @@ namespace DataContextHelper
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<PermissionRoles> PermissionRoles { get; set; }
+        public DbSet<ApprovalTemplate> ApprovalTemplates { get; set; }
+        public DbSet<ApprovalsEmployees> ApprovalsEmployees { get; set; }
+        public DbSet<PurchaseRequest> PurchaseRequests { get; set; }
+        public DbSet<PurchaseRequestRow> PurchaseRequestRows { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +37,39 @@ namespace DataContextHelper
                 .WithMany(pe => pe.PermissionRoles)
                 .HasForeignKey(m => m.RoleId);
 
+
+            modelBuilder.Entity<ApprovalTemplate>()
+                .HasKey(x => x.TemplateCode);
+
+            modelBuilder.Entity<ApprovalTemplate>()
+              .HasIndex(y => y.TemplateName)
+                .IsUnique(true);
+
+
+
+            modelBuilder.Entity<ApprovalsEmployees>()
+             .HasKey(x => new { x.ApprovalCode, x.EmployeeCode });
+
+
+
+
+            modelBuilder.Entity<ApprovalsEmployees>()
+           .HasOne(x => x.ApprovalTemplate)
+           .WithMany(e => e.ApprovalsEmployees)
+           .HasForeignKey(fx => fx.ApprovalCode);
+
+            modelBuilder.Entity<PurchaseRequest>()
+            .HasKey(x => x.DocNum);
+
+
+            modelBuilder.Entity<PurchaseRequest>()
+                .Property(b => b.CreategDate)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<PurchaseRequestRow>()
+       .HasKey(x => new { x.PurchaseRequestDocNum, x.LineNum });
+
+            modelBuilder.Entity<PurchaseRequestRow>().Property(x => x.LineNum).ValueGeneratedOnAdd();
             #region InitialData
 
             modelBuilder.Entity<Permission>().HasData(
@@ -64,10 +102,12 @@ namespace DataContextHelper
 
             modelBuilder.Entity<User>().HasData(
               new User { Id = 1, BranchId = -1, FirstName = "Admin", LastName = "Admin", UserName = "Admin", RoleId = 1, Position = "Administraton", Email = "Example@gamil.com", PasswordHash = passwordHash, PasswordSalt = passwordSalt });
-             
+
 
 
             #endregion
+
+
 
 
 

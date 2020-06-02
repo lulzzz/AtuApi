@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DataModels.Models
+﻿namespace DataModels.Models
 {
     public class BusinessPartner
     {

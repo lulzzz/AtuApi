@@ -59,6 +59,32 @@
     <Compile Remove="Migrations\20200510190713_first.Designer.cs" />
     <Compile Remove="Migrations\20200510192955_first.cs" />
     <Compile Remove="Migrations\20200510192955_first.Designer.cs" />
+    <Compile Remove="Migrations\20200525125426_AddedApprovalMiddleTable2.cs" />
+    <Compile Remove="Migrations\20200525125426_AddedApprovalMiddleTable2.Designer.cs" />
+    <Compile Remove="Migrations\20200525133456_Primarykey.cs" />
+    <Compile Remove="Migrations\20200525133456_Primarykey.Designer.cs" />
+    <Compile Remove="Migrations\20200525142400_Primarykeyz.cs" />
+    <Compile Remove="Migrations\20200525142400_Primarykeyz.Designer.cs" />
+    <Compile Remove="Migrations\20200525142559_Primarykeyz.cs" />
+    <Compile Remove="Migrations\20200525142559_Primarykeyz.Designer.cs" />
+    <Compile Remove="Migrations\20200525144528_first.cs" />
+    <Compile Remove="Migrations\20200525144528_first.Designer.cs" />
+    <Compile Remove="Migrations\20200525144707_first.cs" />
+    <Compile Remove="Migrations\20200525144707_first.Designer.cs" />
+    <Compile Remove="Migrations\20200525144826_first.cs" />
+    <Compile Remove="Migrations\20200525144826_first.Designer.cs" />
+    <Compile Remove="Migrations\20200525144912_first.cs" />
+    <Compile Remove="Migrations\20200525144912_first.Designer.cs" />
+    <Compile Remove="Migrations\20200525144951_first.cs" />
+    <Compile Remove="Migrations\20200525144951_first.Designer.cs" />
+    <Compile Remove="Migrations\20200525145333_first.cs" />
+    <Compile Remove="Migrations\20200525145333_first.Designer.cs" />
+    <Compile Remove="Migrations\20200528072226_xzz.cs" />
+    <Compile Remove="Migrations\20200528072226_xzz.Designer.cs" />
+    <Compile Remove="Migrations\20200528080352_AddedEpprovalEmployeesxz.cs" />
+    <Compile Remove="Migrations\20200528080352_AddedEpprovalEmployeesxz.Designer.cs" />
+    <Compile Remove="Migrations\20200528080714_AddedEpprovalEmployeesxz.cs" />
+    <Compile Remove="Migrations\20200528080714_AddedEpprovalEmployeesxz.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,7 +96,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.1" />
   </ItemGroup>

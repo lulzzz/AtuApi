@@ -95,13 +95,13 @@ namespace AtuApi.Repositories
                 user.LastName = userParam.LastName;
                 user.UserName = userParam.UserName;
                 user.Email = userParam.Email;
-                user.Position = userParam.Position;
-               
+                user.Position = userParam.Position;               
                 user.Branch = userParam.Branch;
+                user.ApprovalTemplateCode = userParam.ApprovalTemplateCode;
 
 
-                // update password if it was entered
-                if (!string.IsNullOrWhiteSpace(password))
+            // update password if it was entered
+            if (!string.IsNullOrWhiteSpace(password))
                 {
                     byte[] passwordHash, passwordSalt;
                     CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -110,7 +110,7 @@ namespace AtuApi.Repositories
                   
                 }
 
-            UserContext.Users.Update(user);
+            var res = UserContext.Users.Update(user).Entity;
             UserContext.SaveChanges();
             
         }

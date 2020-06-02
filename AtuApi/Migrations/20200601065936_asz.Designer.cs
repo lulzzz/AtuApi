@@ -4,14 +4,16 @@ using DataContextHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200601065936_asz")]
+    partial class asz
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,8 +203,8 @@ namespace AtuApi.Migrations
                             Email = "Example@gamil.com",
                             FirstName = "Admin",
                             LastName = "Admin",
-                            PasswordHash = new byte[] { 92, 221, 23, 212, 53, 135, 198, 28, 76, 113, 182, 121, 82, 190, 7, 12, 38, 234, 42, 169, 199, 206, 137, 145, 61, 113, 204, 187, 173, 144, 71, 44, 238, 173, 138, 113, 10, 187, 175, 233, 94, 19, 210, 198, 135, 64, 138, 60, 218, 205, 56, 255, 252, 148, 140, 32, 206, 29, 120, 208, 89, 65, 251, 19 },
-                            PasswordSalt = new byte[] { 21, 57, 156, 129, 35, 182, 147, 195, 163, 194, 178, 166, 194, 78, 218, 42, 170, 54, 228, 90, 49, 197, 154, 112, 58, 36, 173, 209, 216, 186, 92, 253, 38, 180, 29, 183, 235, 149, 138, 165, 163, 219, 178, 140, 99, 74, 19, 114, 18, 207, 124, 28, 179, 122, 65, 186, 192, 243, 219, 65, 90, 23, 109, 247, 71, 16, 59, 173, 147, 164, 177, 169, 194, 109, 143, 110, 206, 24, 78, 131, 216, 49, 42, 142, 229, 204, 203, 49, 226, 36, 225, 193, 75, 181, 26, 127, 50, 172, 36, 151, 66, 182, 201, 230, 175, 35, 227, 200, 46, 180, 144, 32, 141, 114, 25, 58, 11, 222, 224, 246, 50, 42, 206, 125, 230, 252, 210, 224 },
+                            PasswordHash = new byte[] { 166, 233, 83, 157, 135, 230, 180, 165, 100, 109, 161, 7, 234, 239, 58, 208, 13, 112, 66, 64, 173, 146, 235, 51, 119, 125, 171, 171, 235, 128, 11, 3, 20, 67, 119, 92, 34, 243, 45, 15, 115, 165, 128, 184, 139, 163, 225, 188, 201, 163, 195, 51, 194, 71, 171, 58, 70, 51, 174, 72, 69, 103, 220, 162 },
+                            PasswordSalt = new byte[] { 109, 30, 35, 239, 155, 86, 114, 39, 51, 71, 48, 232, 125, 73, 163, 58, 68, 54, 12, 240, 183, 24, 170, 212, 176, 163, 194, 87, 157, 13, 36, 208, 77, 24, 85, 49, 4, 18, 133, 241, 49, 129, 115, 233, 106, 107, 53, 215, 190, 40, 221, 113, 107, 69, 64, 16, 85, 127, 3, 102, 60, 57, 25, 90, 19, 124, 204, 198, 47, 166, 145, 36, 160, 152, 103, 90, 72, 63, 48, 114, 9, 180, 20, 252, 254, 147, 11, 146, 164, 211, 134, 24, 116, 46, 236, 115, 115, 195, 96, 39, 172, 53, 61, 165, 48, 134, 160, 7, 107, 132, 184, 200, 79, 239, 254, 55, 201, 25, 73, 117, 81, 160, 57, 178, 56, 95, 221, 172 },
                             Position = "Administraton",
                             RoleId = 1,
                             UserName = "Admin"
@@ -258,9 +260,6 @@ namespace AtuApi.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("PostingDate")
                         .HasColumnType("datetime2");

@@ -18,6 +18,7 @@ namespace AtuApi.Models
         public virtual Branch Branch { get; set; }
         public int BranchId { get; set; }
         public int RoleId { get; set; }
+        public int ApprovalTemplateCode { get; set; }        
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }

@@ -21,6 +21,10 @@ namespace AtuApi.Repositories
             ItemRepository = new ItemRepository(_dataContext, diManager);
             BusinessPartnerRepository = new BusinessPartnerRepository(_dataContext, diManager);
             EmployeeRepository = new EmployeeRepository(_dataContext, diManager);
+            ApprovalTemplateRepository = new ApprovalTemplateRepository(_dataContext);
+            PurchaseRequestRepository = new PurchaseRequestRepository(_dataContext);
+            TerritoryRepository = new TerritoryRepository(_dataContext, diManager);
+
         }
         public void SaveChanges()
         {
@@ -33,5 +37,8 @@ namespace AtuApi.Repositories
         public IItemRepository ItemRepository { get; }
         public IBusinessPartnerRepository BusinessPartnerRepository { get; }
         public IEmployeeRepository EmployeeRepository { get; }
+        public IApprovalTemplateRepository ApprovalTemplateRepository { get; }
+        public IPurchaseRequestRepository PurchaseRequestRepository { get; }
+        public ITerritoryRepository TerritoryRepository { get; }
     }
 }

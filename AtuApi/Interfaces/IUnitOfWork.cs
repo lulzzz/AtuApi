@@ -16,6 +16,8 @@ namespace AtuApi.Interfaces
         IItemRepository ItemRepository { get; }
         IBusinessPartnerRepository BusinessPartnerRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
-
+        IApprovalTemplateRepository ApprovalTemplateRepository { get; }
+        IPurchaseRequestRepository PurchaseRequestRepository { get; }
+        ITerritoryRepository TerritoryRepository { get; }
     }
 }

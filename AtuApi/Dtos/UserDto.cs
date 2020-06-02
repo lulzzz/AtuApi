@@ -17,6 +17,7 @@ namespace AtuApi.Dtos
         public string Email { get; set; }
         public string Position { get; set; }
         public int RoleId { get; set; }
+        public int ApprovalTemplateCode { get; set; }
 
     }
 }
