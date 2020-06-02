@@ -7,11 +7,13 @@ namespace DataModels.Iterfaces
     {
         IEnumerable<Item> GetItems();
         Item GetItem(string itemCode);
-        BusinessPartner GetBusinessPartner(string bpCode);
         IEnumerable<BusinessPartner> GetBusinessPartners();
+        BusinessPartner GetBusinessPartner(string bpCode);
         IEnumerable<Employee> GetEmployees();
         Employee GetEmployee(int employeeCode);
-        Territory GetTerritory(int territoryId);
         IEnumerable<Territory> GetTerritories();
+        Territory GetTerritory(int territoryId);
+        IEnumerable<Project> GetProjects();
+        Project GetProject(string projectCode);
     }
 }

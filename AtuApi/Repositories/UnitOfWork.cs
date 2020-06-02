@@ -24,6 +24,8 @@ namespace AtuApi.Repositories
             ApprovalTemplateRepository = new ApprovalTemplateRepository(_dataContext);
             PurchaseRequestRepository = new PurchaseRequestRepository(_dataContext);
             TerritoryRepository = new TerritoryRepository(_dataContext, diManager);
+            ProjectRepository = new ProjectRepository(_dataContext, diManager);
+
 
         }
         public void SaveChanges()
@@ -40,5 +42,7 @@ namespace AtuApi.Repositories
         public IApprovalTemplateRepository ApprovalTemplateRepository { get; }
         public IPurchaseRequestRepository PurchaseRequestRepository { get; }
         public ITerritoryRepository TerritoryRepository { get; }
+        public IProjectRepository ProjectRepository { get; }
+
     }
 }

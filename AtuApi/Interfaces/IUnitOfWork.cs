@@ -19,5 +19,6 @@ namespace AtuApi.Interfaces
         IApprovalTemplateRepository ApprovalTemplateRepository { get; }
         IPurchaseRequestRepository PurchaseRequestRepository { get; }
         ITerritoryRepository TerritoryRepository { get; }
+        IProjectRepository ProjectRepository { get; }
     }
 }

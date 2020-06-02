@@ -4,6 +4,7 @@ using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
 using Items = SAPbobsCOM.Items;
+using Project = DataModels.Models.Project;
 
 namespace SapDataAccess
 {
@@ -152,7 +153,7 @@ namespace SapDataAccess
         /// Returns Employee (Null if Not Exists)
         /// </summary>
         /// <param name="employeeCode"></param>
-        /// <returns></returns>       
+        /// <returns></returns> 
         public Employee GetEmployee(int employeeCode)
         {
             Recordset EmployeesRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -193,9 +194,7 @@ namespace SapDataAccess
         public Territory GetTerritory(int teritoryId)
         {
             Recordset TerritoryRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            TerritoryRecordSet.DoQuery($@"SELECT *
-                                        FROM OTER                                              
-                                        WHERE territryID = {teritoryId}");
+            TerritoryRecordSet.DoQuery($@"SELECT * FROM OTER  WHERE territryID = {teritoryId}");
             if (!TerritoryRecordSet.EoF)
             {
                 Territory Territory = new Territory
@@ -233,6 +232,52 @@ namespace SapDataAccess
                 TerritoryRecordSet.MoveNext();
             }
             return territories;
+        }
+
+        /// <summary>
+        /// Returns Project (Null if Not Exists)
+        /// </summary>
+        /// <param name="ProjectCode"></param>
+        /// <returns></returns>
+        public Project GetProject(string ProjectCode)
+        {
+            Recordset ProjectRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            ProjectRecordSet.DoQuery($@"SELECT * FROM OPRJ WHERE PrjCode = N'{ProjectCode}'");
+            if (!ProjectRecordSet.EoF)
+            {
+                Project Project = new Project
+                {
+                    Active = ProjectRecordSet.Fields.Item("Active").Value.ToString(),
+                    ProjectCode = ProjectRecordSet.Fields.Item("PrjCode").Value.ToString(),
+                    ProjectName = ProjectRecordSet.Fields.Item("PrjName").Value.ToString()
+
+                };
+                return Project;
+            }
+            return null;
+        }
+        /// <summary>
+        /// Returns Collection Of Projects 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Project> GetProjects()
+        {
+            List<Project> projects = new List<Project>();
+            Recordset ProjectRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            ProjectRecordSet.DoQuery($@"SELECT * FROM OPRJ");
+            while (!ProjectRecordSet.EoF)
+            {
+                Project Project = new Project
+                {
+                    Active = ProjectRecordSet.Fields.Item("Active").Value.ToString(),
+                    ProjectCode = ProjectRecordSet.Fields.Item("PrjCode").Value.ToString(),
+                    ProjectName = ProjectRecordSet.Fields.Item("PrjName").Value.ToString()
+
+                };
+                projects.Add(Project);
+                ProjectRecordSet.MoveNext();
+            }
+            return projects;
         }
     }
 }
