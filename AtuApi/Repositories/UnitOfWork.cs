@@ -25,6 +25,8 @@ namespace AtuApi.Repositories
             PurchaseRequestRepository = new PurchaseRequestRepository(_dataContext);
             TerritoryRepository = new TerritoryRepository(_dataContext, diManager);
             ProjectRepository = new ProjectRepository(_dataContext, diManager);
+            WareHouseRepository = new WareHouseRepository(_dataContext, diManager);
+            
 
 
         }
@@ -43,6 +45,8 @@ namespace AtuApi.Repositories
         public IPurchaseRequestRepository PurchaseRequestRepository { get; }
         public ITerritoryRepository TerritoryRepository { get; }
         public IProjectRepository ProjectRepository { get; }
+        public IWareHouseRepository WareHouseRepository { get; }
+
 
     }
 }

@@ -85,6 +85,8 @@
     <Compile Remove="Migrations\20200528080352_AddedEpprovalEmployeesxz.Designer.cs" />
     <Compile Remove="Migrations\20200528080714_AddedEpprovalEmployeesxz.cs" />
     <Compile Remove="Migrations\20200528080714_AddedEpprovalEmployeesxz.Designer.cs" />
+    <Compile Remove="Migrations\20200602142847_aszxxx.cs" />
+    <Compile Remove="Migrations\20200602142847_aszxxx.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

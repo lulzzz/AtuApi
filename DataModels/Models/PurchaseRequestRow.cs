@@ -15,7 +15,9 @@ namespace DataModels.Models
         public string BusinessPartnerCode { get; set; }
         public double RequiredQuantity { get; set; }
         public DateTime DueDate { get; set; }
+        [NotMapped]
         public Territory Teritory { get; set; }
+        public string TeritoryId { get; set; }
         public string Remarks { get; set; }
         public double InStockTotal { get; set; }
         public double InStockInWhs { get; set; }

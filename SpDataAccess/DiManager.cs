@@ -279,5 +279,47 @@ namespace SapDataAccess
             }
             return projects;
         }
+        /// <summary>
+        /// Returns WareHouse (Null if Not Exists)
+        /// </summary>
+        /// <param name="WareHouseCode"></param>
+        /// <returns></returns>
+        public WareHouse GetWareHouse(string WareHouseCode)
+        {
+            Recordset WareHouseRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            WareHouseRecordSet.DoQuery($@"SELECT * FROM OWHS WHERE WhsCode = N'{WareHouseCode}'");
+            if (!WareHouseRecordSet.EoF)
+            {
+                WareHouse wareHouse = new WareHouse
+                {
+                    WareHouseCode = WareHouseRecordSet.Fields.Item("WhsCode").Value.ToString(),
+                    WareHouseName = WareHouseRecordSet.Fields.Item("WhsName").Value.ToString(),
+
+                };
+                return wareHouse;
+            }
+            return null;
+        }
+        /// <summary>
+        /// Returns Collection Of WareHouses 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<WareHouse> GetWareHouses()
+        {
+            List<WareHouse> wareHouses = new List<WareHouse>();
+            Recordset WareHouseRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            WareHouseRecordSet.DoQuery($@"SELECT * FROM OWHS");
+            while (!WareHouseRecordSet.EoF)
+            {
+                WareHouse WareHouse = new WareHouse
+                {
+                    WareHouseCode = WareHouseRecordSet.Fields.Item("WhsCode").Value.ToString(),
+                    WareHouseName = WareHouseRecordSet.Fields.Item("WhsName").Value.ToString(),
+                };
+                wareHouses.Add(WareHouse);
+                WareHouseRecordSet.MoveNext();
+            }
+            return wareHouses;
+        }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AtuApi.Migrations
 {
-    public partial class asz : Migration
+    public partial class _1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -57,7 +57,8 @@ namespace AtuApi.Migrations
                     CreategDate = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
                     DueDate = table.Column<DateTime>(nullable: false),
                     ProjectCode = table.Column<string>(nullable: true),
-                    ProjectName = table.Column<string>(nullable: true)
+                    ProjectName = table.Column<string>(nullable: true),
+                    EmployeeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -106,7 +107,6 @@ namespace AtuApi.Migrations
                     BusinessPartnerCode = table.Column<string>(nullable: true),
                     RequiredQuantity = table.Column<double>(nullable: false),
                     DueDate = table.Column<DateTime>(nullable: false),
-                    Teritory = table.Column<string>(nullable: true),
                     Remarks = table.Column<string>(nullable: true),
                     InStockTotal = table.Column<double>(nullable: false),
                     InStockInWhs = table.Column<double>(nullable: false),
@@ -219,7 +219,7 @@ namespace AtuApi.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "ApprovalTemplateCode", "BranchId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "UserName" },
-                values: new object[] { 1, 0, -1, "Example@gamil.com", "Admin", "Admin", new byte[] { 166, 233, 83, 157, 135, 230, 180, 165, 100, 109, 161, 7, 234, 239, 58, 208, 13, 112, 66, 64, 173, 146, 235, 51, 119, 125, 171, 171, 235, 128, 11, 3, 20, 67, 119, 92, 34, 243, 45, 15, 115, 165, 128, 184, 139, 163, 225, 188, 201, 163, 195, 51, 194, 71, 171, 58, 70, 51, 174, 72, 69, 103, 220, 162 }, new byte[] { 109, 30, 35, 239, 155, 86, 114, 39, 51, 71, 48, 232, 125, 73, 163, 58, 68, 54, 12, 240, 183, 24, 170, 212, 176, 163, 194, 87, 157, 13, 36, 208, 77, 24, 85, 49, 4, 18, 133, 241, 49, 129, 115, 233, 106, 107, 53, 215, 190, 40, 221, 113, 107, 69, 64, 16, 85, 127, 3, 102, 60, 57, 25, 90, 19, 124, 204, 198, 47, 166, 145, 36, 160, 152, 103, 90, 72, 63, 48, 114, 9, 180, 20, 252, 254, 147, 11, 146, 164, 211, 134, 24, 116, 46, 236, 115, 115, 195, 96, 39, 172, 53, 61, 165, 48, 134, 160, 7, 107, 132, 184, 200, 79, 239, 254, 55, 201, 25, 73, 117, 81, 160, 57, 178, 56, 95, 221, 172 }, "Administraton", 1, "Admin" });
+                values: new object[] { 1, 0, -1, "Example@gamil.com", "Admin", "Admin", new byte[] { 42, 17, 150, 225, 41, 101, 232, 5, 176, 203, 147, 214, 40, 160, 128, 213, 139, 97, 224, 37, 216, 192, 24, 25, 2, 208, 79, 175, 242, 0, 233, 165, 144, 103, 30, 99, 49, 109, 146, 241, 146, 25, 199, 84, 101, 47, 246, 130, 91, 212, 166, 168, 213, 149, 173, 114, 197, 214, 101, 209, 193, 39, 211, 41 }, new byte[] { 221, 66, 60, 177, 168, 23, 200, 239, 124, 97, 233, 46, 86, 240, 23, 109, 160, 54, 38, 145, 117, 220, 129, 243, 186, 37, 233, 205, 111, 219, 179, 213, 255, 148, 118, 105, 91, 60, 24, 152, 19, 127, 77, 247, 24, 185, 82, 20, 73, 84, 242, 218, 152, 202, 129, 219, 166, 183, 195, 37, 108, 86, 149, 251, 53, 211, 142, 253, 105, 248, 92, 18, 161, 27, 73, 127, 249, 157, 165, 90, 72, 142, 227, 69, 129, 21, 6, 142, 130, 201, 140, 74, 8, 18, 143, 146, 124, 230, 86, 100, 127, 225, 160, 12, 16, 52, 75, 229, 15, 41, 185, 121, 97, 167, 233, 15, 252, 246, 90, 201, 147, 21, 89, 151, 181, 193, 216, 134 }, "Administraton", 1, "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApprovalTemplates_TemplateName",

@@ -20,5 +20,6 @@ namespace AtuApi.Interfaces
         IPurchaseRequestRepository PurchaseRequestRepository { get; }
         ITerritoryRepository TerritoryRepository { get; }
         IProjectRepository ProjectRepository { get; }
+        IWareHouseRepository WareHouseRepository { get; }
     }
 }

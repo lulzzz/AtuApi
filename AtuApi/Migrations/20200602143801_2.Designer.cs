@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200602072144_aszx")]
-    partial class aszx
+    [Migration("20200602143801_2")]
+    partial class _2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -203,8 +203,8 @@ namespace AtuApi.Migrations
                             Email = "Example@gamil.com",
                             FirstName = "Admin",
                             LastName = "Admin",
-                            PasswordHash = new byte[] { 247, 42, 194, 192, 235, 224, 27, 251, 181, 134, 152, 15, 58, 60, 171, 136, 92, 171, 52, 137, 72, 244, 83, 188, 116, 214, 89, 104, 8, 168, 48, 5, 103, 150, 20, 102, 179, 143, 224, 31, 114, 151, 89, 35, 75, 76, 173, 210, 132, 173, 255, 147, 40, 245, 108, 137, 120, 62, 28, 68, 251, 47, 225, 68 },
-                            PasswordSalt = new byte[] { 211, 165, 182, 6, 198, 109, 64, 200, 89, 84, 87, 140, 1, 108, 11, 244, 11, 67, 241, 129, 158, 29, 195, 217, 242, 137, 246, 104, 255, 228, 79, 46, 196, 30, 61, 160, 71, 18, 9, 90, 248, 88, 252, 128, 240, 158, 75, 132, 105, 46, 15, 212, 233, 44, 82, 53, 157, 55, 0, 89, 190, 97, 144, 41, 163, 23, 145, 222, 28, 213, 167, 216, 37, 60, 127, 87, 86, 189, 54, 195, 69, 53, 193, 195, 62, 109, 87, 91, 138, 95, 50, 111, 17, 122, 113, 71, 161, 138, 82, 94, 99, 213, 99, 159, 255, 16, 221, 109, 46, 254, 205, 44, 19, 179, 177, 244, 48, 191, 243, 47, 162, 41, 210, 225, 17, 25, 234, 91 },
+                            PasswordHash = new byte[] { 164, 121, 236, 228, 148, 225, 244, 218, 66, 181, 120, 129, 114, 241, 110, 130, 156, 56, 235, 75, 18, 64, 244, 48, 31, 29, 146, 10, 77, 21, 244, 100, 166, 117, 73, 208, 88, 155, 158, 127, 71, 134, 51, 52, 209, 100, 108, 21, 172, 0, 186, 246, 202, 88, 217, 226, 80, 73, 208, 15, 255, 54, 70, 44 },
+                            PasswordSalt = new byte[] { 254, 239, 97, 135, 16, 44, 210, 99, 148, 163, 25, 178, 104, 23, 68, 66, 189, 242, 108, 141, 231, 56, 71, 89, 51, 61, 180, 71, 53, 153, 244, 80, 253, 223, 73, 112, 24, 53, 134, 23, 245, 121, 119, 27, 198, 96, 0, 243, 232, 161, 205, 187, 66, 173, 222, 86, 150, 139, 100, 190, 249, 167, 71, 182, 162, 227, 6, 186, 162, 92, 140, 249, 74, 17, 179, 13, 162, 192, 216, 230, 201, 233, 243, 100, 20, 253, 88, 207, 161, 208, 232, 184, 188, 162, 64, 82, 224, 6, 245, 210, 155, 133, 123, 93, 123, 39, 49, 65, 183, 89, 43, 153, 37, 221, 40, 246, 229, 54, 171, 159, 60, 23, 203, 232, 46, 11, 192, 173 },
                             Position = "Administraton",
                             RoleId = 1,
                             UserName = "Admin"
@@ -261,7 +261,7 @@ namespace AtuApi.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EmployeeCode")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("PostingDate")
@@ -312,7 +312,7 @@ namespace AtuApi.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Teritory")
+                    b.Property<string>("TeritoryId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("WareHouse")

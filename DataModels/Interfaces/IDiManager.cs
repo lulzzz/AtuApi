@@ -15,5 +15,7 @@ namespace DataModels.Iterfaces
         Territory GetTerritory(int territoryId);
         IEnumerable<Project> GetProjects();
         Project GetProject(string projectCode);
+        IEnumerable<WareHouse> GetWareHouses();
+        WareHouse GetWareHouse(string wareHouseCode);
     }
 }

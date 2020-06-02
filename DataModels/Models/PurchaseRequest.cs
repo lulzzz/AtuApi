@@ -16,6 +16,8 @@ namespace DataModels.Models
         public DateTime PostingDate { get; set; }
         public DateTime CreategDate { get; set; }
         public DateTime DueDate { get; set; }
+        [NotMapped]
+        public Project project { get; set; }
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
         [NotMapped]
