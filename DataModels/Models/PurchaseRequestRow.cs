@@ -19,8 +19,6 @@ namespace DataModels.Models
         public Territory Teritory { get; set; }
         public string TeritoryId { get; set; }
         public string Remarks { get; set; }
-        public double InStockTotal { get; set; }
-        public double InStockInWhs { get; set; }
         public string WareHouse { get; set; }
         public string Status { get; set; }
         public int PurchaseRequestDocNum { get; set; }

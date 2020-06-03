@@ -321,5 +321,63 @@ namespace SapDataAccess
             }
             return wareHouses;
         }
+
+        /// <summary>
+        /// Returns Total Quantiy Of Item
+        /// </summary>
+        /// <param name="itemCode"></param>
+        /// <returns></returns>
+        public ItemsWarehouses GetItemTotalQuantity(string itemCode)
+        {
+            double totalInStock = 0;
+            ItemsWarehouses ItemsWarehouses = new ItemsWarehouses();
+            Items items = (Items)_company.GetBusinessObject(BoObjectTypes.oItems);
+            bool exists = items.GetByKey(itemCode);
+            var WhsInfo = items.WhsInfo;
+            for (int i = 0; i < items.WhsInfo.Count; i++)
+            {
+                WhsInfo.SetCurrentLine(i);
+                ItemWareHouse itemWareHouse = new ItemWareHouse
+                {
+                    IsCommited = WhsInfo.Committed,
+                    OnHand = WhsInfo.InStock,
+                    WareHouseCode = WhsInfo.WarehouseCode,
+                };
+                totalInStock += WhsInfo.InStock;
+                ItemsWarehouses.itemWareHouses.Add(itemWareHouse);
+            }
+            ItemsWarehouses.TotalInStock = totalInStock;
+            ItemsWarehouses.ItemCode = itemCode;
+            return ItemsWarehouses;
+        }
+
+        public ItemsWarehouses GetItemQuantityInWareHouse(string itemCode, string wareHouseCode)
+        {
+            double totalInStock = 0;
+            ItemsWarehouses ItemsWarehouses = new ItemsWarehouses();
+            Items items = (Items)_company.GetBusinessObject(BoObjectTypes.oItems);
+            bool exists = items.GetByKey(itemCode);
+            var WhsInfo = items.WhsInfo;
+            for (int i = 0; i < items.WhsInfo.Count; i++)
+            {
+                WhsInfo.SetCurrentLine(i);
+
+                if (WhsInfo.WarehouseCode != wareHouseCode)
+                {
+                    continue;
+                }
+                ItemWareHouse itemWareHouse = new ItemWareHouse
+                {
+                    IsCommited = WhsInfo.Committed,
+                    OnHand = WhsInfo.InStock,
+                    WareHouseCode = WhsInfo.WarehouseCode,
+                };
+                totalInStock += WhsInfo.InStock;
+                ItemsWarehouses.itemWareHouses.Add(itemWareHouse);
+            }
+            ItemsWarehouses.TotalInStock = totalInStock;
+            ItemsWarehouses.ItemCode = itemCode;
+            return ItemsWarehouses;
+        }
     }
 }

@@ -17,5 +17,7 @@ namespace DataModels.Iterfaces
         Project GetProject(string projectCode);
         IEnumerable<WareHouse> GetWareHouses();
         WareHouse GetWareHouse(string wareHouseCode);
+        ItemsWarehouses GetItemTotalQuantity(string itemCode);
+        ItemsWarehouses GetItemQuantityInWareHouse(string itemCode, string wareHouseCode);
     }
 }

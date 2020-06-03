@@ -21,5 +21,6 @@ namespace AtuApi.Interfaces
         ITerritoryRepository TerritoryRepository { get; }
         IProjectRepository ProjectRepository { get; }
         IWareHouseRepository WareHouseRepository { get; }
+        IItemsWarehousesRepository ItemsWarehousesRepository { get; }
     }
 }
