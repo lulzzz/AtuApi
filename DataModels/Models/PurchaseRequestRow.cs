@@ -17,7 +17,7 @@ namespace DataModels.Models
         public DateTime DueDate { get; set; }
         [NotMapped]
         public Territory Teritory { get; set; }
-        public string TeritoryId { get; set; }
+        public int TeritoryId { get; set; }
         public string Remarks { get; set; }
         public string WareHouse { get; set; }
         public string Status { get; set; }

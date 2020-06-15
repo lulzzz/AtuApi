@@ -41,7 +41,10 @@ namespace AtuApi.Controllers
                 return Unauthorized();
 
             List<Claim> claims = new List<Claim>();
-            Claim claim = new Claim("tepe", "value") { };
+            Claim claim = new Claim(ClaimTypes.Name, userName);
+            Claim claim2 = new Claim(ClaimTypes.Role, userName);
+
+            claims.Add(claim);
 
             var keyBytes = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var key = new SymmetricSecurityKey(keyBytes);

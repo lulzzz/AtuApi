@@ -122,15 +122,13 @@ namespace SapDataAccess
             Recordset EmployeesRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
             EmployeesRecordSet.DoQuery($@"SELECT FirstName, 
                                                LastName,
-                                               position,
-                                               OHPS.name as [Position Name],
+                                               JobTitle,                                            
                                                dept,
                                                OUDP.Name as [Department Name],
                                                govID,
                                                EmpId
                                         FROM OHEM
-                                             LEFT JOIN OUDP ON OUDP.Code = OHEM.dept
-                                             LEFT JOIN OHPS ON OHPS.posID = position");
+                                             LEFT JOIN OUDP ON OUDP.Code = OHEM.dept ");
             while (!EmployeesRecordSet.EoF)
             {
                 Employee Employee = new Employee
@@ -139,8 +137,7 @@ namespace SapDataAccess
                     LastName = EmployeesRecordSet.Fields.Item("LastName").Value.ToString(),
                     Department = EmployeesRecordSet.Fields.Item("Department Name").Value.ToString(),
                     GovId = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
-                    Position = EmployeesRecordSet.Fields.Item("Position Name").Value.ToString(),
-                    PositionCode = (int)EmployeesRecordSet.Fields.Item("Position").Value,
+                    Position = EmployeesRecordSet.Fields.Item("JobTitle").Value.ToString(),                    
                     DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
                     EmpId = (int)EmployeesRecordSet.Fields.Item("EmpId").Value,
                 };
@@ -159,15 +156,13 @@ namespace SapDataAccess
             Recordset EmployeesRecordSet = (Recordset)_company.GetBusinessObject(BoObjectTypes.BoRecordset);
             EmployeesRecordSet.DoQuery($@"SELECT FirstName, 
                                                LastName,
-                                               position,
-                                               OHPS.name as [Position Name],
+                                               JobTitle,                                               
                                                dept,
                                                OUDP.Name as [Department Name],
                                                govID,
                                                EmpId
                                         FROM OHEM
-                                             LEFT JOIN OUDP ON OUDP.Code = OHEM.dept
-                                             LEFT JOIN OHPS ON OHPS.posID = position
+                                             LEFT JOIN OUDP ON OUDP.Code = OHEM.dept                                            
                                         WHERE EmpId = {employeeCode}");
             if (!EmployeesRecordSet.EoF)
             {
@@ -177,8 +172,7 @@ namespace SapDataAccess
                     LastName = EmployeesRecordSet.Fields.Item("LastName").Value.ToString(),
                     Department = EmployeesRecordSet.Fields.Item("Department Name").Value.ToString(),
                     GovId = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
-                    Position = EmployeesRecordSet.Fields.Item("Position Name").Value.ToString(),
-                    PositionCode = (int)EmployeesRecordSet.Fields.Item("Position").Value,
+                    Position = EmployeesRecordSet.Fields.Item("JobTitle").Value.ToString(),                    
                     DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
                     EmpId = (int)EmployeesRecordSet.Fields.Item("EmpId").Value,
                 };

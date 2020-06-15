@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using AtuApi.AutoMapper;
 using AtuApi.Interfaces;
 using AtuApi.Repositories;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SapDataAccess;
 
@@ -79,7 +81,25 @@ namespace AtuApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBranchRepository, BranchRepositry>();
             services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddSingleton<IDiManager>(x => new DiManager(appSettings.SqlServerHostName,appSettings.SapDbServerType, appSettings.SapUserName,appSettings.SapPassword, appSettings.SapCompanyDb));
+            services.AddSingleton<IDiManager>(x => new DiManager(appSettings.SqlServerHostName, appSettings.SapDbServerType, appSettings.SapUserName, appSettings.SapPassword, appSettings.SapCompanyDb));
+
+
+
+            var keyBytes = Encoding.ASCII.GetBytes(appSettings.Secret);       
+            services.AddAuthentication(opts =>
+            {
+                opts.DefaultAuthenticateScheme = "JwtBearer";
+                opts.DefaultChallengeScheme = "JwtBearer";
+            }).AddJwtBearer("JwtBearer", jwtBearerOptions =>
+            {
+                jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
         }
 

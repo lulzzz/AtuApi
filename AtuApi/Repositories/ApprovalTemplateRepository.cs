@@ -16,11 +16,8 @@ namespace AtuApi.Repositories
         {
 
         }
-
-
-
         private DataContext ApprovalTemplateContext => Context as DataContext;
 
-  
+
     }
 }

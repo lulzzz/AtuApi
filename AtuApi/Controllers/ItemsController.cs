@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AtuApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,8 +20,10 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
+        //[Authorize(Policy = "CanReadAccidents")]
         public IActionResult GetItems()
-        {            
+        {
+            var xz = User.Identity.Name;
             return Ok(_unitOfWork.ItemRepository.GetItems());
         }
 
