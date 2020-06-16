@@ -9,6 +9,7 @@ using DataModels.Iterfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +34,15 @@ namespace AtuApi
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddCors(); // Make sure you call this previous to AddMvc
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
 
             services.AddControllers();
             IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
@@ -122,6 +132,10 @@ namespace AtuApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(
+        optionsx => optionsx.WithOrigins("*").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseHttpsRedirection();
 

@@ -8,7 +8,7 @@ namespace AtuApi.Interfaces
 {
     public interface IItemsWarehousesRepository : IRepository<ItemsWarehouses>
     {
-        ItemsWarehouses GetItemQuantityWarehouses(string itemCode);
-        ItemsWarehouses GetItemQuantityInWarehouse(string itemCode, string wareHouseCode);
+        ItemsWarehouses GetItemInfoWarehouses(string itemCode);
+        ItemsWarehouses GetItemInfoInWareHouse(string itemCode, string wareHouseCode); 
     }
 }

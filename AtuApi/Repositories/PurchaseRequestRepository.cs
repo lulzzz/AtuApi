@@ -17,8 +17,8 @@ namespace AtuApi.Repositories
         }
 
         IEnumerable<PurchaseRequest> IRepository<PurchaseRequest>.GetAll()
-        {
-            return PurchaseRequestContext.PurchaseRequests.Include(x => x.Rows);
+        {     
+            return PurchaseRequestContext.PurchaseRequests.Include(x => x.Rows).ToList();
         }
 
         public new PurchaseRequest Get(int id)

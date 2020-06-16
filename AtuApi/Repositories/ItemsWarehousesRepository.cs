@@ -19,14 +19,14 @@ namespace AtuApi.Repositories
 
         private DataContext ItemsWarehousesContext => Context as DataContext;
 
-        public ItemsWarehouses GetItemQuantityInWarehouse(string itemCode, string wareHouseCode)
+        public ItemsWarehouses GetItemInfoInWareHouse(string itemCode, string wareHouseCode)
         {
-            return _diManager.GetItemQuantityInWareHouse(itemCode, wareHouseCode);
+            return _diManager.GetItemInfoInWareHouse(itemCode, wareHouseCode);
         }
 
-        public ItemsWarehouses GetItemQuantityWarehouses(string itemCode)
+        public ItemsWarehouses GetItemInfoWarehouses(string itemCode)
         {
-            return _diManager.GetItemTotalQuantity(itemCode);
+            return _diManager.GetItemTotalInfo(itemCode);
         }
     }
 }

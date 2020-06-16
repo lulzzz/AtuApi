@@ -11,6 +11,7 @@ namespace DataModels.Models
             itemWareHouses = new List<ItemWareHouse>();
         }
         public string ItemCode { get; set; }
+        public double Cost { get; set; }
         public double TotalInStock { get; set; }
         public ICollection<ItemWareHouse> itemWareHouses { get; set; }
 

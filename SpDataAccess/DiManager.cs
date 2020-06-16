@@ -137,7 +137,7 @@ namespace SapDataAccess
                     LastName = EmployeesRecordSet.Fields.Item("LastName").Value.ToString(),
                     Department = EmployeesRecordSet.Fields.Item("Department Name").Value.ToString(),
                     GovId = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
-                    Position = EmployeesRecordSet.Fields.Item("JobTitle").Value.ToString(),                    
+                    Position = EmployeesRecordSet.Fields.Item("JobTitle").Value.ToString(),
                     DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
                     EmpId = (int)EmployeesRecordSet.Fields.Item("EmpId").Value,
                 };
@@ -172,7 +172,7 @@ namespace SapDataAccess
                     LastName = EmployeesRecordSet.Fields.Item("LastName").Value.ToString(),
                     Department = EmployeesRecordSet.Fields.Item("Department Name").Value.ToString(),
                     GovId = EmployeesRecordSet.Fields.Item("govID").Value.ToString(),
-                    Position = EmployeesRecordSet.Fields.Item("JobTitle").Value.ToString(),                    
+                    Position = EmployeesRecordSet.Fields.Item("JobTitle").Value.ToString(),
                     DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
                     EmpId = (int)EmployeesRecordSet.Fields.Item("EmpId").Value,
                 };
@@ -317,11 +317,11 @@ namespace SapDataAccess
         }
 
         /// <summary>
-        /// Returns Total Quantiy Of Item
+        /// Returns Info Of Item
         /// </summary>
         /// <param name="itemCode"></param>
         /// <returns></returns>
-        public ItemsWarehouses GetItemTotalQuantity(string itemCode)
+        public ItemsWarehouses GetItemTotalInfo(string itemCode)
         {
             double totalInStock = 0;
             ItemsWarehouses ItemsWarehouses = new ItemsWarehouses();
@@ -336,16 +336,27 @@ namespace SapDataAccess
                     IsCommited = WhsInfo.Committed,
                     OnHand = WhsInfo.InStock,
                     WareHouseCode = WhsInfo.WarehouseCode,
+                    Cost = WhsInfo.StandardAveragePrice,
                 };
                 totalInStock += WhsInfo.InStock;
+
                 ItemsWarehouses.itemWareHouses.Add(itemWareHouse);
             }
-            ItemsWarehouses.TotalInStock = totalInStock;
+            if (_company.GetCompanyService().GetAdminInfo().PriceSystem == BoYesNoEnum.tNO)
+            {
+                ItemsWarehouses.Cost = items.AvgStdPrice;
+            }
             ItemsWarehouses.ItemCode = itemCode;
+            ItemsWarehouses.TotalInStock = totalInStock;
             return ItemsWarehouses;
         }
-
-        public ItemsWarehouses GetItemQuantityInWareHouse(string itemCode, string wareHouseCode)
+        /// <summary>
+        /// Gets Item Info By Warehouse
+        /// </summary>
+        /// <param name="itemCode"></param>
+        /// <param name="wareHouseCode"></param>
+        /// <returns></returns>
+        public ItemsWarehouses GetItemInfoInWareHouse(string itemCode, string wareHouseCode)
         {
             double totalInStock = 0;
             ItemsWarehouses ItemsWarehouses = new ItemsWarehouses();
@@ -365,9 +376,15 @@ namespace SapDataAccess
                     IsCommited = WhsInfo.Committed,
                     OnHand = WhsInfo.InStock,
                     WareHouseCode = WhsInfo.WarehouseCode,
+                    Cost = WhsInfo.StandardAveragePrice,
                 };
                 totalInStock += WhsInfo.InStock;
                 ItemsWarehouses.itemWareHouses.Add(itemWareHouse);
+            }
+
+            if (_company.GetCompanyService().GetAdminInfo().PriceSystem == BoYesNoEnum.tNO)
+            {
+                ItemsWarehouses.Cost = items.AvgStdPrice;
             }
             ItemsWarehouses.TotalInStock = totalInStock;
             ItemsWarehouses.ItemCode = itemCode;

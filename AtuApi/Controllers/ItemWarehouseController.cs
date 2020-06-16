@@ -19,16 +19,16 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
-        [ActionName("GetItemQuantity")]
-        public IActionResult GetItemQuantity(string itemCode)
+        [ActionName("GetItemInfo")]
+        public IActionResult GetItemInfo(string itemCode)
         {
-            return Ok(_unitOfWork.ItemsWarehousesRepository.GetItemQuantityWarehouses(itemCode));
+            return Ok(_unitOfWork.ItemsWarehousesRepository.GetItemInfoWarehouses(itemCode));
         }
         [HttpGet]
-        [ActionName("GetItemQuantityInWareHouse")]
-        public IActionResult GetItemQuantityInWareHouse(string itemCode, string wareHouseCode)
+        [ActionName("GetItemInfoInWareHouse")]
+        public IActionResult GetItemInfoInWareHouse(string itemCode, string wareHouseCode)
         {
-            return Ok(_unitOfWork.ItemsWarehousesRepository.GetItemQuantityInWarehouse(itemCode, wareHouseCode));
-        }
+            return Ok(_unitOfWork.ItemsWarehousesRepository.GetItemInfoInWareHouse(itemCode, wareHouseCode));
+        } 
     }
 }

@@ -68,6 +68,7 @@ namespace AtuApi.Controllers
         public IActionResult GetPurchaseReques()
         {
             IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll();
+            var xz = purchaseReqests.ToList();
             IEnumerable<PurchaseRequestDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestDto>>(purchaseReqests);
             return Ok(PurchaseRequetDtos);
         }
