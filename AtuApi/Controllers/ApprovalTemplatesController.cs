@@ -31,18 +31,34 @@ namespace AtuApi.Controllers
             return Ok(result.TemplateCode);
         }
 
-        ///TODO
-        //[HttpPut]
-        //public IActionResult UpdateApprovalTemplate(ApprovalTemplateDto approvalTemplateDto)
-        //{
-        //    var approvalTemplate = _mapper.Map<ApprovalTemplate>(approvalTemplateDto);
-        //    var template = _unitOfWork.ApprovalTemplateRepository.Get(approvalTemplateDto.TemplateCode);
-        //    template.IsActive = approvalTemplate.IsActive;
-        //    template.TemplateName = approvalTemplate.TemplateName;
-        //    template.ApprovalsEmployees = approvalTemplate.ApprovalsEmployees;            
-        //     _unitOfWork.ApprovalTemplateRepository.Update(template);
-        //    return Ok();
-        //}
+        [HttpGet]
+        public IActionResult GetApprovalTemplates()
+        {
+            var approvalTemplates = _unitOfWork.ApprovalTemplateRepository.GetAll();
+            var approvalTemplateDtos = _mapper.Map<IEnumerable<ApprovalTemplateDto>>(approvalTemplates);
+            return Ok(approvalTemplateDtos);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetApprovalTemplates(int id)
+        {
+            var approvalTemplate = _unitOfWork.ApprovalTemplateRepository.Get(id);
+            var approvalTemplateDto = _mapper.Map<ApprovalTemplateDto>(approvalTemplate);
+            return Ok(approvalTemplateDto);
+        }
+
+        
+        [HttpPut]
+        public IActionResult UpdateApprovalTemplate(ApprovalTemplateDto approvalTemplateDto)
+        {
+            var approvalTemplate = _mapper.Map<ApprovalTemplate>(approvalTemplateDto);
+            var template = _unitOfWork.ApprovalTemplateRepository.Get(approvalTemplateDto.TemplateCode);
+            template.IsActive = approvalTemplate.IsActive;
+            template.TemplateName = approvalTemplate.TemplateName;
+            template.ApprovalsEmployees = approvalTemplate.ApprovalsEmployees;
+            _unitOfWork.ApprovalTemplateRepository.Update(template);
+            return Ok();
+        }
 
     }
 }

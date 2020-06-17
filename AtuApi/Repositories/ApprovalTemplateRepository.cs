@@ -1,4 +1,5 @@
-﻿using AtuApi.Interfaces;
+﻿using AtuApi.Dtos;
+using AtuApi.Interfaces;
 using DataContextHelper;
 using DataModels.Models;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,17 @@ namespace AtuApi.Repositories
         {
 
         }
+
+        public new IEnumerable<ApprovalTemplate> GetAll()
+        {
+            return ApprovalTemplateContext.ApprovalTemplates.Include(x => x.ApprovalsEmployees).ToList();
+        }
+
+        public new ApprovalTemplate Get(int id)
+        {
+            return ApprovalTemplateContext.ApprovalTemplates.Include(x => x.ApprovalsEmployees).FirstOrDefault(x=>x.TemplateCode == id);
+        }
+
         private DataContext ApprovalTemplateContext => Context as DataContext;
 
 

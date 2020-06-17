@@ -38,7 +38,7 @@ namespace AtuApi.AutoMapper
                 .ForMember(dest => dest.TemplateCode, opts => opts.Ignore());
             CreateMap<ApprovalTemplate, ApprovalTemplateDto>()
                 .ForMember(
-                    des => des.ApprovalEmployees,
+                    des => des.ApprovalEmployees, 
                     opts => opts.MapFrom(
                         src => src.ApprovalsEmployees.Select(appr => appr.EmployeeCode).ToList())); ;
         }

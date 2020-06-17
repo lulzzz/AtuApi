@@ -334,9 +334,10 @@ namespace SapDataAccess
                 ItemWareHouse itemWareHouse = new ItemWareHouse
                 {
                     IsCommited = WhsInfo.Committed,
-                    OnHand = WhsInfo.InStock,
+                    OnHand = WhsInfo.InStock, 
                     WareHouseCode = WhsInfo.WarehouseCode,
                     Cost = WhsInfo.StandardAveragePrice,
+                    Ordered = WhsInfo.Ordered
                 };
                 totalInStock += WhsInfo.InStock;
 
@@ -377,6 +378,7 @@ namespace SapDataAccess
                     OnHand = WhsInfo.InStock,
                     WareHouseCode = WhsInfo.WarehouseCode,
                     Cost = WhsInfo.StandardAveragePrice,
+                    Ordered = WhsInfo.Ordered,
                 };
                 totalInStock += WhsInfo.InStock;
                 ItemsWarehouses.itemWareHouses.Add(itemWareHouse);
