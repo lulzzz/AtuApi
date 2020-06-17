@@ -111,6 +111,14 @@ namespace AtuApi.Controllers
             return Ok(userDto);
         }
 
+        [HttpGet]
+        public IActionResult GetByAll()
+        {
+            var user = _unitOfWork.UserRepository.GetAll();
+            var userDto = _mapper.Map<IEnumerable<UserDto>>(user);
+            return Ok(userDto);
+        }
+
         [HttpPut]
         public IActionResult Update([FromBody]UserDto userDto)
         {
