@@ -1,15 +1,18 @@
-﻿using AtuApi.Controllers;
+﻿using AtuApi;
+using AtuApi.Controllers;
 using AtuApi.Models;
 using DataModels.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DataContextHelper
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options, IConfiguration configuration) : base(options)
         {
+            Configuration = configuration;
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Branch> Branches { get; set; }
@@ -20,6 +23,7 @@ namespace DataContextHelper
         public DbSet<ApprovalsEmployees> ApprovalsEmployees { get; set; }
         public DbSet<PurchaseRequest> PurchaseRequests { get; set; }
         public DbSet<PurchaseRequestRow> PurchaseRequestRows { get; set; }
+        public IConfiguration Configuration { get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -76,8 +80,7 @@ namespace DataContextHelper
           new Permission { PermissionName = "CanCreateUsers", Id = 1 },
           new Permission { PermissionName = "CanDeleteUsers", Id = 2 },
           new Permission { PermissionName = "CanReadUsers", Id = 3 },
-          new Permission { PermissionName = "CanModifyUsers", Id = 4 },
-          new Permission { PermissionName = "CanModifyUsers", Id = 5 }
+          new Permission { PermissionName = "CanModifyUsers", Id = 4 }
           );
             modelBuilder.Entity<Role>().HasData(
          new Role { RoleName = "Admin", Id = 1 });
@@ -86,22 +89,25 @@ namespace DataContextHelper
                new PermissionRoles { PermissionId = 1, RoleId = 1 },
                new PermissionRoles { PermissionId = 2, RoleId = 1 },
                new PermissionRoles { PermissionId = 3, RoleId = 1 },
-               new PermissionRoles { PermissionId = 4, RoleId = 1 },
-               new PermissionRoles { PermissionId = 5, RoleId = 1 }
+               new PermissionRoles { PermissionId = 4, RoleId = 1 }
                );
 
 
             modelBuilder.Entity<Branch>().HasData(
                 new Branch { Id = -1, BranchName = "Default" });
+
+            IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");            
+            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
+
             byte[] passwordHash, passwordSalt;
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes("Welcome1"));
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(appSettings.AdminPassword));
             }
 
             modelBuilder.Entity<User>().HasData(
-              new User { Id = 1, BranchId = -1, FirstName = "Admin", LastName = "Admin", UserName = "Admin", RoleId = 1, Position = "Administraton", Email = "Example@gamil.com", PasswordHash = passwordHash, PasswordSalt = passwordSalt });
+              new User { Id = 1, BranchId = -1, FirstName = "Jason", LastName = "Buttler", UserName = "manager", RoleId = 1, Position = "Manager", Email = "Example@gamil.com", PasswordHash = passwordHash, PasswordSalt = passwordSalt });
 
 
 

@@ -1,6 +1,7 @@
 ﻿using AtuApi.Interfaces;
 using AtuApi.Models;
 using DataContextHelper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ namespace AtuApi.Repositories
         public PermissionRepository(DataContext context) : base(context)
         {
 
+        }
+
+        public new IEnumerable<Permission> GetAll()
+        {
+            return PermissionsContext.Permissions.Include(x => x.PermissionRoles).ThenInclude(y=>y.Roles).ToList();
         }
 
         private DataContext PermissionsContext => Context as DataContext;

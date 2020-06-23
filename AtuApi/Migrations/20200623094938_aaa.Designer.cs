@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200602143801_2")]
-    partial class _2
+    [Migration("20200623094938_aaa")]
+    partial class aaa
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -77,11 +77,6 @@ namespace AtuApi.Migrations
                         {
                             Id = 4,
                             PermissionName = "CanModifyUsers"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            PermissionName = "CanModifyUsers"
                         });
                 });
 
@@ -118,11 +113,6 @@ namespace AtuApi.Migrations
                         new
                         {
                             PermissionId = 4,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            PermissionId = 5,
                             RoleId = 1
                         });
                 });
@@ -201,13 +191,13 @@ namespace AtuApi.Migrations
                             ApprovalTemplateCode = 0,
                             BranchId = -1,
                             Email = "Example@gamil.com",
-                            FirstName = "Admin",
-                            LastName = "Admin",
-                            PasswordHash = new byte[] { 164, 121, 236, 228, 148, 225, 244, 218, 66, 181, 120, 129, 114, 241, 110, 130, 156, 56, 235, 75, 18, 64, 244, 48, 31, 29, 146, 10, 77, 21, 244, 100, 166, 117, 73, 208, 88, 155, 158, 127, 71, 134, 51, 52, 209, 100, 108, 21, 172, 0, 186, 246, 202, 88, 217, 226, 80, 73, 208, 15, 255, 54, 70, 44 },
-                            PasswordSalt = new byte[] { 254, 239, 97, 135, 16, 44, 210, 99, 148, 163, 25, 178, 104, 23, 68, 66, 189, 242, 108, 141, 231, 56, 71, 89, 51, 61, 180, 71, 53, 153, 244, 80, 253, 223, 73, 112, 24, 53, 134, 23, 245, 121, 119, 27, 198, 96, 0, 243, 232, 161, 205, 187, 66, 173, 222, 86, 150, 139, 100, 190, 249, 167, 71, 182, 162, 227, 6, 186, 162, 92, 140, 249, 74, 17, 179, 13, 162, 192, 216, 230, 201, 233, 243, 100, 20, 253, 88, 207, 161, 208, 232, 184, 188, 162, 64, 82, 224, 6, 245, 210, 155, 133, 123, 93, 123, 39, 49, 65, 183, 89, 43, 153, 37, 221, 40, 246, 229, 54, 171, 159, 60, 23, 203, 232, 46, 11, 192, 173 },
-                            Position = "Administraton",
+                            FirstName = "Jason",
+                            LastName = "Buttler",
+                            PasswordHash = new byte[] { 251, 17, 100, 231, 14, 168, 102, 144, 118, 109, 221, 117, 161, 250, 67, 62, 29, 83, 32, 34, 96, 152, 35, 250, 58, 247, 0, 142, 202, 20, 91, 239, 120, 83, 246, 183, 144, 78, 245, 136, 194, 81, 194, 97, 226, 117, 245, 206, 171, 128, 68, 133, 29, 130, 122, 81, 114, 40, 70, 252, 244, 70, 118, 65 },
+                            PasswordSalt = new byte[] { 214, 34, 179, 106, 255, 229, 43, 67, 58, 27, 143, 254, 146, 61, 116, 51, 172, 10, 24, 59, 187, 21, 188, 84, 4, 15, 143, 29, 145, 178, 65, 215, 202, 145, 161, 0, 215, 136, 104, 56, 195, 35, 182, 32, 54, 224, 211, 107, 65, 175, 53, 47, 27, 64, 234, 67, 185, 89, 110, 196, 123, 30, 40, 187, 60, 50, 86, 207, 8, 15, 215, 77, 108, 80, 129, 105, 149, 39, 34, 154, 208, 199, 196, 8, 104, 100, 42, 47, 190, 68, 154, 252, 40, 159, 139, 198, 142, 24, 242, 27, 167, 236, 170, 9, 10, 193, 112, 44, 231, 177, 75, 139, 131, 223, 82, 127, 112, 87, 183, 172, 213, 2, 238, 221, 180, 189, 102, 169 },
+                            Position = "Manager",
                             RoleId = 1,
-                            UserName = "Admin"
+                            UserName = "manager"
                         });
                 });
 
@@ -294,12 +284,6 @@ namespace AtuApi.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("InStockInWhs")
-                        .HasColumnType("float");
-
-                    b.Property<double>("InStockTotal")
-                        .HasColumnType("float");
-
                     b.Property<string>("ItemCode")
                         .HasColumnType("nvarchar(max)");
 
@@ -312,8 +296,8 @@ namespace AtuApi.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TeritoryId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TeritoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("WareHouse")
                         .HasColumnType("nvarchar(max)");

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using AtuApi.Dtos;
@@ -36,27 +38,35 @@ namespace AtuApi.Controllers
         public IActionResult Authenticate(string userName, string password)
         {
             var user = _unitOfWork.UserRepository.Authenticate(userName, password);
-
             if (user == null)
                 return Unauthorized();
 
-            List<Claim> claims = new List<Claim>();
-            Claim claim = new Claim(ClaimTypes.Name, userName);
-            Claim claim2 = new Claim(ClaimTypes.Role, userName);
+            var role = user.Role;
+            var permissionsRoles = role.PermissionRoles;
 
-            claims.Add(claim);
+            var Subject = new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, role.Id.ToString())
+            });
 
-            var keyBytes = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var key = new SymmetricSecurityKey(keyBytes);
-            var algorithm = SecurityAlgorithms.HmacSha256Signature;
-            var signInCredentials = new SigningCredentials(key, algorithm);
 
-            var token = new JwtSecurityToken("", "", claims, DateTime.Now, DateTime.Now.AddHours(1), signInCredentials);
+            foreach (var permissionsRole in permissionsRoles.Select(x => x.Permissions).Distinct())
+            {
+                Claim claim = new Claim(permissionsRole.PermissionName, "xuevoznaet");
+                Subject.AddClaim(claim);
+            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = Subject,
+                Expires = DateTime.UtcNow.AddYears(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-            var userPrincipal = new ClaimsPrincipal(new[] { new ClaimsIdentity(claims) });
-            HttpContext.SignInAsync(userPrincipal);
             return Ok(new
             {
                 Id = user.Id,
@@ -68,16 +78,24 @@ namespace AtuApi.Controllers
         }
 
         [HttpPost("Register")]
+        [Authorize(Policy = "CanCreateUsers")]
         public IActionResult Register([FromBody]UserDto userDto)
         {
-            // map dto to entity
             var user = _mapper.Map<User>(userDto);
-            var userCreator = _unitOfWork.UserRepository.Get(int.Parse(User.Identity.Name));
+            var userCreator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
             var creatorRole = userCreator.Role.RoleName;
-
 
             Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
             Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
+
+            if (role == null)
+            {
+                return UnprocessableEntity("ასეთი როლი არ არსებობს");
+            }
+            if (branch == null)
+            {
+                branch = _unitOfWork.BranchesRepository.Get(-1);
+            }
 
             user.Role = role;
             user.Branch = branch;
@@ -86,24 +104,23 @@ namespace AtuApi.Controllers
 
             if (creatingRole == "Admin" && creatorRole != "Admin")
             {
-                return BadRequest("არავალიდური ქმედება");
+                return BadRequest("არავალიდური ქმედება (Creating Admin From Non Admin User)");
             }
 
             try
             {
-                // save 
                 var userInDb = _unitOfWork.UserRepository.Create(user, userDto.Password);
                 return Accepted(userInDb.Id);
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
                 return BadRequest(ex.Message);
             }
 
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "CanReadUsers")]
         public IActionResult GetById([FromRoute] int id)
         {
             var user = _unitOfWork.UserRepository.Get(id);
@@ -111,32 +128,59 @@ namespace AtuApi.Controllers
             return Ok(userDto);
         }
 
+        [Authorize(Policy = "CanReadUsers")]
         [HttpGet]
         public IActionResult GetByAll()
         {
+            var xz = User.Identity;
             var user = _unitOfWork.UserRepository.GetAll();
             var userDto = _mapper.Map<IEnumerable<UserDto>>(user);
             return Ok(userDto);
         }
 
+        [Authorize(Policy = "CanModifyUsers")]
         [HttpPut]
         public IActionResult Update([FromBody]UserDto userDto)
         {
             // map dto to entity and set id
+            var userToBeUpdatedInDb = _unitOfWork.UserRepository.GetById(userDto.Id);
+            if (userToBeUpdatedInDb == null)
+            {
+                return BadRequest("მომხმარებელი ვერ მოიძებნა");
+            }
             var userToBeUpdated = _mapper.Map<User>(userDto);
 
-            //userToBeUpdated.Branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
-            //userToBeUpdated.Role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
-            //var userCreator = _unitOfWork.UserRepository.Get(int.Parse(User.Identity.Name));
-            //var creatorRole = userCreator.Role;
-           // var creatingRole = userToBeUpdated.Role;
-           // bool isHimself = userCreator.Id == userToBeUpdated.Id;
+            var userCreator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
+            var creatorRole = userCreator.Role.RoleName;
+            Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
+            Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
+            if (role == null)
+            {
+                return UnprocessableEntity("ასეთი როლი არ არსებობს");
+            }
+            if (branch == null)
+            {
+                branch = _unitOfWork.BranchesRepository.Get(-1);
+            }
+
+            userToBeUpdated.Branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
+            userToBeUpdated.Role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
+
+            var creatingRole = userToBeUpdated.Role.RoleName;
+            bool isHimself = userCreator.Id == userToBeUpdated.Id;
+
+            if (creatingRole == "Admin" && creatorRole != "Admin")
+            {
+                return BadRequest("არავალიდური ქმედება (Updating Admin From Non Admin User)");
+            }
+
+
 
             try
             {
                 // save
                 _unitOfWork.UserRepository.Update(userToBeUpdated, userDto.Password);
-                return Ok();
+                return Accepted();
             }
             catch (Exception ex)
             {

@@ -31,7 +31,7 @@ namespace AtuApi.Repositories
 
             //check if password is correct
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                    return null;
+                return null;
 
             // authentication successful
             return user;
@@ -40,15 +40,16 @@ namespace AtuApi.Repositories
         public User Create(User user, string password)
         {
             if (string.IsNullOrWhiteSpace(password))
-                throw new Exception("Password is required");
+                throw new Exception("პაროლი აუცილებელია");
 
             if (GetByUserName(user.UserName) != null)
-                throw new Exception("Username \"" + user.UserName + "\" is already taken");
+                throw new Exception(@$"მომხმარებელი ""{user.UserName}"" უკვე არსებობს");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-       
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
             UserContext.Users.Add(user);
             UserContext.SaveChanges();
 
@@ -67,52 +68,54 @@ namespace AtuApi.Repositories
 
         public User GetById(int id)
         {
-          //  var user = UserContext.Users.Include(x => x.Roles).ThenInclude(p => p.PermissionRoles).Include(b => b.Branches).FirstOrDefault(u => u.Id == id.ToString());
-            return null;
+            var user = UserContext.Users.Include(x => x.Role).ThenInclude(p => p.PermissionRoles).Include(b => b.Branch).FirstOrDefault(u => u.Id == id);
+            return user;
         }
 
         public User GetByUserName(string username)
         {
-           return UserContext.Users.FirstOrDefault(u=>u.UserName == username);
+            return UserContext.Users.Include(x => x.Role).ThenInclude(y => y.PermissionRoles).ThenInclude(z => z.Permissions).FirstOrDefault(u => u.UserName == username);
         }
 
         public void Update(User userParam, string password = null)
         {
-            
-                User user = UserContext.Users.Find(userParam.Id);
-                if (user == null)
-                    throw new Exception("User not found");
 
-                if (userParam.UserName != user.UserName)
-                {
-                    // username has changed so check if the new username is already taken
-                    if (UserContext.Users.Any(x => x.UserName == userParam.UserName))
-                        throw new Exception("Username " + userParam.UserName + " is already taken");
-                }
+            User user = UserContext.Users.Find(userParam.Id);
+            if (user == null)
+                throw new Exception("მომხმარებელი ვერ მოიძებნა");
 
-                // update user properties
-                user.FirstName = userParam.FirstName;
-                user.LastName = userParam.LastName;
-                user.UserName = userParam.UserName;
-                user.Email = userParam.Email;
-                user.Position = userParam.Position;               
-                user.Branch = userParam.Branch;
-                user.ApprovalTemplateCode = userParam.ApprovalTemplateCode;
+            if (userParam.UserName != user.UserName)
+            {
+                // username has changed so check if the new username is already taken
+                if (UserContext.Users.Any(x => x.UserName == userParam.UserName))
+                    throw new Exception("მომხმარებელი " + userParam.UserName + " უკვე არსებობს");
+            }
+
+            // update user properties
+            user.FirstName = userParam.FirstName;
+            user.LastName = userParam.LastName;
+            user.UserName = userParam.UserName;
+            user.Email = userParam.Email;
+            user.Position = userParam.Position;
+            user.Branch = userParam.Branch;
+            user.ApprovalTemplateCode = userParam.ApprovalTemplateCode;
+            user.Role = userParam.Role;
+
 
 
             // update password if it was entered
             if (!string.IsNullOrWhiteSpace(password))
-                {
-                    byte[] passwordHash, passwordSalt;
-                    CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            {
+                byte[] passwordHash, passwordSalt;
+                CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-                    //user.PasswordHash = passwordHash;
-                  
-                }
+                //user.PasswordHash = passwordHash;
+
+            }
 
             var res = UserContext.Users.Update(user).Entity;
             UserContext.SaveChanges();
-            
+
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

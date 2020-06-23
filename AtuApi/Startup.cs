@@ -1,11 +1,15 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using AtuApi.AutoMapper;
 using AtuApi.Interfaces;
+using AtuApi.Models;
 using AtuApi.Repositories;
 using AutoMapper;
 using DataContextHelper;
 using DataModels.Iterfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -94,8 +98,28 @@ namespace AtuApi
             services.AddSingleton<IDiManager>(x => new DiManager(appSettings.SqlServerHostName, appSettings.SapDbServerType, appSettings.SapUserName, appSettings.SapPassword, appSettings.SapCompanyDb));
 
 
+            var serviceProvider = services.BuildServiceProvider();
+            var dataBaseConector = serviceProvider.GetService<IUnitOfWork>();
+            var permissions = dataBaseConector.PermissionRepository.GetAll();
 
-            var keyBytes = Encoding.ASCII.GetBytes(appSettings.Secret);       
+            services.AddAuthorization(options =>
+            {
+                foreach (var permission in permissions)
+                {
+                    List<string> permissions = new List<string>();
+
+                    foreach (var role in permission.PermissionRoles.Select(r => r.Permissions))
+                    {
+                        permissions.Add(role.PermissionName);
+                    }
+                    options.AddPolicy(permission.PermissionName, policy => policy.RequireClaim(permission.PermissionName));
+                }
+
+            });
+
+            //  test(services);
+
+            var keyBytes = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(opts =>
             {
                 opts.DefaultAuthenticateScheme = "JwtBearer";
@@ -111,8 +135,7 @@ namespace AtuApi
                 };
             });
 
-        }
-
+        } 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
