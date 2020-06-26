@@ -19,5 +19,11 @@ namespace DataModels.Iterfaces
         WareHouse GetWareHouse(string wareHouseCode);
         ItemsWarehouses GetItemTotalInfo(string itemCode);
         ItemsWarehouses GetItemInfoInWareHouse(string itemCode, string wareHouseCode);
+        IEnumerable<UnitOfMeasureGroup> GetUnitOfMeasurGroups();
+        UnitOfMeasureGroup GetUnitOfMeasurGroup(int grpEntry);
+        UnitOfMeasure GetUnitOfMeasure(int absEntry);
+
+
+
     }
 }

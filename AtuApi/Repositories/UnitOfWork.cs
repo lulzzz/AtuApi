@@ -27,6 +27,8 @@ namespace AtuApi.Repositories
             ProjectRepository = new ProjectRepository(_dataContext, diManager);
             WareHouseRepository = new WareHouseRepository(_dataContext, diManager);
             ItemsWarehousesRepository = new ItemsWarehousesRepository(_dataContext, diManager);
+            UnitOfMeasueGroupRepository = new UnitOfMeasueGroupsRepository(_dataContext, diManager);
+            UnitOfMeasueRepository = new UnitOfMeasueRepository(_dataContext, diManager);
 
 
 
@@ -48,6 +50,8 @@ namespace AtuApi.Repositories
         public IProjectRepository ProjectRepository { get; }
         public IItemsWarehousesRepository ItemsWarehousesRepository { get; }
         public IWareHouseRepository WareHouseRepository { get; }
+        public IUnitOfMeasueGroupRepository UnitOfMeasueGroupRepository { get; }
+        public IUnitOfMeasueRepository UnitOfMeasueRepository { get; }
 
 
     }

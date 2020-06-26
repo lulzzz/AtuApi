@@ -22,5 +22,7 @@ namespace AtuApi.Interfaces
         IProjectRepository ProjectRepository { get; }
         IWareHouseRepository WareHouseRepository { get; }
         IItemsWarehousesRepository ItemsWarehousesRepository { get; }
+        IUnitOfMeasueRepository UnitOfMeasueRepository { get; }
+        IUnitOfMeasueGroupRepository UnitOfMeasueGroupRepository { get; }
     }
 }

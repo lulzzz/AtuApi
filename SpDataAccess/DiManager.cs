@@ -63,11 +63,23 @@ namespace SapDataAccess
         {
             Items items = (Items)_company.GetBusinessObject(BoObjectTypes.oItems);
             bool exists = items.GetByKey(itemCode);
+            List<UnitOfMeasure> uoms = new List<UnitOfMeasure>();
+            for (int i = 0; i < items.UnitOfMeasurements.Count; i++)
+            {
+                items.UnitOfMeasurements.SetCurrentLine(i);
+                if (items.UnitOfMeasurements.UoMType != ItemUoMTypeEnum.iutPurchasing)
+                {
+                    continue;
+                }
+                UnitOfMeasure uom = GetUnitOfMeasure(items.UnitOfMeasurements.UoMEntry);
+                uoms.Add(uom);
+            }
             DataModels.Item item = new DataModels.Item
             {
                 ItemCode = items.ItemCode,
                 ItemName = items.ItemName,
                 UnitOfMeasurePurchaseCode = items.PurchaseUnit,
+                UnitOfMeasures = uoms
             };
             return !exists ? null : item;
         }
@@ -334,7 +346,7 @@ namespace SapDataAccess
                 ItemWareHouse itemWareHouse = new ItemWareHouse
                 {
                     IsCommited = WhsInfo.Committed,
-                    OnHand = WhsInfo.InStock, 
+                    OnHand = WhsInfo.InStock,
                     WareHouseCode = WhsInfo.WarehouseCode,
                     Cost = WhsInfo.StandardAveragePrice,
                     Ordered = WhsInfo.Ordered
@@ -392,5 +404,88 @@ namespace SapDataAccess
             ItemsWarehouses.ItemCode = itemCode;
             return ItemsWarehouses;
         }
+        /// <summary>
+        ///  Gets UnitOfMeasureGroups
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<UnitOfMeasureGroup> GetUnitOfMeasurGroups()
+        {
+            var unitOfMeasurementsService = (IUnitOfMeasurementGroupsService)_company.GetCompanyService().GetBusinessService(ServiceTypes.UnitOfMeasurementGroupsService);
+            var uomGroups = unitOfMeasurementsService.GetList();
+            List<UnitOfMeasureGroup> unitOfMeasureGroups = new List<UnitOfMeasureGroup>();
+
+            foreach (UnitOfMeasurementGroupParams uomGroup in uomGroups)
+            {
+                UnitOfMeasurementGroup uom = unitOfMeasurementsService.Get(uomGroup);
+                List<UnitOfMeasure> uoms = new List<UnitOfMeasure>();
+                for (int i = 0; i < uom.GroupDefinitions.Count; i++)
+                {
+                    var altUom = uom.GroupDefinitions.Item(i).AlternateUoM;
+                    var uomModel = GetUnitOfMeasure(altUom);
+                    uoms.Add(uomModel);
+                }
+
+                UnitOfMeasureGroup uomGroupModel = new UnitOfMeasureGroup
+                {
+                    UgpEntry = uom.AbsEntry,
+                    UgpCode = uom.Code,
+                    UgpName = uom.Name,
+                    Uoms = uoms
+                };
+                unitOfMeasureGroups.Add(uomGroupModel);
+            }
+            return unitOfMeasureGroups;
+        }
+        /// <summary>
+        /// Gets UnitOfMeasureGroup By grpEntry
+        /// </summary>
+        /// <param name="grpEntry"></param>
+        /// <returns></returns>
+        public UnitOfMeasureGroup GetUnitOfMeasurGroup(int grpEntry)
+        {
+            var unitOfMeasurementsService = (IUnitOfMeasurementGroupsService)_company.GetCompanyService().GetBusinessService(ServiceTypes.UnitOfMeasurementGroupsService);
+            var unitOfMeasurementGroupParams = (UnitOfMeasurementGroupParams)unitOfMeasurementsService.GetDataInterface(UnitOfMeasurementGroupsServiceDataInterfaces.uomgsUnitOfMeasurementGroupParams);
+            unitOfMeasurementGroupParams.AbsEntry = grpEntry;
+
+            UnitOfMeasurementGroup uom = unitOfMeasurementsService.Get(unitOfMeasurementGroupParams);
+            List<UnitOfMeasure> uoms = new List<UnitOfMeasure>();
+            for (int i = 0; i < uom.GroupDefinitions.Count; i++)
+            {
+                var altUom = uom.GroupDefinitions.Item(i).AlternateUoM;
+                var uomModel = GetUnitOfMeasure(altUom);
+                uoms.Add(uomModel);
+            }
+
+            UnitOfMeasureGroup uomGroupModel = new UnitOfMeasureGroup
+            {
+                UgpEntry = uom.AbsEntry,
+                UgpCode = uom.Code,
+                UgpName = uom.Name,
+                Uoms = uoms
+            };
+
+
+            return uomGroupModel;
+        }
+        /// <summary>
+        /// Gets UnitOfMeasurer By absEntry
+        /// </summary>
+        /// <param name="absEntry"></param>
+        /// <returns></returns>
+        public UnitOfMeasure GetUnitOfMeasure(int absEntry)
+        {
+            var unitOfMeasurementsService = (UnitOfMeasurementsService)_company.GetCompanyService().GetBusinessService(ServiceTypes.UnitOfMeasurementsService);
+            var unitOfMeasurementParams = (UnitOfMeasurementParams)unitOfMeasurementsService.GetDataInterface(UnitOfMeasurementsServiceDataInterfaces.uomsUnitOfMeasurementParams);
+            unitOfMeasurementParams.AbsEntry = absEntry;
+            UnitOfMeasurement uom = unitOfMeasurementsService.Get(unitOfMeasurementParams);
+            UnitOfMeasure unitOfMeasure = new UnitOfMeasure
+            {
+                AbsEntry = uom.AbsEntry,
+                UomCode = uom.Code,
+                UomName = uom.Name,
+            };
+            return unitOfMeasure;
+        }
+
     }
 }

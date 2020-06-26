@@ -20,7 +20,6 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Policy = "CanReadAccidents")]
         public IActionResult GetItems()
         {
             var xz = User.Identity.Name;
