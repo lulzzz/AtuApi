@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +49,11 @@ namespace AtuApi
                         .AllowAnyHeader());
             });
 
-            services.AddControllers();
+            services.AddControllers(setupActin =>
+            {
+                setupActin.ReturnHttpNotAcceptable = true;
+                setupActin.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+            });
             IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             AppSettings appSettings = appSettingsSection.Get<AppSettings>();
@@ -135,7 +140,7 @@ namespace AtuApi
                 };
             });
 
-        } 
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
