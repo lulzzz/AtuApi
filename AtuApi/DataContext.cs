@@ -43,6 +43,12 @@ namespace DataContextHelper
 
 
             modelBuilder.Entity<ApprovalTemplate>()
+        .HasMany<User>(g => g.Users)
+        .WithOne(s => s.ApprovalTemplate)
+        .HasForeignKey(s => s.ApprovalTemplateCode);
+
+
+            modelBuilder.Entity<ApprovalTemplate>()
                 .HasKey(x => x.TemplateCode);
 
             modelBuilder.Entity<ApprovalTemplate>()
@@ -96,7 +102,7 @@ namespace DataContextHelper
             modelBuilder.Entity<Branch>().HasData(
                 new Branch { Id = -1, BranchName = "Default" });
 
-            IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");            
+            IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
             AppSettings appSettings = appSettingsSection.Get<AppSettings>();
 
             byte[] passwordHash, passwordSalt;

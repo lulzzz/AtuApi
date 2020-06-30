@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataModels.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace AtuApi.Models
         public int BranchId { get; set; }
         public int RoleId { get; set; }
         public int ApprovalTemplateCode { get; set; }
+        public ApprovalTemplate ApprovalTemplate { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }

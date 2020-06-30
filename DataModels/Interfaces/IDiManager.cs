@@ -22,8 +22,5 @@ namespace DataModels.Iterfaces
         IEnumerable<UnitOfMeasureGroup> GetUnitOfMeasurGroups();
         UnitOfMeasureGroup GetUnitOfMeasurGroup(int grpEntry);
         UnitOfMeasure GetUnitOfMeasure(int absEntry);
-
-
-
     }
 }
