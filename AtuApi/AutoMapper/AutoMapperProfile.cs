@@ -1,13 +1,13 @@
-﻿using AtuApi.Dtos;
-using AtuApi.Interfaces;
+﻿ 
 using AtuApi.Models;
 using AutoMapper;
+using DataModels.Dtos;
 using DataModels.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+using DataModels.RequestDtos;
+using DataModels.ResponseDtos;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace AtuApi.AutoMapper
 {
@@ -15,8 +15,16 @@ namespace AtuApi.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserDto>();
-            CreateMap<UserDto, User>();
+            CreateMap<User, UserDtoRequest>();
+            CreateMap<UserDtoRequest, User>();
+
+            CreateMap<User, UserDtoResponse>().ForMember(
+                    des => des.Permissions,
+                    opts => opts.MapFrom(
+                        src => src.Role.PermissionRoles.Select(x=>x.Permissions)));
+            CreateMap<UserDtoResponse, User>();
+
+
 
             CreateMap<PurchaseRequest, PurchaseRequestDto>();
 

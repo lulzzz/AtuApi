@@ -5,10 +5,13 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using AtuApi.Dtos;
 using AtuApi.Interfaces;
 using AtuApi.Models;
 using AutoMapper;
+using DataModels.Dtos;
+using DataModels.Models;
+using DataModels.RequestDtos;
+using DataModels.ResponseDtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +44,8 @@ namespace AtuApi.Controllers
             if (user == null)
                 return Unauthorized();
 
+            var userDto = _mapper.Map<UserDtoResponse>(user);
+
             var role = user.Role;
             var permissionsRoles = role.PermissionRoles;
 
@@ -69,17 +74,14 @@ namespace AtuApi.Controllers
             var tokenString = tokenHandler.WriteToken(token);
             return Ok(new
             {
-                Id = user.Id,
-                Username = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                userDto,
                 Token = tokenString
             });
         }
 
         [HttpPost("Register")]
         [Authorize(Policy = "CanCreateUsers")]
-        public IActionResult Register([FromBody]UserDto userDto)
+        public IActionResult Register([FromBody]UserDtoRequest userDto)
         {
             var user = _mapper.Map<User>(userDto);
             var userCreator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
@@ -87,6 +89,7 @@ namespace AtuApi.Controllers
 
             Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
             Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
+            ApprovalTemplate approvalTemplate = _unitOfWork.ApprovalTemplateRepository.Get(userDto.ApprovalTemplateCode);
 
             if (role == null)
             {
@@ -96,9 +99,14 @@ namespace AtuApi.Controllers
             {
                 branch = _unitOfWork.BranchesRepository.Get(-1);
             }
+            if (approvalTemplate == null)
+            {
+                user.ApprovalTemplateCode = -1;
+            }
 
             user.Role = role;
             user.Branch = branch;
+            user.ApprovalTemplate = approvalTemplate;
 
             var creatingRole = user.Role.RoleName;
 
@@ -110,7 +118,8 @@ namespace AtuApi.Controllers
             try
             {
                 var userInDb = _unitOfWork.UserRepository.Create(user, userDto.Password);
-                return Accepted(userInDb.Id);
+                return CreatedAtAction(nameof(GetById), new { id = userInDb.Id }, userInDb.Id);
+                 
             }
             catch (Exception ex)
             {
@@ -123,8 +132,8 @@ namespace AtuApi.Controllers
         [Authorize(Policy = "CanReadUsers")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var user = _unitOfWork.UserRepository.Get(id);
-            var userDto = _mapper.Map<UserDto>(user);
+            var user = _unitOfWork.UserRepository.GetById(id);
+            var userDto = _mapper.Map<UserDtoResponse>(user);
             return Ok(userDto);
         }
 
@@ -134,7 +143,7 @@ namespace AtuApi.Controllers
         {
             var xz = User.Identity;
             var users = _unitOfWork.UserRepository.GetAll();
-            var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
+            var usersDto = _mapper.Map<IEnumerable<UserDtoResponse>>(users);
             Request.HttpContext.Response.Headers.Add("Total-Count", users.Count().ToString());
 
             return Ok(usersDto);
@@ -142,7 +151,7 @@ namespace AtuApi.Controllers
 
         [Authorize(Policy = "CanModifyUsers")]
         [HttpPut]
-        public IActionResult Update([FromBody]UserDto userDto)
+        public IActionResult Update([FromBody]UserDtoRequest userDto)
         {
             // map dto to entity and set id
             var userToBeUpdatedInDb = _unitOfWork.UserRepository.GetById(userDto.Id);
@@ -156,6 +165,7 @@ namespace AtuApi.Controllers
             var creatorRole = userCreator.Role.RoleName;
             Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
             Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
+            ApprovalTemplate temlate = _unitOfWork.ApprovalTemplateRepository.Get(userDto.ApprovalTemplateCode);
             if (role == null)
             {
                 return UnprocessableEntity("ასეთი როლი არ არსებობს");
@@ -164,9 +174,11 @@ namespace AtuApi.Controllers
             {
                 branch = _unitOfWork.BranchesRepository.Get(-1);
             }
+            
 
-            userToBeUpdated.Branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
-            userToBeUpdated.Role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
+            userToBeUpdated.Branch = branch;
+            userToBeUpdated.Role = role;
+            userToBeUpdated.ApprovalTemplate = temlate;
 
             var creatingRole = userToBeUpdated.Role.RoleName;
             bool isHimself = userCreator.Id == userToBeUpdated.Id;
@@ -175,8 +187,6 @@ namespace AtuApi.Controllers
             {
                 return BadRequest("არავალიდური ქმედება (Updating Admin From Non Admin User)");
             }
-
-
 
             try
             {

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200630081657_first")]
-    partial class first
+    [Migration("20200630131051_xz")]
+    partial class xz
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -149,6 +149,9 @@ namespace AtuApi.Migrations
                     b.Property<int>("ApprovalTemplateCode")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ApprovalTemplateTemplateCode")
+                        .HasColumnType("int");
+
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
@@ -157,6 +160,11 @@ namespace AtuApi.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -178,6 +186,8 @@ namespace AtuApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApprovalTemplateTemplateCode");
+
                     b.HasIndex("BranchId");
 
                     b.HasIndex("RoleId");
@@ -192,9 +202,10 @@ namespace AtuApi.Migrations
                             BranchId = -1,
                             Email = "Example@gamil.com",
                             FirstName = "Jason",
+                            IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 145, 95, 202, 103, 16, 11, 73, 186, 39, 73, 231, 17, 196, 252, 115, 204, 147, 105, 127, 223, 216, 47, 137, 12, 11, 15, 43, 198, 63, 106, 127, 12, 3, 34, 66, 220, 202, 105, 132, 89, 35, 207, 231, 114, 196, 217, 229, 40, 20, 166, 163, 159, 148, 146, 62, 5, 14, 50, 145, 252, 6, 112, 24, 136 },
-                            PasswordSalt = new byte[] { 233, 49, 79, 225, 39, 251, 228, 142, 168, 151, 225, 117, 181, 209, 220, 126, 131, 143, 133, 89, 200, 5, 104, 14, 144, 40, 88, 97, 206, 127, 233, 93, 7, 89, 128, 30, 116, 103, 81, 28, 240, 95, 130, 71, 33, 208, 146, 10, 149, 65, 156, 218, 42, 165, 153, 178, 118, 253, 193, 30, 55, 42, 21, 35, 32, 226, 38, 234, 157, 38, 19, 155, 215, 207, 47, 134, 86, 76, 19, 156, 168, 128, 69, 41, 118, 199, 59, 44, 52, 145, 65, 158, 126, 195, 29, 197, 88, 187, 202, 160, 164, 32, 241, 8, 179, 90, 154, 6, 29, 36, 142, 201, 235, 161, 75, 65, 164, 210, 148, 170, 18, 237, 172, 43, 197, 164, 151, 88 },
+                            PasswordHash = new byte[] { 220, 153, 74, 111, 126, 251, 105, 68, 228, 189, 147, 41, 7, 87, 68, 240, 25, 20, 240, 117, 242, 7, 23, 82, 154, 141, 205, 211, 231, 48, 151, 195, 243, 144, 37, 89, 43, 118, 234, 108, 41, 229, 51, 83, 223, 63, 7, 163, 241, 24, 82, 32, 190, 22, 84, 115, 135, 236, 83, 81, 85, 253, 112, 60 },
+                            PasswordSalt = new byte[] { 29, 226, 176, 236, 127, 239, 225, 184, 8, 192, 151, 180, 82, 149, 216, 61, 219, 49, 114, 210, 237, 98, 3, 47, 165, 129, 14, 86, 198, 9, 215, 211, 157, 91, 172, 19, 227, 244, 108, 161, 224, 6, 236, 127, 199, 76, 200, 166, 26, 43, 110, 166, 40, 189, 96, 90, 28, 149, 110, 58, 158, 67, 157, 143, 138, 143, 109, 59, 108, 34, 41, 178, 238, 212, 149, 81, 231, 52, 247, 157, 243, 141, 196, 59, 80, 252, 237, 246, 219, 98, 224, 146, 167, 174, 193, 92, 79, 132, 253, 37, 111, 156, 52, 128, 88, 157, 0, 14, 215, 42, 158, 70, 139, 159, 195, 243, 116, 8, 59, 219, 19, 108, 30, 38, 49, 156, 159, 25 },
                             Position = "Manager",
                             RoleId = 1,
                             UserName = "manager"
@@ -324,6 +335,10 @@ namespace AtuApi.Migrations
 
             modelBuilder.Entity("AtuApi.Models.User", b =>
                 {
+                    b.HasOne("DataModels.Models.ApprovalTemplate", "ApprovalTemplate")
+                        .WithMany("Users")
+                        .HasForeignKey("ApprovalTemplateTemplateCode");
+
                     b.HasOne("AtuApi.Models.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId")

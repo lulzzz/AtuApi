@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AtuApi.Dtos
+namespace DataModels.Dtos
 {
     public class RoleDto
     {

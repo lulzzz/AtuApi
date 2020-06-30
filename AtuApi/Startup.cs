@@ -40,7 +40,7 @@ namespace AtuApi
         {
 
             services.AddCors(); // Make sure you call this previous to AddMvc
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddMvc()/*.AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).SetCompatibilityVersion(CompatibilityVersion.Latest)*/;
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
@@ -54,6 +54,7 @@ namespace AtuApi
                 setupActin.ReturnHttpNotAcceptable = true;
                 setupActin.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
             });
+
             IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             AppSettings appSettings = appSettingsSection.Get<AppSettings>();
@@ -111,12 +112,7 @@ namespace AtuApi
             {
                 foreach (var permission in permissions)
                 {
-                    List<string> permissions = new List<string>();
 
-                    foreach (var role in permission.PermissionRoles.Select(r => r.Permissions))
-                    {
-                        permissions.Add(role.PermissionName);
-                    }
                     options.AddPolicy(permission.PermissionName, policy => policy.RequireClaim(permission.PermissionName));
                 }
 

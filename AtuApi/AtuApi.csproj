@@ -94,11 +94,18 @@
     <Compile Remove="Migrations\20200528080714_AddedEpprovalEmployeesxz.Designer.cs" />
     <Compile Remove="Migrations\20200602142847_aszxxx.cs" />
     <Compile Remove="Migrations\20200602142847_aszxxx.Designer.cs" />
+    <Compile Remove="Migrations\20200630130142_addedIsActiveToUSers.cs" />
+    <Compile Remove="Migrations\20200630130142_addedIsActiveToUSers.Designer.cs" />
+    <Compile Remove="Migrations\20200630130705_xz.cs" />
+    <Compile Remove="Migrations\20200630130705_xz.Designer.cs" />
+    <Compile Remove="Migrations\20200630130843_xz.cs" />
+    <Compile Remove="Migrations\20200630130843_xz.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">

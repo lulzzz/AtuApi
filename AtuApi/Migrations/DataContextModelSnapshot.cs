@@ -147,6 +147,9 @@ namespace AtuApi.Migrations
                     b.Property<int>("ApprovalTemplateCode")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ApprovalTemplateTemplateCode")
+                        .HasColumnType("int");
+
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
@@ -155,6 +158,11 @@ namespace AtuApi.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -176,7 +184,7 @@ namespace AtuApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApprovalTemplateCode");
+                    b.HasIndex("ApprovalTemplateTemplateCode");
 
                     b.HasIndex("BranchId");
 
@@ -192,9 +200,10 @@ namespace AtuApi.Migrations
                             BranchId = -1,
                             Email = "Example@gamil.com",
                             FirstName = "Jason",
+                            IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 177, 186, 166, 162, 37, 170, 149, 12, 212, 20, 64, 112, 90, 111, 97, 81, 139, 145, 223, 22, 110, 5, 39, 105, 187, 10, 217, 82, 30, 57, 226, 46, 189, 221, 35, 209, 214, 154, 155, 89, 2, 47, 214, 228, 119, 140, 172, 197, 241, 216, 231, 144, 89, 220, 235, 111, 69, 120, 124, 234, 62, 54, 204, 140 },
-                            PasswordSalt = new byte[] { 28, 191, 38, 236, 86, 31, 73, 48, 141, 180, 22, 185, 11, 181, 94, 173, 128, 28, 232, 26, 31, 213, 68, 128, 157, 231, 0, 187, 121, 241, 16, 77, 121, 162, 67, 167, 203, 168, 122, 51, 35, 41, 68, 239, 177, 215, 11, 212, 58, 149, 77, 25, 37, 179, 239, 211, 163, 30, 252, 86, 227, 125, 216, 129, 187, 126, 234, 25, 213, 25, 123, 39, 35, 87, 175, 203, 181, 93, 91, 95, 110, 72, 12, 224, 19, 17, 16, 139, 176, 61, 94, 146, 35, 156, 190, 195, 241, 110, 200, 253, 90, 142, 161, 229, 46, 25, 169, 49, 28, 102, 237, 96, 149, 204, 102, 251, 128, 168, 134, 160, 151, 189, 170, 218, 177, 138, 214, 148 },
+                            PasswordHash = new byte[] { 220, 153, 74, 111, 126, 251, 105, 68, 228, 189, 147, 41, 7, 87, 68, 240, 25, 20, 240, 117, 242, 7, 23, 82, 154, 141, 205, 211, 231, 48, 151, 195, 243, 144, 37, 89, 43, 118, 234, 108, 41, 229, 51, 83, 223, 63, 7, 163, 241, 24, 82, 32, 190, 22, 84, 115, 135, 236, 83, 81, 85, 253, 112, 60 },
+                            PasswordSalt = new byte[] { 29, 226, 176, 236, 127, 239, 225, 184, 8, 192, 151, 180, 82, 149, 216, 61, 219, 49, 114, 210, 237, 98, 3, 47, 165, 129, 14, 86, 198, 9, 215, 211, 157, 91, 172, 19, 227, 244, 108, 161, 224, 6, 236, 127, 199, 76, 200, 166, 26, 43, 110, 166, 40, 189, 96, 90, 28, 149, 110, 58, 158, 67, 157, 143, 138, 143, 109, 59, 108, 34, 41, 178, 238, 212, 149, 81, 231, 52, 247, 157, 243, 141, 196, 59, 80, 252, 237, 246, 219, 98, 224, 146, 167, 174, 193, 92, 79, 132, 253, 37, 111, 156, 52, 128, 88, 157, 0, 14, 215, 42, 158, 70, 139, 159, 195, 243, 116, 8, 59, 219, 19, 108, 30, 38, 49, 156, 159, 25 },
                             Position = "Manager",
                             RoleId = 1,
                             UserName = "manager"
@@ -326,9 +335,7 @@ namespace AtuApi.Migrations
                 {
                     b.HasOne("DataModels.Models.ApprovalTemplate", "ApprovalTemplate")
                         .WithMany("Users")
-                        .HasForeignKey("ApprovalTemplateCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApprovalTemplateTemplateCode");
 
                     b.HasOne("AtuApi.Models.Branch", "Branch")
                         .WithMany()

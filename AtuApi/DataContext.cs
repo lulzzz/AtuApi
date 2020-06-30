@@ -42,10 +42,10 @@ namespace DataContextHelper
                 .HasForeignKey(m => m.RoleId);
 
 
-            modelBuilder.Entity<ApprovalTemplate>()
-        .HasMany<User>(g => g.Users)
-        .WithOne(s => s.ApprovalTemplate)
-        .HasForeignKey(s => s.ApprovalTemplateCode);
+        //    modelBuilder.Entity<ApprovalTemplate>()
+        //.HasMany<User>(g => g.Users)
+        //.WithOne(s => s.ApprovalTemplate)
+        //.HasForeignKey(s => s.ApprovalTemplateCode);
 
 
             modelBuilder.Entity<ApprovalTemplate>()
@@ -60,7 +60,8 @@ namespace DataContextHelper
             modelBuilder.Entity<ApprovalsEmployees>()
              .HasKey(x => new { x.ApprovalCode, x.EmployeeCode });
 
-
+            modelBuilder.Entity<User>().Property(i => i.IsActive).HasDefaultValue(true);
+  
 
 
             modelBuilder.Entity<ApprovalsEmployees>()
@@ -80,6 +81,7 @@ namespace DataContextHelper
        .HasKey(x => new { x.PurchaseRequestDocNum, x.LineNum });
 
             modelBuilder.Entity<PurchaseRequestRow>().Property(x => x.LineNum).ValueGeneratedOnAdd();
+
             #region InitialData
 
             modelBuilder.Entity<Permission>().HasData(

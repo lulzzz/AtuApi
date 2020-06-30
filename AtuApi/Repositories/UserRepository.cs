@@ -37,6 +37,13 @@ namespace AtuApi.Repositories
             return user;
         }
 
+        public new IEnumerable<User> GetAll()
+        {
+            var users = UserContext.Users.Include(x => x.Role).ThenInclude(p => p.PermissionRoles).ThenInclude(p => p.Permissions).Include(b => b.Branch).ToList();
+            return users;
+        }
+        
+
         public User Create(User user, string password)
         {
             if (string.IsNullOrWhiteSpace(password))
@@ -68,7 +75,7 @@ namespace AtuApi.Repositories
 
         public User GetById(int id)
         {
-            var user = UserContext.Users.Include(x => x.Role).ThenInclude(p => p.PermissionRoles).Include(b => b.Branch).FirstOrDefault(u => u.Id == id);
+            var user = UserContext.Users.Include(x => x.Role).ThenInclude(p => p.PermissionRoles).ThenInclude(p=>p.Permissions).Include(b => b.Branch).FirstOrDefault(u => u.Id == id);
             return user;
         }
 
@@ -100,6 +107,7 @@ namespace AtuApi.Repositories
             user.Branch = userParam.Branch;
             user.ApprovalTemplate = userParam.ApprovalTemplate;
             user.Role = userParam.Role;
+            user.IsActive = userParam.IsActive;
 
 
 

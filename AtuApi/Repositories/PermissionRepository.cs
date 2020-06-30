@@ -18,7 +18,7 @@ namespace AtuApi.Repositories
 
         public new IEnumerable<Permission> GetAll()
         {
-            return PermissionsContext.Permissions.Include(x => x.PermissionRoles).ThenInclude(y=>y.Roles).ToList();
+            return PermissionsContext.Permissions.ToList();
         }
 
         private DataContext PermissionsContext => Context as DataContext;

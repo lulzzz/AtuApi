@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AtuApi.Dtos;
+ 
 using AtuApi.Interfaces;
 using AtuApi.Models;
 using AutoMapper;
+using DataModels.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

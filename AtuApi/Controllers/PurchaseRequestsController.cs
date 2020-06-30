@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AtuApi.Dtos;
+ 
 using AtuApi.Interfaces;
 using AutoMapper;
+using DataModels.Dtos;
 using DataModels.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
