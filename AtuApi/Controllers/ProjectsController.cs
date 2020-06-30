@@ -22,7 +22,9 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetProjects()
         {
-            return Ok(_unitOfWork.ProjectRepository.GetProjects());
+            var projects = _unitOfWork.ProjectRepository.GetProjects();
+            Request.HttpContext.Response.Headers.Add("Total-Count", projects.Count().ToString());
+            return base.Ok(projects);
         }
         [HttpGet("{projectCode}")]
         public IActionResult GetTerritories(string projectCode)

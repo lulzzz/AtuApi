@@ -133,9 +133,11 @@ namespace AtuApi.Controllers
         public IActionResult GetByAll()
         {
             var xz = User.Identity;
-            var user = _unitOfWork.UserRepository.GetAll();
-            var userDto = _mapper.Map<IEnumerable<UserDto>>(user);
-            return Ok(userDto);
+            var users = _unitOfWork.UserRepository.GetAll();
+            var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
+            Request.HttpContext.Response.Headers.Add("Total-Count", users.Count().ToString());
+
+            return Ok(usersDto);
         }
 
         [Authorize(Policy = "CanModifyUsers")]

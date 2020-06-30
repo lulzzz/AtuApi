@@ -22,8 +22,9 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetItems()
         {
-            var xz = User.Identity.Name;
-            return Ok(_unitOfWork.ItemRepository.GetItems());
+            var items = _unitOfWork.ItemRepository.GetItems();
+            Request.HttpContext.Response.Headers.Add("Total-Count", items.Count().ToString());
+            return Ok(items);
         }
 
         [HttpGet("{itemCode}")]

@@ -67,9 +67,9 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetPurchaseReques()
         {
-            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll();
-            var xz = purchaseReqests.ToList();
+            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll();     
             IEnumerable<PurchaseRequestDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestDto>>(purchaseReqests);
+            Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());
             return Ok(PurchaseRequetDtos);
         }
 

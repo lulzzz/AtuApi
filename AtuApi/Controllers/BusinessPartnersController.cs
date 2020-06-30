@@ -21,7 +21,9 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetBusinessPartners()
         {
-            return Ok(_unitOfWork.BusinessPartnerRepository.GetBusinessPartners());
+            var businessPartners = _unitOfWork.BusinessPartnerRepository.GetBusinessPartners();
+            Request.HttpContext.Response.Headers.Add("Total-Count", businessPartners.Count().ToString());
+            return Ok();
         }
 
         [HttpGet("{cardCode}")]

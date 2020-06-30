@@ -36,6 +36,7 @@ namespace AtuApi.Controllers
         {
             var approvalTemplates = _unitOfWork.ApprovalTemplateRepository.GetAll();
             var approvalTemplateDtos = _mapper.Map<IEnumerable<ApprovalTemplateDto>>(approvalTemplates);
+            Request.HttpContext.Response.Headers.Add("Total-Count", approvalTemplates.Count().ToString());
             return Ok(approvalTemplateDtos);
         }
 

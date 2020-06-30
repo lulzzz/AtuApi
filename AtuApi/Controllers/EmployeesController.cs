@@ -21,7 +21,9 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            return Ok(_unitOfWork.EmployeeRepository.GetEmployees());
+            var employees = _unitOfWork.EmployeeRepository.GetEmployees();
+            Request.HttpContext.Response.Headers.Add("Total-Count", employees.Count().ToString());
+            return base.Ok(employees);
         }
         [HttpGet("{employeeCode}")]
         public IActionResult GetEmployee(int employeeCode)

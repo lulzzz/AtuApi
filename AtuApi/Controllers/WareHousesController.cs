@@ -22,7 +22,9 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetWareHouses()
         {
-            return Ok(_unitOfWork.WareHouseRepository.GetWareHouses());
+            var wareHouses = _unitOfWork.WareHouseRepository.GetWareHouses();
+            Request.HttpContext.Response.Headers.Add("Total-Count", wareHouses.Count().ToString());
+            return base.Ok(wareHouses);
         }
         [HttpGet("{wareHouseCode}")]
         public IActionResult GetTerritories(string wareHouseCode)

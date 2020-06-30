@@ -37,7 +37,9 @@ namespace AtuApi.Controllers
         [ActionName("GetUnitOfMeasureGroups")]
         public IActionResult GetUnitOfMeasureGroups()
         {
-            return Ok(_unitOfWork.UnitOfMeasueGroupRepository.GetUnitOfMeasurGroups());
+            IEnumerable<DataModels.Models.UnitOfMeasureGroup> uoms = _unitOfWork.UnitOfMeasueGroupRepository.GetUnitOfMeasurGroups();
+            Request.HttpContext.Response.Headers.Add("Total-Count", uoms.Count().ToString());
+            return base.Ok(uoms);
         }
 
     }

@@ -122,7 +122,7 @@ namespace AtuApi
 
             });
 
-            //  test(services);
+            //test(services);
 
             var keyBytes = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(opts =>

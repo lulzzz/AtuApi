@@ -38,9 +38,24 @@ namespace AtuApi.AutoMapper
                 .ForMember(dest => dest.TemplateCode, opts => opts.Ignore());
             CreateMap<ApprovalTemplate, ApprovalTemplateDto>()
                 .ForMember(
-                    des => des.ApprovalEmployees, 
+                    des => des.ApprovalEmployees,
                     opts => opts.MapFrom(
-                        src => src.ApprovalsEmployees.Select(appr => appr.EmployeeCode).ToList())); ;
+                        src => src.ApprovalsEmployees.Select(appr => appr.EmployeeCode).ToList()));
+
+            CreateMap<Permission, PermissionDto>();
+            CreateMap<PermissionDto, Permission>();
+
+            CreateMap<Role, RoleDto>().ForMember(
+                des => des.Permissions,
+                opt => opt.MapFrom(
+                    src => src.PermissionRoles.Select(x => x.Permissions)));
+
+            CreateMap<RoleDto, Role>();
+
+
+
+
+
         }
     }
 }

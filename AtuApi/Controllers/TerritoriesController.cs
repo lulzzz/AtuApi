@@ -22,7 +22,9 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetTerritories()
         {
-            return Ok(_unitOfWork.TerritoryRepository.GetTerritories());
+            IEnumerable<DataModels.Models.Territory> territories = _unitOfWork.TerritoryRepository.GetTerritories();
+            Request.HttpContext.Response.Headers.Add("Total-Count", territories.Count().ToString());
+            return base.Ok(territories);
         }
 
         [HttpGet("{territoryId}")]
