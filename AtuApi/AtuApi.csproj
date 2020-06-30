@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\**" />
+    <Content Remove="Dtos\**" />
+    <EmbeddedResource Remove="Dtos\**" />
+    <None Remove="Dtos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20200508101749_Fisrt.cs" />
     <Compile Remove="Migrations\20200508101749_Fisrt.Designer.cs" />
     <Compile Remove="Migrations\20200508101932_First.cs" />
