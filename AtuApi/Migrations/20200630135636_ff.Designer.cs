@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200630131051_xz")]
-    partial class xz
+    [Migration("20200630135636_ff")]
+    partial class ff
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,17 +66,97 @@ namespace AtuApi.Migrations
                         new
                         {
                             Id = 2,
-                            PermissionName = "CanDeleteUsers"
-                        },
-                        new
-                        {
-                            Id = 3,
                             PermissionName = "CanReadUsers"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = 3,
                             PermissionName = "CanModifyUsers"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            PermissionName = "CanReadApprovalTemplates"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            PermissionName = "CanCreateApprovalTemplates"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            PermissionName = "CanModifyApprovalTemplates"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            PermissionName = "CanReadBusinessPartners"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            PermissionName = "CanReadEmployees"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            PermissionName = "CanReadItems"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            PermissionName = "CanReadItemsWarehouse"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            PermissionName = "CanReadProjects"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            PermissionName = "CanCreatePurchaseRequests"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            PermissionName = "CanModifyPurchaseRequests"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            PermissionName = "CanReadPurchaseRequests"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            PermissionName = "CanCreateRoles"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            PermissionName = "CanModifyRoles"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            PermissionName = "CanReadRoles"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            PermissionName = "CanReadTerritories"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            PermissionName = "CanReadUnitOfMeasures"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            PermissionName = "CanReadUnitOfMeasureGroups"
                         });
                 });
 
@@ -93,28 +173,6 @@ namespace AtuApi.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("PermissionRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            PermissionId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            PermissionId = 2,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            PermissionId = 3,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            PermissionId = 4,
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("AtuApi.Models.Role", b =>
@@ -204,8 +262,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 220, 153, 74, 111, 126, 251, 105, 68, 228, 189, 147, 41, 7, 87, 68, 240, 25, 20, 240, 117, 242, 7, 23, 82, 154, 141, 205, 211, 231, 48, 151, 195, 243, 144, 37, 89, 43, 118, 234, 108, 41, 229, 51, 83, 223, 63, 7, 163, 241, 24, 82, 32, 190, 22, 84, 115, 135, 236, 83, 81, 85, 253, 112, 60 },
-                            PasswordSalt = new byte[] { 29, 226, 176, 236, 127, 239, 225, 184, 8, 192, 151, 180, 82, 149, 216, 61, 219, 49, 114, 210, 237, 98, 3, 47, 165, 129, 14, 86, 198, 9, 215, 211, 157, 91, 172, 19, 227, 244, 108, 161, 224, 6, 236, 127, 199, 76, 200, 166, 26, 43, 110, 166, 40, 189, 96, 90, 28, 149, 110, 58, 158, 67, 157, 143, 138, 143, 109, 59, 108, 34, 41, 178, 238, 212, 149, 81, 231, 52, 247, 157, 243, 141, 196, 59, 80, 252, 237, 246, 219, 98, 224, 146, 167, 174, 193, 92, 79, 132, 253, 37, 111, 156, 52, 128, 88, 157, 0, 14, 215, 42, 158, 70, 139, 159, 195, 243, 116, 8, 59, 219, 19, 108, 30, 38, 49, 156, 159, 25 },
+                            PasswordHash = new byte[] { 179, 162, 91, 102, 119, 11, 187, 60, 18, 169, 214, 253, 53, 52, 245, 123, 86, 30, 242, 152, 186, 171, 6, 149, 248, 21, 193, 80, 238, 1, 164, 52, 120, 181, 235, 123, 36, 163, 81, 231, 150, 55, 30, 236, 177, 226, 242, 53, 12, 195, 14, 83, 242, 195, 211, 136, 16, 7, 125, 207, 241, 221, 25, 65 },
+                            PasswordSalt = new byte[] { 48, 133, 112, 4, 74, 6, 177, 89, 241, 108, 75, 161, 140, 113, 54, 248, 245, 248, 94, 28, 104, 15, 148, 73, 9, 96, 52, 23, 77, 53, 147, 135, 161, 137, 180, 249, 238, 21, 174, 135, 44, 172, 218, 1, 84, 95, 236, 25, 117, 55, 174, 46, 20, 137, 139, 176, 161, 20, 100, 69, 117, 55, 45, 78, 53, 175, 17, 126, 40, 110, 78, 34, 32, 148, 211, 94, 195, 92, 89, 75, 230, 44, 8, 214, 5, 69, 217, 27, 131, 21, 129, 23, 101, 135, 27, 96, 50, 216, 222, 5, 19, 81, 27, 2, 245, 115, 193, 214, 105, 20, 84, 113, 66, 38, 226, 93, 124, 122, 136, 70, 38, 0, 199, 33, 69, 178, 112, 216 },
                             Position = "Manager",
                             RoleId = 1,
                             UserName = "manager"

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace AtuApi.Repositories
 {
-    public class ItemsWarehousesRepository : Repository<ItemsWarehouses>, IItemsWarehousesRepository
+    public class ItemsWarehouseRepository : Repository<ItemsWarehouses>, IItemsWarehousesRepository
     {
         IDiManager _diManager;
-        public ItemsWarehousesRepository(DataContext context, IDiManager diManager) : base(context)
+        public ItemsWarehouseRepository(DataContext context, IDiManager diManager) : base(context)
         {
             _diManager = diManager;
         }

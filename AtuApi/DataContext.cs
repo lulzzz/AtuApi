@@ -5,6 +5,7 @@ using DataModels.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace DataContextHelper
 {
@@ -41,13 +42,6 @@ namespace DataContextHelper
                 .WithMany(pe => pe.PermissionRoles)
                 .HasForeignKey(m => m.RoleId);
 
-
-        //    modelBuilder.Entity<ApprovalTemplate>()
-        //.HasMany<User>(g => g.Users)
-        //.WithOne(s => s.ApprovalTemplate)
-        //.HasForeignKey(s => s.ApprovalTemplateCode);
-
-
             modelBuilder.Entity<ApprovalTemplate>()
                 .HasKey(x => x.TemplateCode);
 
@@ -61,7 +55,7 @@ namespace DataContextHelper
              .HasKey(x => new { x.ApprovalCode, x.EmployeeCode });
 
             modelBuilder.Entity<User>().Property(i => i.IsActive).HasDefaultValue(true);
-  
+
 
 
             modelBuilder.Entity<ApprovalsEmployees>()
@@ -84,28 +78,31 @@ namespace DataContextHelper
 
             #region InitialData
 
-            modelBuilder.Entity<Permission>().HasData(
-          new Permission { PermissionName = "CanCreateUsers", Id = 1 },
-          new Permission { PermissionName = "CanDeleteUsers", Id = 2 },
-          new Permission { PermissionName = "CanReadUsers", Id = 3 },
-          new Permission { PermissionName = "CanModifyUsers", Id = 4 }
-          );
+            IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
+            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
+            var premissions = appSettings.Permissions;
+            List<Permission> permissionslist = new List<Permission>();
+            for (int i = 1; i < premissions.Count; i++)
+            {
+                permissionslist.Add(new Permission { PermissionName = premissions[i - 1], Id = i });
+            }
+            modelBuilder.Entity<Permission>().HasData(permissionslist);
+
             modelBuilder.Entity<Role>().HasData(
          new Role { RoleName = "Admin", Id = 1 });
+
 
             modelBuilder.Entity<PermissionRoles>().HasData(
                new PermissionRoles { PermissionId = 1, RoleId = 1 },
                new PermissionRoles { PermissionId = 2, RoleId = 1 },
-               new PermissionRoles { PermissionId = 3, RoleId = 1 },
-               new PermissionRoles { PermissionId = 4, RoleId = 1 }
+               new PermissionRoles { PermissionId = 3, RoleId = 1 }
                );
 
 
             modelBuilder.Entity<Branch>().HasData(
                 new Branch { Id = -1, BranchName = "Default" });
 
-            IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
-            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
+
 
             byte[] passwordHash, passwordSalt;
             using (var hmac = new System.Security.Cryptography.HMACSHA512())

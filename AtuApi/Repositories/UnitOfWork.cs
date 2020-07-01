@@ -26,7 +26,7 @@ namespace AtuApi.Repositories
             TerritoryRepository = new TerritoryRepository(_dataContext, diManager);
             ProjectRepository = new ProjectRepository(_dataContext, diManager);
             WareHouseRepository = new WareHouseRepository(_dataContext, diManager);
-            ItemsWarehousesRepository = new ItemsWarehousesRepository(_dataContext, diManager);
+            ItemsWarehousesRepository = new ItemsWarehouseRepository(_dataContext, diManager);
             UnitOfMeasueGroupRepository = new UnitOfMeasueGroupsRepository(_dataContext, diManager);
             UnitOfMeasueRepository = new UnitOfMeasueRepository(_dataContext, diManager);
 
