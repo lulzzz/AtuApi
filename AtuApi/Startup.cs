@@ -118,8 +118,6 @@ namespace AtuApi
 
             });
 
-            //test(services);
-
             var keyBytes = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(opts =>
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
- 
+
 using AtuApi.Interfaces;
 using AtuApi.Models;
 using AutoMapper;
@@ -71,7 +71,25 @@ namespace AtuApi.Controllers
                 return Conflict();
             }
 
+            var userCreator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
+            var creartorRoleId = userCreator.RoleId;
+            var creartorRole = _unitOfWork.RoleRepository.Get(creartorRoleId);
             var role = _mapper.Map<Role>(roleDto);
+
+            var creartorRoleDto = _mapper.Map<RoleDto>(creartorRole);
+            var creartorPermissions = creartorRoleDto.Permissions;
+            var RoleToaddedPermissions = roleDto.Permissions;
+
+            var RoleToaddedPermissionsIds = RoleToaddedPermissions.Select(i => i.Id);
+            var creartorPermissionsIds = creartorPermissions.Select(i => i.Id);
+            bool isSubset = !RoleToaddedPermissionsIds.Except(creartorPermissionsIds).Any();
+
+            if (!isSubset)
+            {
+                return Forbid();
+            }
+
+
 
             List<PermissionRoles> permissionRoles = new List<PermissionRoles>();
             foreach (var permission in roleDto.Permissions)
@@ -89,39 +107,50 @@ namespace AtuApi.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateRoles(RoleDto role)
+        public IActionResult UpdateRoles(RoleDto roleDto)
         {
-            if (!ModelState.IsValid)
+            bool hasPermissions = roleDto.Permissions != null;
+
+            var userCreator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
+            var creartorRole = _unitOfWork.RoleRepository.Get(userCreator.RoleId);
+            var UpdateRole = _mapper.Map<Role>(roleDto);
+            var roleInDb = _unitOfWork.RoleRepository.Get(UpdateRole.Id);
+            var creartorRoleDto = _mapper.Map<RoleDto>(creartorRole);
+            var creartorPermissions = creartorRoleDto.Permissions;
+            var RoleToaddedPermissions = roleDto.Permissions;
+
+            var RoleToaddedPermissionsIds = RoleToaddedPermissions?.Select(i => i.Id);
+            var creartorPermissionsIds = creartorPermissions?.Select(i => i.Id);
+            bool isSubset;
+
+            if (!hasPermissions)
             {
-                return UnprocessableEntity();
+                isSubset = true;
+            }
+            else
+            {
+                isSubset = !RoleToaddedPermissionsIds.Except(creartorPermissionsIds).Any();
+                List<PermissionRoles> permissionRoles = new List<PermissionRoles>();
+                foreach (var permission in roleDto.Permissions)
+                {
+                    var permissionRole = new PermissionRoles { PermissionId = permission.Id, RoleId = roleInDb.Id };
+                    permissionRoles.Add(permissionRole);
+                }
+                roleInDb.PermissionRoles = permissionRoles;
             }
 
-            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
-
-
-            var roleInDb = _unitOfWork.RoleRepository.Get(role.Id);
+            if (!isSubset)
+            {
+                return Forbid();
+            }
             if (roleInDb.RoleName == "Admin")
             {
                 return Forbid();
             }
-
-
-            List<PermissionRoles> permissionRoles = new List<PermissionRoles>();
-            foreach (var permission in role.Permissions)
-            {
-                var permissionRole = new PermissionRoles { PermissionId = permission.Id, RoleId = roleInDb.Id };
-                permissionRoles.Add(permissionRole);
-            }
-
-            roleInDb.PermissionRoles = permissionRoles;
-
-
+            roleInDb.RoleName = roleDto.RoleName;
             _unitOfWork.RoleRepository.Update(roleInDb);
+            return Accepted(UpdateRole);
 
-            return new ObjectResult(role)
-            {
-                StatusCode = (int)HttpStatusCode.Accepted
-            };
         }
 
 

@@ -23,7 +23,7 @@ namespace AtuApi.Controllers
         {
             var businessPartners = _unitOfWork.BusinessPartnerRepository.GetBusinessPartners();
             Request.HttpContext.Response.Headers.Add("Total-Count", businessPartners.Count().ToString());
-            return Ok();
+            return Ok(businessPartners);
         }
 
         [HttpGet("{cardCode}")]

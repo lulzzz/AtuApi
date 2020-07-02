@@ -88,21 +88,19 @@ namespace DataContextHelper
             }
             modelBuilder.Entity<Permission>().HasData(permissionslist);
 
+
+            List<PermissionRoles> permissionRolesList = new List<PermissionRoles>();
+            foreach (var permission in permissionslist)
+            {
+                permissionRolesList.Add(new PermissionRoles { PermissionId = permission.Id, RoleId = 1 });
+            };
+            modelBuilder.Entity<PermissionRoles>().HasData(permissionRolesList);
+
             modelBuilder.Entity<Role>().HasData(
-         new Role { RoleName = "Admin", Id = 1 });
-
-
-            modelBuilder.Entity<PermissionRoles>().HasData(
-               new PermissionRoles { PermissionId = 1, RoleId = 1 },
-               new PermissionRoles { PermissionId = 2, RoleId = 1 },
-               new PermissionRoles { PermissionId = 3, RoleId = 1 }
-               );
-
+            new Role { RoleName = appSettings.SuperUserRole, Id = 1 });
 
             modelBuilder.Entity<Branch>().HasData(
                 new Branch { Id = -1, BranchName = "Default" });
-
-
 
             byte[] passwordHash, passwordSalt;
             using (var hmac = new System.Security.Cryptography.HMACSHA512())

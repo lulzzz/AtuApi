@@ -7,7 +7,7 @@ namespace AtuApi
 {
     public class AppSettings
     {
-        public string Secret { get; set; }      
+        public string Secret { get; set; }
         public string SqlServerHostName { get; set; }
         public string SqlServerPost { get; set; }
         public string SqlServerCatalog { get; set; }
@@ -24,6 +24,7 @@ namespace AtuApi
         public string SapUserName { get; set; }
         public string SapPassword { get; set; }
         public string SapCompanyDb { get; set; }
+        public string SuperUserRole { get; set; }
         public List<string> Permissions { get; set; }
     }
 }
