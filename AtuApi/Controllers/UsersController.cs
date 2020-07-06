@@ -35,6 +35,12 @@ namespace AtuApi.Controllers
             _appSettings = appSettings.Value;
         }
 
+        [AllowAnonymous]
+        [HttpPost("signin-facebook")]
+        public IActionResult AuthenticateFacebook()
+        {
+            return Ok();
+        }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using AtuApi.AutoMapper;
+using AtuApi.Hubs;
 using AtuApi.Interfaces;
 using AtuApi.Models;
 using AtuApi.Repositories;
@@ -48,6 +49,9 @@ namespace AtuApi
                         .AllowAnyMethod()
                         .AllowAnyHeader());
             });
+
+            services.AddSignalR();
+ 
 
             services.AddControllers(setupActin =>
             {
@@ -132,6 +136,10 @@ namespace AtuApi
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            }).AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = appSettings.AppId;
+                facebookOptions.AppSecret = appSettings.AppSecret;
             });
 
         }
@@ -155,6 +163,8 @@ namespace AtuApi
                 app.UseDeveloperExceptionPage();
             }
 
+          
+
             app.UseCors(
         optionsx => optionsx.WithOrigins("*").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             app.UseCors("AllowSpecificOrigin");
@@ -170,6 +180,7 @@ namespace AtuApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ApprovalHub>("/ApprovalHub");
             });
         }
     }

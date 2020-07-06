@@ -25,6 +25,8 @@ namespace AtuApi
         public string SapPassword { get; set; }
         public string SapCompanyDb { get; set; }
         public string SuperUserRole { get; set; }
+        public string AppId { get; set; }
+        public string AppSecret { get; set; }
         public List<string> Permissions { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace AtuApi.Repositories
             var users = UserContext.Users.Include(x => x.Role).ThenInclude(p => p.PermissionRoles).ThenInclude(p => p.Permissions).Include(b => b.Branch).ToList();
             return users;
         }
-        
+
 
         public User Create(User user, string password)
         {
@@ -75,7 +75,7 @@ namespace AtuApi.Repositories
 
         public User GetById(int id)
         {
-            var user = UserContext.Users.Include(x => x.Role).ThenInclude(p => p.PermissionRoles).ThenInclude(p=>p.Permissions).Include(b => b.Branch).FirstOrDefault(u => u.Id == id);
+            var user = UserContext.Users.Include(x => x.Role).ThenInclude(p => p.PermissionRoles).ThenInclude(p => p.Permissions).Include(b => b.Branch).FirstOrDefault(u => u.Id == id);
             return user;
         }
 
@@ -109,16 +109,12 @@ namespace AtuApi.Repositories
             user.Role = userParam.Role;
             user.IsActive = userParam.IsActive;
 
-
-
-            // update password if it was entered
             if (!string.IsNullOrWhiteSpace(password))
             {
                 byte[] passwordHash, passwordSalt;
                 CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-                //user.PasswordHash = passwordHash;
-
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
             }
 
             var res = UserContext.Users.Update(user).Entity;
