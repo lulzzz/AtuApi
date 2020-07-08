@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using AtuApi.Models;
 using AutoMapper;
 using DataModels.Dtos;
@@ -21,7 +21,7 @@ namespace AtuApi.AutoMapper
             CreateMap<User, UserDtoResponse>().ForMember(
                     des => des.Permissions,
                     opts => opts.MapFrom(
-                        src => src.Role.PermissionRoles.Select(x=>x.Permissions)));
+                        src => src.Role.PermissionRoles.Select(x => x.Permissions)));
             CreateMap<UserDtoResponse, User>();
 
 
@@ -34,21 +34,6 @@ namespace AtuApi.AutoMapper
             CreateMap<PurchaseRequestRowDto, PurchaseRequestRow>();
             CreateMap<PurchaseRequestRow, PurchaseRequestRowDto>();
 
-            CreateMap<ApprovalTemplateDto, ApprovalTemplate>()
-                .ForMember(
-                     dest => dest.ApprovalsEmployees,
-                     opts => opts.MapFrom(
-                         src => src.ApprovalEmployees.Select(pr => new ApprovalsEmployees
-                         {
-                             EmployeeCode = pr,
-                         }
-                         )))
-                .ForMember(dest => dest.TemplateCode, opts => opts.Ignore());
-            CreateMap<ApprovalTemplate, ApprovalTemplateDto>()
-                .ForMember(
-                    des => des.ApprovalEmployees,
-                    opts => opts.MapFrom(
-                        src => src.ApprovalsEmployees.Select(appr => appr.EmployeeCode).ToList()));
 
             CreateMap<Permission, PermissionDto>();
             CreateMap<PermissionDto, Permission>();
@@ -61,6 +46,31 @@ namespace AtuApi.AutoMapper
             CreateMap<RoleDto, Role>();
 
 
+
+            CreateMap<ApprovalTemplateDto, ApprovalTemplate>()
+                 .ForMember(
+                      dest => dest.ApprovalsEmployees,
+                      opts => opts.MapFrom(
+                          src => src.ApprovalEmployees.Select(pr => new ApprovalsEmployees
+                          {
+                              EmployeeCode = pr,
+                          }
+                          )))
+                 .ForMember(dest => dest.TemplateCode, opts => opts.Ignore())
+                 .ForMember(dest => dest.UsersAppovalTemplates, opts => opts.MapFrom(
+                       src => src.Users.Select(ua => new UsersAppovalTemplate { UserId = ua })));
+
+
+
+            CreateMap<ApprovalTemplate, ApprovalTemplateDto>()
+                .ForMember(
+                    des => des.ApprovalEmployees,
+                    opts => opts.MapFrom(
+                        src => src.ApprovalsEmployees.Select(appr => appr.EmployeeCode).ToList()))
+                .ForMember(
+                  des=>des.Users,
+                  opts=>opts.MapFrom(
+                      src=>src.UsersAppovalTemplates.Select(usr=>usr.UserId)));
 
 
 

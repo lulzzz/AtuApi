@@ -58,6 +58,7 @@ namespace AtuApi.Controllers
             template.IsActive = approvalTemplate.IsActive;
             template.TemplateName = approvalTemplate.TemplateName;
             template.ApprovalsEmployees = approvalTemplate.ApprovalsEmployees;
+            template.UsersAppovalTemplates = approvalTemplate.UsersAppovalTemplates;
             _unitOfWork.ApprovalTemplateRepository.Update(template);
             return Ok();
         }

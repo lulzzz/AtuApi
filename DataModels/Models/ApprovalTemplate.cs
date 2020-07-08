@@ -11,8 +11,9 @@ namespace DataModels.Models
         public int TemplateCode { get; set; }
         public string TemplateName { get; set; }
         public bool IsActive { get; set; }
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
         public ICollection<ApprovalsEmployees> ApprovalsEmployees { get; set; }
+        public List<DocumentType> DocumentTypes { get; set; }
 
     }
 }

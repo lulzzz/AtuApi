@@ -94,8 +94,7 @@ namespace AtuApi.Controllers
             var creatorRole = userCreator.Role.RoleName;
 
             Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
-            Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
-            ApprovalTemplate approvalTemplate = _unitOfWork.ApprovalTemplateRepository.Get(userDto.ApprovalTemplateCode);
+            Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);            
 
             if (role == null)
             {
@@ -104,15 +103,10 @@ namespace AtuApi.Controllers
             if (branch == null)
             {
                 branch = _unitOfWork.BranchesRepository.Get(-1);
-            }
-            if (approvalTemplate == null)
-            {
-                user.ApprovalTemplateCode = -1;
-            }
+            }          
 
             user.Role = role;
-            user.Branch = branch;
-            user.ApprovalTemplate = approvalTemplate;
+            user.Branch = branch;        
 
             var creatingRole = user.Role.RoleName;
 
@@ -171,7 +165,7 @@ namespace AtuApi.Controllers
             var creatorRole = userCreator.Role.RoleName;
             Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
             Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
-            ApprovalTemplate temlate = _unitOfWork.ApprovalTemplateRepository.Get(userDto.ApprovalTemplateCode);
+           
             if (role == null)
             {
                 return UnprocessableEntity("ასეთი როლი არ არსებობს");
@@ -184,7 +178,7 @@ namespace AtuApi.Controllers
 
             userToBeUpdated.Branch = branch;
             userToBeUpdated.Role = role;
-            userToBeUpdated.ApprovalTemplate = temlate;
+            //userToBeUpdated.ApprovalTemplate = temlate;
 
             var creatingRole = userToBeUpdated.Role.RoleName;
             bool isHimself = userCreator.Id == userToBeUpdated.Id;

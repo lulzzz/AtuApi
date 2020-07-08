@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AtuApi.Migrations
 {
-    public partial class ff : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -97,6 +97,26 @@ namespace AtuApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DocumentTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DocDescription = table.Column<string>(nullable: true),
+                    ApprovalTemplateTemplateCode = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentTypes_ApprovalTemplates_ApprovalTemplateTemplateCode",
+                        column: x => x.ApprovalTemplateTemplateCode,
+                        principalTable: "ApprovalTemplates",
+                        principalColumn: "TemplateCode",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PurchaseRequestRows",
                 columns: table => new
                 {
@@ -162,19 +182,12 @@ namespace AtuApi.Migrations
                     RoleId = table.Column<int>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false, defaultValue: true),
                     ApprovalTemplateCode = table.Column<int>(nullable: false),
-                    ApprovalTemplateTemplateCode = table.Column<int>(nullable: true),
                     PasswordHash = table.Column<byte[]>(nullable: true),
                     PasswordSalt = table.Column<byte[]>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_ApprovalTemplates_ApprovalTemplateTemplateCode",
-                        column: x => x.ApprovalTemplateTemplateCode,
-                        principalTable: "ApprovalTemplates",
-                        principalColumn: "TemplateCode",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Users_Branches_BranchId",
                         column: x => x.BranchId,
@@ -185,6 +198,30 @@ namespace AtuApi.Migrations
                         name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsersAppovalTemplates",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false),
+                    ApprovalTemplateTemplateCode = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersAppovalTemplates", x => new { x.UserId, x.ApprovalTemplateTemplateCode });
+                    table.ForeignKey(
+                        name: "FK_UsersAppovalTemplates_ApprovalTemplates_ApprovalTemplateTemplateCode",
+                        column: x => x.ApprovalTemplateTemplateCode,
+                        principalTable: "ApprovalTemplates",
+                        principalColumn: "TemplateCode",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UsersAppovalTemplates_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -227,9 +264,36 @@ namespace AtuApi.Migrations
                 values: new object[] { 1, "Admin" });
 
             migrationBuilder.InsertData(
+                table: "PermissionRoles",
+                columns: new[] { "PermissionId", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 19, 1 },
+                    { 18, 1 },
+                    { 17, 1 },
+                    { 16, 1 },
+                    { 15, 1 },
+                    { 14, 1 },
+                    { 13, 1 },
+                    { 12, 1 },
+                    { 20, 1 },
+                    { 11, 1 },
+                    { 9, 1 },
+                    { 8, 1 },
+                    { 7, 1 },
+                    { 6, 1 },
+                    { 5, 1 },
+                    { 4, 1 },
+                    { 3, 1 },
+                    { 2, 1 },
+                    { 10, 1 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "ApprovalTemplateCode", "ApprovalTemplateTemplateCode", "BranchId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "UserName" },
-                values: new object[] { 1, 0, null, -1, "Example@gamil.com", "Jason", "Buttler", new byte[] { 179, 162, 91, 102, 119, 11, 187, 60, 18, 169, 214, 253, 53, 52, 245, 123, 86, 30, 242, 152, 186, 171, 6, 149, 248, 21, 193, 80, 238, 1, 164, 52, 120, 181, 235, 123, 36, 163, 81, 231, 150, 55, 30, 236, 177, 226, 242, 53, 12, 195, 14, 83, 242, 195, 211, 136, 16, 7, 125, 207, 241, 221, 25, 65 }, new byte[] { 48, 133, 112, 4, 74, 6, 177, 89, 241, 108, 75, 161, 140, 113, 54, 248, 245, 248, 94, 28, 104, 15, 148, 73, 9, 96, 52, 23, 77, 53, 147, 135, 161, 137, 180, 249, 238, 21, 174, 135, 44, 172, 218, 1, 84, 95, 236, 25, 117, 55, 174, 46, 20, 137, 139, 176, 161, 20, 100, 69, 117, 55, 45, 78, 53, 175, 17, 126, 40, 110, 78, 34, 32, 148, 211, 94, 195, 92, 89, 75, 230, 44, 8, 214, 5, 69, 217, 27, 131, 21, 129, 23, 101, 135, 27, 96, 50, 216, 222, 5, 19, 81, 27, 2, 245, 115, 193, 214, 105, 20, 84, 113, 66, 38, 226, 93, 124, 122, 136, 70, 38, 0, 199, 33, 69, 178, 112, 216 }, "Manager", 1, "manager" });
+                columns: new[] { "Id", "ApprovalTemplateCode", "BranchId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "UserName" },
+                values: new object[] { 1, 0, -1, "Example@gamil.com", "Jason", "Buttler", new byte[] { 43, 52, 180, 130, 247, 68, 111, 32, 125, 12, 23, 17, 100, 180, 164, 244, 147, 137, 35, 243, 236, 120, 182, 45, 37, 148, 212, 193, 175, 25, 227, 9, 98, 106, 96, 240, 180, 174, 242, 92, 187, 190, 116, 120, 84, 147, 184, 161, 117, 232, 21, 133, 235, 86, 43, 110, 12, 32, 84, 188, 22, 125, 87, 86 }, new byte[] { 24, 124, 1, 209, 87, 92, 98, 109, 171, 115, 172, 50, 134, 62, 234, 240, 209, 55, 10, 218, 255, 238, 92, 105, 140, 73, 142, 32, 3, 56, 97, 79, 198, 182, 171, 210, 207, 89, 98, 8, 126, 214, 182, 154, 205, 187, 127, 160, 127, 205, 52, 12, 244, 181, 167, 9, 74, 193, 197, 67, 255, 83, 104, 236, 203, 97, 76, 136, 227, 110, 199, 240, 157, 190, 194, 180, 190, 65, 132, 144, 170, 83, 215, 103, 140, 216, 66, 70, 216, 61, 76, 228, 224, 172, 216, 139, 171, 26, 0, 233, 209, 107, 85, 226, 196, 42, 156, 84, 205, 109, 76, 198, 187, 125, 125, 235, 148, 118, 26, 149, 211, 128, 218, 88, 168, 53, 0, 218 }, "Manager", 1, "manager" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApprovalTemplates_TemplateName",
@@ -239,14 +303,14 @@ namespace AtuApi.Migrations
                 filter: "[TemplateName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocumentTypes_ApprovalTemplateTemplateCode",
+                table: "DocumentTypes",
+                column: "ApprovalTemplateTemplateCode");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PermissionRoles_RoleId",
                 table: "PermissionRoles",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_ApprovalTemplateTemplateCode",
-                table: "Users",
-                column: "ApprovalTemplateTemplateCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_BranchId",
@@ -257,6 +321,11 @@ namespace AtuApi.Migrations
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersAppovalTemplates_ApprovalTemplateTemplateCode",
+                table: "UsersAppovalTemplates",
+                column: "ApprovalTemplateTemplateCode");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -265,13 +334,16 @@ namespace AtuApi.Migrations
                 name: "ApprovalsEmployees");
 
             migrationBuilder.DropTable(
+                name: "DocumentTypes");
+
+            migrationBuilder.DropTable(
                 name: "PermissionRoles");
 
             migrationBuilder.DropTable(
                 name: "PurchaseRequestRows");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "UsersAppovalTemplates");
 
             migrationBuilder.DropTable(
                 name: "Permissions");
@@ -281,6 +353,9 @@ namespace AtuApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ApprovalTemplates");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Branches");

@@ -13,5 +13,13 @@ namespace AtuApi.Hubs
         {
             await Clients.All.SendAsync("xz",user,message);
         }
+        public async Task SendMessage2()
+        {
+            await Clients.All.SendAsync("aaaaaaaaaa");
+        }
+        public void MethodNoParametersNoReturnValue()
+        {
+            Console.WriteLine("'MethodNoParametersNoReturnValue' invoked.");
+        }
     }
 }

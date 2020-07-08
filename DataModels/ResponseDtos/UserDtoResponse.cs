@@ -16,9 +16,7 @@ namespace DataModels.ResponseDtos
         public string Email { get; set; }
         public string Position { get; set; }
         public bool IsActive { get; set; }
-
-        public int RoleId { get; set; }
-        public int ApprovalTemplateCode { get; set; }
+        public int RoleId { get; set; } 
         public List<PermissionDto> Permissions { get; set; }
     }
 }

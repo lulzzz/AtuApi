@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200702092541_updateUserPerms22")]
-    partial class updateUserPerms22
+    [Migration("20200708094706_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -309,9 +309,6 @@ namespace AtuApi.Migrations
                     b.Property<int>("ApprovalTemplateCode")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApprovalTemplateTemplateCode")
-                        .HasColumnType("int");
-
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
@@ -346,8 +343,6 @@ namespace AtuApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApprovalTemplateTemplateCode");
-
                     b.HasIndex("BranchId");
 
                     b.HasIndex("RoleId");
@@ -364,8 +359,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 178, 61, 178, 202, 1, 81, 158, 183, 159, 223, 114, 81, 75, 12, 5, 58, 169, 94, 120, 34, 57, 2, 224, 214, 32, 214, 220, 253, 225, 14, 240, 117, 18, 233, 189, 248, 33, 221, 43, 168, 165, 87, 40, 92, 74, 90, 232, 218, 101, 161, 172, 172, 185, 151, 198, 36, 143, 1, 28, 93, 94, 199, 84, 87 },
-                            PasswordSalt = new byte[] { 63, 19, 155, 183, 34, 172, 197, 41, 21, 204, 97, 152, 109, 14, 30, 174, 200, 139, 73, 151, 254, 72, 22, 110, 43, 71, 157, 203, 123, 13, 210, 17, 40, 238, 131, 181, 192, 241, 9, 123, 147, 138, 126, 237, 105, 38, 34, 240, 126, 178, 102, 28, 91, 219, 54, 28, 194, 75, 252, 192, 91, 76, 182, 22, 82, 252, 157, 253, 76, 144, 198, 29, 183, 23, 227, 39, 12, 34, 157, 144, 199, 70, 172, 110, 105, 167, 69, 87, 107, 89, 85, 191, 35, 5, 75, 160, 129, 165, 39, 24, 65, 71, 57, 35, 49, 145, 2, 208, 34, 202, 21, 129, 207, 18, 128, 237, 253, 199, 113, 68, 202, 117, 214, 61, 88, 24, 42, 105 },
+                            PasswordHash = new byte[] { 43, 52, 180, 130, 247, 68, 111, 32, 125, 12, 23, 17, 100, 180, 164, 244, 147, 137, 35, 243, 236, 120, 182, 45, 37, 148, 212, 193, 175, 25, 227, 9, 98, 106, 96, 240, 180, 174, 242, 92, 187, 190, 116, 120, 84, 147, 184, 161, 117, 232, 21, 133, 235, 86, 43, 110, 12, 32, 84, 188, 22, 125, 87, 86 },
+                            PasswordSalt = new byte[] { 24, 124, 1, 209, 87, 92, 98, 109, 171, 115, 172, 50, 134, 62, 234, 240, 209, 55, 10, 218, 255, 238, 92, 105, 140, 73, 142, 32, 3, 56, 97, 79, 198, 182, 171, 210, 207, 89, 98, 8, 126, 214, 182, 154, 205, 187, 127, 160, 127, 205, 52, 12, 244, 181, 167, 9, 74, 193, 197, 67, 255, 83, 104, 236, 203, 97, 76, 136, 227, 110, 199, 240, 157, 190, 194, 180, 190, 65, 132, 144, 170, 83, 215, 103, 140, 216, 66, 70, 216, 61, 76, 228, 224, 172, 216, 139, 171, 26, 0, 233, 209, 107, 85, 226, 196, 42, 156, 84, 205, 109, 76, 198, 187, 125, 125, 235, 148, 118, 26, 149, 211, 128, 218, 88, 168, 53, 0, 218 },
                             Position = "Manager",
                             RoleId = 1,
                             UserName = "manager"
@@ -405,6 +400,26 @@ namespace AtuApi.Migrations
                     b.HasKey("ApprovalCode", "EmployeeCode");
 
                     b.ToTable("ApprovalsEmployees");
+                });
+
+            modelBuilder.Entity("DataModels.Models.DocumentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ApprovalTemplateTemplateCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DocDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApprovalTemplateTemplateCode");
+
+                    b.ToTable("DocumentTypes");
                 });
 
             modelBuilder.Entity("DataModels.Models.PurchaseRequest", b =>
@@ -478,6 +493,21 @@ namespace AtuApi.Migrations
                     b.ToTable("PurchaseRequestRows");
                 });
 
+            modelBuilder.Entity("DataModels.Models.UsersAppovalTemplates", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ApprovalTemplateTemplateCode")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "ApprovalTemplateTemplateCode");
+
+                    b.HasIndex("ApprovalTemplateTemplateCode");
+
+                    b.ToTable("UsersAppovalTemplates");
+                });
+
             modelBuilder.Entity("AtuApi.Models.PermissionRoles", b =>
                 {
                     b.HasOne("AtuApi.Models.Permission", "Permissions")
@@ -495,10 +525,6 @@ namespace AtuApi.Migrations
 
             modelBuilder.Entity("AtuApi.Models.User", b =>
                 {
-                    b.HasOne("DataModels.Models.ApprovalTemplate", "ApprovalTemplate")
-                        .WithMany("Users")
-                        .HasForeignKey("ApprovalTemplateTemplateCode");
-
                     b.HasOne("AtuApi.Models.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId")
@@ -521,11 +547,33 @@ namespace AtuApi.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DataModels.Models.DocumentType", b =>
+                {
+                    b.HasOne("DataModels.Models.ApprovalTemplate", null)
+                        .WithMany("DocumentTypes")
+                        .HasForeignKey("ApprovalTemplateTemplateCode");
+                });
+
             modelBuilder.Entity("DataModels.Models.PurchaseRequestRow", b =>
                 {
                     b.HasOne("DataModels.Models.PurchaseRequest", null)
                         .WithMany("Rows")
                         .HasForeignKey("PurchaseRequestDocNum")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DataModels.Models.UsersAppovalTemplates", b =>
+                {
+                    b.HasOne("DataModels.Models.ApprovalTemplate", "ApprovalTemplate")
+                        .WithMany("UsersAppovalTemplates")
+                        .HasForeignKey("ApprovalTemplateTemplateCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AtuApi.Models.User", "User")
+                        .WithMany("UsersAppovalTemplates")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

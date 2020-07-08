@@ -24,6 +24,8 @@ namespace DataContextHelper
         public DbSet<ApprovalsEmployees> ApprovalsEmployees { get; set; }
         public DbSet<PurchaseRequest> PurchaseRequests { get; set; }
         public DbSet<PurchaseRequestRow> PurchaseRequestRows { get; set; }
+        public DbSet<DocumentType> DocumentTypes { get; set; }
+        public DbSet<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
         public IConfiguration Configuration { get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +43,19 @@ namespace DataContextHelper
                 .HasOne(p => p.Roles)
                 .WithMany(pe => pe.PermissionRoles)
                 .HasForeignKey(m => m.RoleId);
+
+            modelBuilder.Entity<UsersAppovalTemplate>()
+                .HasKey(x => new { x.UserId, x.ApprovalTemplateTemplateCode });
+
+            modelBuilder.Entity<UsersAppovalTemplate>()
+            .HasOne(p => p.ApprovalTemplate)
+            .WithMany(pe => pe.UsersAppovalTemplates)
+            .HasForeignKey(m => m.ApprovalTemplateTemplateCode);
+
+            modelBuilder.Entity<UsersAppovalTemplate>()
+                .HasOne(p => p.User)
+                .WithMany(pe => pe.UsersAppovalTemplates)
+                .HasForeignKey(m => m.UserId);
 
             modelBuilder.Entity<ApprovalTemplate>()
                 .HasKey(x => x.TemplateCode);

@@ -148,10 +148,8 @@ namespace AtuApi.Controllers
                 return Forbid();
             }
             roleInDb.RoleName = roleDto.RoleName;
-
-            RoleDto RolesDto = _mapper.Map<RoleDto>(roleInDb);
-
             _unitOfWork.RoleRepository.Update(roleInDb);
+            RoleDto RolesDto = _mapper.Map<RoleDto>(roleInDb);
             return Accepted(RolesDto);
 
         }

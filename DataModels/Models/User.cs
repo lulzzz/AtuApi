@@ -19,8 +19,7 @@ namespace AtuApi.Models
         public int BranchId { get; set; }
         public int RoleId { get; set; }
         public bool IsActive { get; set; }
-        public int ApprovalTemplateCode { get; set; }
-        public ApprovalTemplate ApprovalTemplate { get; set; }
+        public ICollection<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }
