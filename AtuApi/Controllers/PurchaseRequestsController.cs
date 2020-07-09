@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
- 
+
 using AtuApi.Interfaces;
 using AutoMapper;
 using DataModels.Dtos;
@@ -29,7 +29,7 @@ namespace AtuApi.Controllers
         {
             var purchaseRequest = _mapper.Map<PurchaseRequest>(purchaseRequestDto);
             var emp = _unitOfWork.EmployeeRepository.GetEmployee(purchaseRequestDto.EmployeeId);
-            var project = _unitOfWork.ProjectRepository.GetProject(purchaseRequestDto.ProjectCode); 
+            var project = _unitOfWork.ProjectRepository.GetProject(purchaseRequestDto.ProjectCode);
             if (emp == null)
             {
                 return UnprocessableEntity($"EmployeeId : {purchaseRequestDto.EmployeeId} არ არსებობს");
@@ -68,18 +68,17 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetPurchaseReques()
         {
-            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll();     
+            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll();
             IEnumerable<PurchaseRequestDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestDto>>(purchaseReqests);
             Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());
             return Ok(PurchaseRequetDtos);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetPurchaseReques(int id)  
+        public IActionResult GetPurchaseReques(int id)
         {
-            PurchaseRequest purchaseReqests = _unitOfWork.PurchaseRequestRepository.Get(id);
-            purchaseReqests.Employee = _unitOfWork.UserRepository.GetById(purchaseReqests.EmployeeId);
-            purchaseReqests.project = _unitOfWork.ProjectRepository.GetProject(purchaseReqests.ProjectCode);    
+            PurchaseRequest purchaseReqests = _unitOfWork.PurchaseRequestRepository.Get(id);            
+            purchaseReqests.project = _unitOfWork.ProjectRepository.GetProject(purchaseReqests.ProjectCode);
             PurchaseRequestDto PurchaseRequestDto = _mapper.Map<PurchaseRequestDto>(purchaseReqests);
             return Ok(PurchaseRequestDto);
         }

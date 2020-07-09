@@ -11,8 +11,8 @@ namespace DataModels.RequestDtos
         public int TemplateCode { get; set; }
         public string TemplateName { get; set; }
         public bool IsActive { get; set; }
-        public List<int> ApprovalEmployees { get; set; }
-        public List<int> Users { get; set; }
+        public List<int> Approvers { get; set; }
+        public List<int> Originators { get; set; }
         public List<int> DocumentTypes { get; set; }
     }
 }

@@ -95,10 +95,14 @@ namespace DataContextHelper
             modelBuilder.Entity<PurchaseRequest>()
             .HasKey(x => x.DocNum);
 
+            modelBuilder.Entity<PurchaseRequest>();        
+ 
 
             modelBuilder.Entity<PurchaseRequest>()
                 .Property(b => b.CreategDate)
                 .HasDefaultValueSql("getdate()");
+
+
 
             modelBuilder.Entity<PurchaseRequestRow>()
        .HasKey(x => new { x.PurchaseRequestDocNum, x.LineNum });

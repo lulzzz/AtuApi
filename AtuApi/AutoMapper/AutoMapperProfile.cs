@@ -27,10 +27,10 @@ namespace AtuApi.AutoMapper
 
 
             CreateMap<PurchaseRequest, PurchaseRequestDto>();
-                //.ForMember(des => des.Rows, opts => opts.MapFrom(src=>src.Rows));
+            //.ForMember(des => des.Rows, opts => opts.MapFrom(src=>src.Rows));
 
-            CreateMap<PurchaseRequestDto, PurchaseRequest>()
-                .ForMember(des => des.Employee, opts => opts.Ignore());
+            CreateMap<PurchaseRequestDto, PurchaseRequest>();
+
 
             CreateMap<PurchaseRequestRowDto, PurchaseRequestRow>();
             CreateMap<PurchaseRequestRow, PurchaseRequestRowDto>();
@@ -52,14 +52,14 @@ namespace AtuApi.AutoMapper
                  .ForMember(
                       dest => dest.ApprovalsEmployees,
                       opts => opts.MapFrom(
-                          src => src.ApprovalEmployees.Select(pr => new ApprovalsEmployees
+                          src => src.Approvers.Select(pr => new ApprovalsEmployees
                           {
                               UserId = pr,
                           }
                           )))
                  .ForMember(dest => dest.TemplateCode, opts => opts.Ignore())
                  .ForMember(dest => dest.UsersAppovalTemplates, opts => opts.MapFrom(
-                       src => src.Users.Select(ua => new UsersAppovalTemplate { UserId = ua })))
+                       src => src.Originators.Select(ua => new UsersAppovalTemplate { UserId = ua })))
                  .ForMember(src => src.ApprovalsDocumentTypes, opts => opts.MapFrom(
                        src => src.DocumentTypes.Select(appD => new ApprovalsDocumentType { DocumentTypeId = appD })));
 
@@ -67,11 +67,11 @@ namespace AtuApi.AutoMapper
 
             CreateMap<ApprovalTemplate, ApprovalTemplateResponseDto>()
                 .ForMember(
-                    des => des.ApprovalEmployees,
+                    des => des.Approvers,
                     opts => opts.MapFrom(
                         src => src.ApprovalsEmployees.Select(appr => appr.User).ToList()))
                 .ForMember(
-                  des => des.Users,
+                  des => des.Originators,
                   opts => opts.MapFrom(
                       src => src.UsersAppovalTemplates.Select(usr => usr.User)))
                 .ForMember(

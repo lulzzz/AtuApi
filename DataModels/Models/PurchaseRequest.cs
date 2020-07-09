@@ -11,6 +11,7 @@ namespace DataModels.Models
         public PurchaseRequest()
         {
             Rows = new List<PurchaseRequestRow>();
+            ObjctType = "PurchaseRequest";
         }
         public string CompanyName = "ასოციაცია ატუ";
         public int DocNum { get; set; }
@@ -21,9 +22,9 @@ namespace DataModels.Models
         public Project project { get; set; }
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
-        [NotMapped]
-        public User Employee { get; set; }
-        public int EmployeeId { get; set; }
+        public int OriginatorId { get; set; }
+        public virtual User Creator { get; set; }
+        public string ObjctType { get; set; }
         public List<PurchaseRequestRow> Rows { get; set; }
     }
 }

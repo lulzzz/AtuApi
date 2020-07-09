@@ -61,24 +61,6 @@ namespace AtuApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PurchaseRequests",
-                columns: table => new
-                {
-                    DocNum = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PostingDate = table.Column<DateTime>(nullable: false),
-                    CreategDate = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
-                    DueDate = table.Column<DateTime>(nullable: false),
-                    ProjectCode = table.Column<string>(nullable: true),
-                    ProjectName = table.Column<string>(nullable: true),
-                    EmployeeId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PurchaseRequests", x => x.DocNum);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -112,33 +94,6 @@ namespace AtuApi.Migrations
                         column: x => x.DocumentTypeId,
                         principalTable: "DocumentTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PurchaseRequestRows",
-                columns: table => new
-                {
-                    PurchaseRequestDocNum = table.Column<int>(nullable: false),
-                    LineNum = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemCode = table.Column<string>(nullable: true),
-                    BusinessPartnerCode = table.Column<string>(nullable: true),
-                    RequiredQuantity = table.Column<double>(nullable: false),
-                    DueDate = table.Column<DateTime>(nullable: false),
-                    TeritoryId = table.Column<int>(nullable: false),
-                    Remarks = table.Column<string>(nullable: true),
-                    WareHouse = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PurchaseRequestRows", x => new { x.PurchaseRequestDocNum, x.LineNum });
-                    table.ForeignKey(
-                        name: "FK_PurchaseRequestRows_PurchaseRequests_PurchaseRequestDocNum",
-                        column: x => x.PurchaseRequestDocNum,
-                        principalTable: "PurchaseRequests",
-                        principalColumn: "DocNum",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -179,6 +134,7 @@ namespace AtuApi.Migrations
                     Position = table.Column<string>(nullable: true),
                     BranchId = table.Column<int>(nullable: false),
                     RoleId = table.Column<int>(nullable: false),
+                    SapEmployeeId = table.Column<int>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false, defaultValue: true),
                     PasswordHash = table.Column<byte[]>(nullable: true),
                     PasswordSalt = table.Column<byte[]>(nullable: true)
@@ -225,6 +181,32 @@ namespace AtuApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PurchaseRequests",
+                columns: table => new
+                {
+                    DocNum = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PostingDate = table.Column<DateTime>(nullable: false),
+                    CreategDate = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
+                    DueDate = table.Column<DateTime>(nullable: false),
+                    ProjectCode = table.Column<string>(nullable: true),
+                    ProjectName = table.Column<string>(nullable: true),
+                    OriginatorId = table.Column<int>(nullable: false),
+                    CreatorId = table.Column<int>(nullable: true),
+                    ObjctType = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchaseRequests", x => x.DocNum);
+                    table.ForeignKey(
+                        name: "FK_PurchaseRequests_Users_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UsersAppovalTemplates",
                 columns: table => new
                 {
@@ -245,6 +227,33 @@ namespace AtuApi.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PurchaseRequestRows",
+                columns: table => new
+                {
+                    PurchaseRequestDocNum = table.Column<int>(nullable: false),
+                    LineNum = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemCode = table.Column<string>(nullable: true),
+                    BusinessPartnerCode = table.Column<string>(nullable: true),
+                    RequiredQuantity = table.Column<double>(nullable: false),
+                    DueDate = table.Column<DateTime>(nullable: false),
+                    TeritoryId = table.Column<int>(nullable: false),
+                    Remarks = table.Column<string>(nullable: true),
+                    WareHouse = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchaseRequestRows", x => new { x.PurchaseRequestDocNum, x.LineNum });
+                    table.ForeignKey(
+                        name: "FK_PurchaseRequestRows_PurchaseRequests_PurchaseRequestDocNum",
+                        column: x => x.PurchaseRequestDocNum,
+                        principalTable: "PurchaseRequests",
+                        principalColumn: "DocNum",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -314,8 +323,8 @@ namespace AtuApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "BranchId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "UserName" },
-                values: new object[] { 1, -1, "Example@gamil.com", "Jason", "Buttler", new byte[] { 21, 187, 105, 8, 23, 190, 109, 174, 100, 151, 184, 12, 170, 29, 42, 194, 198, 5, 249, 128, 168, 38, 66, 19, 22, 215, 100, 87, 17, 41, 125, 198, 153, 77, 160, 143, 213, 51, 146, 220, 249, 22, 247, 231, 109, 39, 25, 20, 210, 85, 243, 39, 49, 249, 21, 201, 168, 123, 174, 81, 20, 0, 15, 250 }, new byte[] { 219, 144, 223, 34, 178, 22, 111, 158, 59, 125, 140, 199, 122, 89, 130, 225, 158, 66, 189, 64, 108, 144, 115, 67, 49, 201, 78, 217, 39, 79, 222, 18, 132, 231, 0, 92, 127, 105, 61, 81, 149, 84, 213, 87, 50, 109, 102, 88, 195, 62, 147, 243, 147, 247, 231, 99, 40, 55, 139, 234, 43, 8, 131, 131, 231, 216, 55, 1, 245, 223, 211, 238, 242, 89, 47, 210, 51, 178, 108, 193, 162, 211, 79, 98, 210, 54, 40, 46, 18, 125, 143, 85, 76, 104, 23, 238, 90, 32, 178, 22, 65, 38, 248, 41, 85, 33, 146, 28, 43, 135, 45, 151, 3, 244, 9, 166, 130, 206, 186, 233, 32, 53, 125, 162, 60, 202, 229, 165 }, "Manager", 1, "manager" });
+                columns: new[] { "Id", "BranchId", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Position", "RoleId", "SapEmployeeId", "UserName" },
+                values: new object[] { 1, -1, "Example@gamil.com", "Jason", "Buttler", new byte[] { 2, 222, 135, 73, 4, 131, 25, 181, 28, 208, 54, 69, 217, 38, 101, 29, 111, 148, 131, 36, 213, 170, 4, 200, 169, 229, 156, 154, 69, 3, 174, 56, 5, 20, 143, 67, 181, 138, 91, 234, 247, 232, 178, 137, 188, 68, 18, 224, 132, 244, 215, 81, 173, 219, 237, 1, 2, 161, 86, 49, 130, 100, 41, 116 }, new byte[] { 149, 234, 75, 43, 254, 255, 69, 89, 7, 82, 26, 15, 136, 213, 113, 171, 47, 7, 227, 2, 252, 165, 133, 89, 146, 91, 146, 95, 59, 88, 166, 3, 72, 195, 67, 156, 50, 229, 199, 145, 72, 26, 246, 13, 38, 240, 66, 159, 237, 95, 93, 6, 123, 49, 174, 115, 55, 244, 198, 30, 35, 128, 35, 106, 130, 254, 29, 46, 36, 238, 136, 104, 11, 157, 58, 189, 219, 94, 13, 11, 29, 56, 97, 117, 201, 227, 236, 88, 39, 6, 61, 119, 117, 14, 82, 140, 181, 108, 175, 142, 91, 148, 11, 95, 152, 157, 31, 92, 123, 180, 86, 243, 128, 18, 15, 226, 91, 162, 184, 94, 71, 42, 97, 26, 142, 144, 88, 102 }, "Manager", 1, 0, "manager" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApprovalDocumentTypes_DocumentTypeId",
@@ -338,6 +347,11 @@ namespace AtuApi.Migrations
                 name: "IX_PermissionRoles_RoleId",
                 table: "PermissionRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PurchaseRequests_CreatorId",
+                table: "PurchaseRequests",
+                column: "CreatorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_BranchId",
