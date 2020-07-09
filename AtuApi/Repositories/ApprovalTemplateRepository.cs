@@ -20,12 +20,12 @@ namespace AtuApi.Repositories
 
         public new IEnumerable<ApprovalTemplate> GetAll()
         {
-            return ApprovalTemplateContext.ApprovalTemplates.Include(x => x.ApprovalsEmployees).Include(x=>x.UsersAppovalTemplates).Include(x => x.ApprovalsDocumentTypes).ToList();
+            return ApprovalTemplateContext.ApprovalTemplates.Include(x => x.UsersAppovalTemplates).ThenInclude(x => x.User).Include(x => x.ApprovalsEmployees).ThenInclude(x => x.User).Include(x => x.ApprovalsDocumentTypes).ThenInclude(x => x.DocumentType).ToList();
         }
 
         public new ApprovalTemplate Get(int id)
         {
-            return ApprovalTemplateContext.ApprovalTemplates.Include(x => x.UsersAppovalTemplates).Include(x => x.ApprovalsEmployees).Include(x => x.ApprovalsDocumentTypes).FirstOrDefault(x=>x.TemplateCode == id);
+            return ApprovalTemplateContext.ApprovalTemplates.Include(x => x.UsersAppovalTemplates).ThenInclude(x=>x.User).Include(x => x.ApprovalsEmployees).ThenInclude(x=>x.User).Include(x => x.ApprovalsDocumentTypes).ThenInclude(x=>x.DocumentType).FirstOrDefault(x=>x.TemplateCode == id);
         }
 
         private DataContext ApprovalTemplateContext => Context as DataContext;

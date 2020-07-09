@@ -27,6 +27,7 @@ namespace AtuApi.AutoMapper
 
 
             CreateMap<PurchaseRequest, PurchaseRequestDto>();
+                //.ForMember(des => des.Rows, opts => opts.MapFrom(src=>src.Rows));
 
             CreateMap<PurchaseRequestDto, PurchaseRequest>()
                 .ForMember(des => des.Employee, opts => opts.Ignore());
@@ -47,13 +48,13 @@ namespace AtuApi.AutoMapper
 
 
 
-            CreateMap<ApprovalTemplateDto, ApprovalTemplate>()
+            CreateMap<ApprovalTemplateRequestDto, ApprovalTemplate>()
                  .ForMember(
                       dest => dest.ApprovalsEmployees,
                       opts => opts.MapFrom(
                           src => src.ApprovalEmployees.Select(pr => new ApprovalsEmployees
                           {
-                              EmployeeCode = pr,
+                              UserId = pr,
                           }
                           )))
                  .ForMember(dest => dest.TemplateCode, opts => opts.Ignore())
@@ -64,21 +65,21 @@ namespace AtuApi.AutoMapper
 
 
 
-            CreateMap<ApprovalTemplate, ApprovalTemplateDto>()
+            CreateMap<ApprovalTemplate, ApprovalTemplateResponseDto>()
                 .ForMember(
                     des => des.ApprovalEmployees,
                     opts => opts.MapFrom(
-                        src => src.ApprovalsEmployees.Select(appr => appr.EmployeeCode).ToList()))
+                        src => src.ApprovalsEmployees.Select(appr => appr.User).ToList()))
                 .ForMember(
                   des => des.Users,
                   opts => opts.MapFrom(
-                      src => src.UsersAppovalTemplates.Select(usr => usr.UserId)))
+                      src => src.UsersAppovalTemplates.Select(usr => usr.User)))
                 .ForMember(
                   des => des.DocumentTypes,
                   opts => opts.MapFrom(
-                      src => src.ApprovalsDocumentTypes.Select(usr => usr.DocumentTypeId)));
+                      src => src.ApprovalsDocumentTypes.Select(usr => usr.DocumentType)));
 
-
+            CreateMap<DocumentType, DocumentTypeResponseDto>();
 
         }
     }

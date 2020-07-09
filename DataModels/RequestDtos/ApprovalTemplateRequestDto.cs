@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataModels.Dtos
+namespace DataModels.RequestDtos
 {
-    public class ApprovalTemplateDto
+    public class ApprovalTemplateRequestDto
     {
         public int TemplateCode { get; set; }
         public string TemplateName { get; set; }
@@ -14,6 +14,5 @@ namespace DataModels.Dtos
         public List<int> ApprovalEmployees { get; set; }
         public List<int> Users { get; set; }
         public List<int> DocumentTypes { get; set; }
-
     }
 }

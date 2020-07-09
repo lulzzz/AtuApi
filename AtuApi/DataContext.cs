@@ -81,7 +81,7 @@ namespace DataContextHelper
 
 
             modelBuilder.Entity<ApprovalsEmployees>()
-             .HasKey(x => new { x.ApprovalCode, x.EmployeeCode });
+             .HasKey(x => new { x.ApprovalTemplateTemplateCode, x.UserId });
 
             modelBuilder.Entity<User>().Property(i => i.IsActive).HasDefaultValue(true);
 
@@ -90,7 +90,7 @@ namespace DataContextHelper
             modelBuilder.Entity<ApprovalsEmployees>()
            .HasOne(x => x.ApprovalTemplate)
            .WithMany(e => e.ApprovalsEmployees)
-           .HasForeignKey(fx => fx.ApprovalCode);
+           .HasForeignKey(fx => fx.ApprovalTemplateTemplateCode);
 
             modelBuilder.Entity<PurchaseRequest>()
             .HasKey(x => x.DocNum);

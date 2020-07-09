@@ -7,6 +7,8 @@ using AtuApi.Interfaces;
 using AutoMapper;
 using DataModels.Dtos;
 using DataModels.Models;
+using DataModels.RequestDtos;
+using DataModels.ResponseDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +27,7 @@ namespace AtuApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateApprovalTemplate(ApprovalTemplateDto approvalTemplateDto)
+        public IActionResult CreateApprovalTemplate(ApprovalTemplateRequestDto approvalTemplateDto)
         {
             var approvalTemplate = _mapper.Map<ApprovalTemplate>(approvalTemplateDto);
             var result = _unitOfWork.ApprovalTemplateRepository.Add(approvalTemplate);
@@ -36,7 +38,7 @@ namespace AtuApi.Controllers
         public IActionResult GetApprovalTemplates()
         {
             var approvalTemplates = _unitOfWork.ApprovalTemplateRepository.GetAll();
-            var approvalTemplateDtos = _mapper.Map<IEnumerable<ApprovalTemplateDto>>(approvalTemplates);
+            var approvalTemplateDtos = _mapper.Map<IEnumerable<ApprovalTemplateResponseDto>>(approvalTemplates);
             Request.HttpContext.Response.Headers.Add("Total-Count", approvalTemplates.Count().ToString());
             return Ok(approvalTemplateDtos);
         }
@@ -44,14 +46,14 @@ namespace AtuApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetApprovalTemplates(int id)
         {
-            var approvalTemplate = _unitOfWork.ApprovalTemplateRepository.Get(id);
-            var approvalTemplateDto = _mapper.Map<ApprovalTemplateDto>(approvalTemplate);
+            ApprovalTemplate approvalTemplate = _unitOfWork.ApprovalTemplateRepository.Get(id);
+            var approvalTemplateDto = _mapper.Map<ApprovalTemplateResponseDto>(approvalTemplate);
             return Ok(approvalTemplateDto);
         }
 
 
         [HttpPut]
-        public IActionResult UpdateApprovalTemplate(ApprovalTemplateDto approvalTemplateDto)
+        public IActionResult UpdateApprovalTemplate(ApprovalTemplateRequestDto approvalTemplateDto)
         {
             var approvalTemplate = _mapper.Map<ApprovalTemplate>(approvalTemplateDto);
             var template = _unitOfWork.ApprovalTemplateRepository.Get(approvalTemplateDto.TemplateCode);

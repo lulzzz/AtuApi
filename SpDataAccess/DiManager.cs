@@ -63,6 +63,10 @@ namespace SapDataAccess
         {
             Items items = (Items)_company.GetBusinessObject(BoObjectTypes.oItems);
             bool exists = items.GetByKey(itemCode);
+            if (!exists)
+            {
+                return null;
+            }
             List<UnitOfMeasure> uoms = new List<UnitOfMeasure>();
             for (int i = 0; i < items.UnitOfMeasurements.Count; i++)
             {
@@ -81,7 +85,7 @@ namespace SapDataAccess
                 UnitOfMeasurePurchaseCode = items.PurchaseUnit,
                 UnitOfMeasures = uoms
             };
-            return !exists ? null : item;
+            return item;
         }
         /// <summary>
         /// Returns BusinessPartner (Null if Not Exists)
@@ -477,13 +481,22 @@ namespace SapDataAccess
             var unitOfMeasurementsService = (UnitOfMeasurementsService)_company.GetCompanyService().GetBusinessService(ServiceTypes.UnitOfMeasurementsService);
             var unitOfMeasurementParams = (UnitOfMeasurementParams)unitOfMeasurementsService.GetDataInterface(UnitOfMeasurementsServiceDataInterfaces.uomsUnitOfMeasurementParams);
             unitOfMeasurementParams.AbsEntry = absEntry;
-            UnitOfMeasurement uom = unitOfMeasurementsService.Get(unitOfMeasurementParams);
-            UnitOfMeasure unitOfMeasure = new UnitOfMeasure
+            UnitOfMeasurement uom;
+            UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
+            try
             {
-                AbsEntry = uom.AbsEntry,
-                UomCode = uom.Code,
-                UomName = uom.Name,
-            };
+                uom = unitOfMeasurementsService.Get(unitOfMeasurementParams);
+                unitOfMeasure = new UnitOfMeasure
+                {
+                    AbsEntry = uom.AbsEntry,
+                    UomCode = uom.Code,
+                    UomName = uom.Name,
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
             return unitOfMeasure;
         }
 

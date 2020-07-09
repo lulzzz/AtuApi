@@ -10,7 +10,7 @@ namespace DataModels.Dtos
     {
         public PurchaseRequestDto()
         {
-            Rows = new List<PurchaseRequestRowDto>();
+            Rows = new List<PurchaseRequestRow>();
         }
         public string CompanyName = "ასოციაცია ატუ";
         public int DocNum { get; set; }
@@ -18,8 +18,9 @@ namespace DataModels.Dtos
         public DateTime CreategDate { get; set; }
         public DateTime DueDate { get; set; }
         public string ProjectCode { get; set; }
-        public string ProjectName { get; set; }     
+        public Project Project { get; set; }     
         public int EmployeeId { get; set; }
-        public List<PurchaseRequestRowDto> Rows { get; set; }
+        public Employee Employee { get; set; }
+        public List<PurchaseRequestRow> Rows { get; set; }
     }
 }

@@ -353,8 +353,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 39, 172, 167, 17, 217, 243, 74, 76, 125, 183, 18, 6, 144, 47, 56, 181, 15, 99, 53, 162, 227, 4, 122, 90, 105, 131, 156, 68, 210, 50, 225, 183, 109, 23, 207, 241, 195, 238, 183, 249, 80, 24, 165, 189, 141, 164, 67, 27, 59, 71, 124, 69, 211, 71, 214, 8, 252, 77, 47, 75, 57, 241, 159, 80 },
-                            PasswordSalt = new byte[] { 205, 197, 113, 76, 72, 168, 101, 96, 182, 187, 106, 103, 192, 246, 184, 150, 223, 172, 223, 201, 28, 114, 191, 210, 189, 120, 7, 130, 163, 118, 179, 233, 54, 66, 180, 50, 230, 33, 169, 18, 230, 143, 125, 198, 112, 244, 181, 67, 169, 152, 186, 120, 179, 152, 82, 207, 152, 173, 94, 127, 52, 120, 173, 29, 146, 61, 58, 191, 195, 41, 104, 27, 114, 153, 110, 66, 153, 44, 111, 162, 8, 128, 152, 161, 189, 67, 246, 136, 150, 224, 230, 41, 146, 234, 147, 61, 198, 45, 15, 198, 252, 169, 39, 15, 194, 76, 122, 234, 78, 111, 17, 15, 55, 193, 12, 234, 35, 37, 237, 107, 234, 153, 100, 28, 81, 151, 192, 114 },
+                            PasswordHash = new byte[] { 21, 187, 105, 8, 23, 190, 109, 174, 100, 151, 184, 12, 170, 29, 42, 194, 198, 5, 249, 128, 168, 38, 66, 19, 22, 215, 100, 87, 17, 41, 125, 198, 153, 77, 160, 143, 213, 51, 146, 220, 249, 22, 247, 231, 109, 39, 25, 20, 210, 85, 243, 39, 49, 249, 21, 201, 168, 123, 174, 81, 20, 0, 15, 250 },
+                            PasswordSalt = new byte[] { 219, 144, 223, 34, 178, 22, 111, 158, 59, 125, 140, 199, 122, 89, 130, 225, 158, 66, 189, 64, 108, 144, 115, 67, 49, 201, 78, 217, 39, 79, 222, 18, 132, 231, 0, 92, 127, 105, 61, 81, 149, 84, 213, 87, 50, 109, 102, 88, 195, 62, 147, 243, 147, 247, 231, 99, 40, 55, 139, 234, 43, 8, 131, 131, 231, 216, 55, 1, 245, 223, 211, 238, 242, 89, 47, 210, 51, 178, 108, 193, 162, 211, 79, 98, 210, 54, 40, 46, 18, 125, 143, 85, 76, 104, 23, 238, 90, 32, 178, 22, 65, 38, 248, 41, 85, 33, 146, 28, 43, 135, 45, 151, 3, 244, 9, 166, 130, 206, 186, 233, 32, 53, 125, 162, 60, 202, 229, 165 },
                             Position = "Manager",
                             RoleId = 1,
                             UserName = "manager"
@@ -400,13 +400,15 @@ namespace AtuApi.Migrations
 
             modelBuilder.Entity("DataModels.Models.ApprovalsEmployees", b =>
                 {
-                    b.Property<int>("ApprovalCode")
+                    b.Property<int>("ApprovalTemplateTemplateCode")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeCode")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("ApprovalCode", "EmployeeCode");
+                    b.HasKey("ApprovalTemplateTemplateCode", "UserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ApprovalsEmployees");
                 });
@@ -561,7 +563,13 @@ namespace AtuApi.Migrations
                 {
                     b.HasOne("DataModels.Models.ApprovalTemplate", "ApprovalTemplate")
                         .WithMany("ApprovalsEmployees")
-                        .HasForeignKey("ApprovalCode")
+                        .HasForeignKey("ApprovalTemplateTemplateCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AtuApi.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
