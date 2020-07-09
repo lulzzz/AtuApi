@@ -78,7 +78,7 @@ namespace AtuApi.Controllers
         public IActionResult GetPurchaseReques(int id)  
         {
             PurchaseRequest purchaseReqests = _unitOfWork.PurchaseRequestRepository.Get(id);
-            purchaseReqests.Employee = _unitOfWork.EmployeeRepository.GetEmployee(purchaseReqests.EmployeeId);
+            purchaseReqests.Employee = _unitOfWork.UserRepository.GetById(purchaseReqests.EmployeeId);
             purchaseReqests.project = _unitOfWork.ProjectRepository.GetProject(purchaseReqests.ProjectCode);    
             PurchaseRequestDto PurchaseRequestDto = _mapper.Map<PurchaseRequestDto>(purchaseReqests);
             return Ok(PurchaseRequestDto);

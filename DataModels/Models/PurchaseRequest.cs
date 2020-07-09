@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AtuApi.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -21,7 +22,7 @@ namespace DataModels.Models
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
         [NotMapped]
-        public Employee Employee { get; set; }
+        public User Employee { get; set; }
         public int EmployeeId { get; set; }
         public List<PurchaseRequestRow> Rows { get; set; }
     }

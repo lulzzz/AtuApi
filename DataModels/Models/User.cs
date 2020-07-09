@@ -18,6 +18,7 @@ namespace AtuApi.Models
         public virtual Branch Branch { get; set; }
         public int BranchId { get; set; }
         public int RoleId { get; set; }
+        public int SapEmployeeId { get; set; }
         public bool IsActive { get; set; }
         public ICollection<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
         public byte[] PasswordHash { get; set; }

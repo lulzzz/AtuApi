@@ -105,7 +105,8 @@ namespace AtuApi.Repositories
             user.Email = userParam.Email;
             user.Position = userParam.Position;
             user.Branch = userParam.Branch;
-           // user.ApprovalTemplate = userParam.ApprovalTemplate;
+            user.SapEmployeeId = userParam.SapEmployeeId;
+            // user.ApprovalTemplate = userParam.ApprovalTemplate;
             user.Role = userParam.Role;
             user.IsActive = userParam.IsActive;
 

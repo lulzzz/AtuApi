@@ -1,4 +1,6 @@
-﻿using DataModels.Models;
+﻿using AtuApi.Models;
+using DataModels.Models;
+using DataModels.ResponseDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace DataModels.Dtos
         public string ProjectCode { get; set; }
         public Project Project { get; set; }     
         public int EmployeeId { get; set; }
-        public Employee Employee { get; set; }
+        public UserDtoResponse Employee { get; set; }
         public List<PurchaseRequestRow> Rows { get; set; }
     }
 }

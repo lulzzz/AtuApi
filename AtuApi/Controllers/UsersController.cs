@@ -95,6 +95,11 @@ namespace AtuApi.Controllers
 
             Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
             Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);            
+            Employee employee = _unitOfWork.EmployeeRepository.GetEmployee(userDto.SapEmployeeId);
+            if (employee == null)
+            {
+                return UnprocessableEntity("ასეთი Employee არ არსებობს");
+            }
 
             if (role == null)
             {
@@ -165,7 +170,12 @@ namespace AtuApi.Controllers
             var creatorRole = userCreator.Role.RoleName;
             Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
             Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
-           
+            Employee employee = _unitOfWork.EmployeeRepository.GetEmployee(userDto.SapEmployeeId);
+            if (employee == null)
+            {
+                return UnprocessableEntity("ასეთი Employee არ არსებობს");
+            }
+
             if (role == null)
             {
                 return UnprocessableEntity("ასეთი როლი არ არსებობს");
@@ -178,6 +188,7 @@ namespace AtuApi.Controllers
 
             userToBeUpdated.Branch = branch;
             userToBeUpdated.Role = role;
+            userToBeUpdated.SapEmployeeId = employee.EmpId;
             //userToBeUpdated.ApprovalTemplate = temlate;
 
             var creatingRole = userToBeUpdated.Role.RoleName;
