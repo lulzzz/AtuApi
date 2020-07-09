@@ -49,7 +49,7 @@ namespace AtuApi.Controllers
             return Ok(approvalTemplateDto);
         }
 
-        
+
         [HttpPut]
         public IActionResult UpdateApprovalTemplate(ApprovalTemplateDto approvalTemplateDto)
         {
@@ -59,6 +59,7 @@ namespace AtuApi.Controllers
             template.TemplateName = approvalTemplate.TemplateName;
             template.ApprovalsEmployees = approvalTemplate.ApprovalsEmployees;
             template.UsersAppovalTemplates = approvalTemplate.UsersAppovalTemplates;
+            template.ApprovalsDocumentTypes = approvalTemplate.ApprovalsDocumentTypes;
             _unitOfWork.ApprovalTemplateRepository.Update(template);
             return Ok();
         }

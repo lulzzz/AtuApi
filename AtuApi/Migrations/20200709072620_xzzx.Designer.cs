@@ -4,14 +4,16 @@ using DataContextHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200709072620_xzzx")]
+    partial class xzzx
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -353,8 +355,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 39, 172, 167, 17, 217, 243, 74, 76, 125, 183, 18, 6, 144, 47, 56, 181, 15, 99, 53, 162, 227, 4, 122, 90, 105, 131, 156, 68, 210, 50, 225, 183, 109, 23, 207, 241, 195, 238, 183, 249, 80, 24, 165, 189, 141, 164, 67, 27, 59, 71, 124, 69, 211, 71, 214, 8, 252, 77, 47, 75, 57, 241, 159, 80 },
-                            PasswordSalt = new byte[] { 205, 197, 113, 76, 72, 168, 101, 96, 182, 187, 106, 103, 192, 246, 184, 150, 223, 172, 223, 201, 28, 114, 191, 210, 189, 120, 7, 130, 163, 118, 179, 233, 54, 66, 180, 50, 230, 33, 169, 18, 230, 143, 125, 198, 112, 244, 181, 67, 169, 152, 186, 120, 179, 152, 82, 207, 152, 173, 94, 127, 52, 120, 173, 29, 146, 61, 58, 191, 195, 41, 104, 27, 114, 153, 110, 66, 153, 44, 111, 162, 8, 128, 152, 161, 189, 67, 246, 136, 150, 224, 230, 41, 146, 234, 147, 61, 198, 45, 15, 198, 252, 169, 39, 15, 194, 76, 122, 234, 78, 111, 17, 15, 55, 193, 12, 234, 35, 37, 237, 107, 234, 153, 100, 28, 81, 151, 192, 114 },
+                            PasswordHash = new byte[] { 92, 25, 56, 48, 151, 199, 66, 139, 1, 21, 127, 185, 102, 6, 24, 149, 0, 145, 255, 198, 80, 132, 46, 35, 56, 224, 128, 21, 226, 107, 92, 160, 138, 39, 213, 46, 46, 66, 68, 215, 253, 168, 42, 232, 109, 177, 79, 204, 93, 255, 133, 199, 147, 57, 99, 41, 7, 232, 69, 181, 91, 239, 206, 148 },
+                            PasswordSalt = new byte[] { 255, 105, 8, 233, 211, 130, 136, 165, 239, 207, 178, 70, 190, 142, 116, 180, 84, 236, 76, 237, 83, 167, 183, 95, 169, 13, 163, 70, 63, 156, 42, 58, 231, 253, 194, 183, 23, 231, 86, 234, 127, 30, 175, 33, 224, 232, 183, 244, 163, 85, 65, 25, 191, 177, 6, 119, 10, 187, 97, 41, 110, 85, 250, 77, 83, 207, 243, 26, 24, 162, 241, 3, 15, 24, 65, 224, 132, 42, 76, 146, 168, 40, 143, 24, 230, 69, 17, 92, 101, 46, 191, 225, 18, 13, 0, 44, 14, 53, 119, 93, 221, 165, 225, 37, 158, 162, 54, 210, 126, 226, 88, 14, 48, 232, 121, 64, 219, 125, 26, 151, 109, 112, 234, 43, 166, 248, 172, 57 },
                             Position = "Manager",
                             RoleId = 1,
                             UserName = "manager"
@@ -388,12 +390,12 @@ namespace AtuApi.Migrations
                     b.Property<int>("ApprovalTemplateTemplateCode")
                         .HasColumnType("int");
 
-                    b.Property<int>("DocumentTypeId")
+                    b.Property<int>("DocumentTypeID")
                         .HasColumnType("int");
 
-                    b.HasKey("ApprovalTemplateTemplateCode", "DocumentTypeId");
+                    b.HasKey("ApprovalTemplateTemplateCode", "DocumentTypeID");
 
-                    b.HasIndex("DocumentTypeId");
+                    b.HasIndex("DocumentTypeID");
 
                     b.ToTable("ApprovalDocumentTypes");
                 });
@@ -544,15 +546,15 @@ namespace AtuApi.Migrations
 
             modelBuilder.Entity("DataModels.Models.ApprovalsDocumentType", b =>
                 {
-                    b.HasOne("DataModels.Models.ApprovalTemplate", "ApprovalTemplate")
-                        .WithMany("ApprovalsDocumentTypes")
+                    b.HasOne("DataModels.Models.DocumentType", "DocumentType")
+                        .WithMany("ApprovalDocumentTypes")
                         .HasForeignKey("ApprovalTemplateTemplateCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataModels.Models.DocumentType", "DocumentType")
-                        .WithMany("ApprovalDocumentTypes")
-                        .HasForeignKey("DocumentTypeId")
+                    b.HasOne("DataModels.Models.ApprovalTemplate", "ApprovalTemplate")
+                        .WithMany("ApprovalsDocumentTypes")
+                        .HasForeignKey("DocumentTypeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

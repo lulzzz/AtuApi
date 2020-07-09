@@ -13,6 +13,7 @@ namespace DataModels.Dtos
         public bool IsActive { get; set; }
         public List<int> ApprovalEmployees { get; set; }
         public List<int> Users { get; set; }
+        public List<int> DocumentTypes { get; set; }
 
     }
 }

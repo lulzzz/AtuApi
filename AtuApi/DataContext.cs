@@ -26,10 +26,24 @@ namespace DataContextHelper
         public DbSet<PurchaseRequestRow> PurchaseRequestRows { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
+        public DbSet<ApprovalsDocumentType> ApprovalDocumentTypes { get; set; }
         public IConfiguration Configuration { get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<ApprovalsDocumentType>()
+               .HasKey(x => new { x.ApprovalTemplateTemplateCode, x.DocumentTypeId });
+
+            modelBuilder.Entity<ApprovalsDocumentType>()
+            .HasOne(p => p.DocumentType)
+            .WithMany(pe => pe.ApprovalDocumentTypes)
+            .HasForeignKey(m => m.DocumentTypeId);
+
+            modelBuilder.Entity<ApprovalsDocumentType>()
+                .HasOne(p => p.ApprovalTemplate)
+                .WithMany(pe => pe.ApprovalsDocumentTypes)
+                .HasForeignKey(m => m.ApprovalTemplateTemplateCode);
 
             modelBuilder.Entity<PermissionRoles>()
                 .HasKey(x => new { x.PermissionId, x.RoleId });

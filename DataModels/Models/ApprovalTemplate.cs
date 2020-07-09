@@ -13,7 +13,7 @@ namespace DataModels.Models
         public bool IsActive { get; set; }
         public virtual ICollection<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
         public ICollection<ApprovalsEmployees> ApprovalsEmployees { get; set; }
-        public List<DocumentType> DocumentTypes { get; set; }
+        public ICollection<ApprovalsDocumentType> ApprovalsDocumentTypes { get; set; }
 
     }
 }

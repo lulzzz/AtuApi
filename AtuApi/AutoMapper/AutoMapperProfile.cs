@@ -58,7 +58,9 @@ namespace AtuApi.AutoMapper
                           )))
                  .ForMember(dest => dest.TemplateCode, opts => opts.Ignore())
                  .ForMember(dest => dest.UsersAppovalTemplates, opts => opts.MapFrom(
-                       src => src.Users.Select(ua => new UsersAppovalTemplate { UserId = ua })));
+                       src => src.Users.Select(ua => new UsersAppovalTemplate { UserId = ua })))
+                 .ForMember(src => src.ApprovalsDocumentTypes, opts => opts.MapFrom(
+                       src => src.DocumentTypes.Select(appD => new ApprovalsDocumentType { DocumentTypeId = appD })));
 
 
 
@@ -68,9 +70,13 @@ namespace AtuApi.AutoMapper
                     opts => opts.MapFrom(
                         src => src.ApprovalsEmployees.Select(appr => appr.EmployeeCode).ToList()))
                 .ForMember(
-                  des=>des.Users,
-                  opts=>opts.MapFrom(
-                      src=>src.UsersAppovalTemplates.Select(usr=>usr.UserId)));
+                  des => des.Users,
+                  opts => opts.MapFrom(
+                      src => src.UsersAppovalTemplates.Select(usr => usr.UserId)))
+                .ForMember(
+                  des => des.DocumentTypes,
+                  opts => opts.MapFrom(
+                      src => src.ApprovalsDocumentTypes.Select(usr => usr.DocumentTypeId)));
 
 
 
