@@ -19,7 +19,9 @@ namespace DataModels.Models
         public Territory Teritory { get; set; }
         public int TeritoryId { get; set; }
         public string Remarks { get; set; }
-        public string WareHouse { get; set; }
+        [NotMapped]
+        public WareHouse WareHouse { get; set; }
+        public string WareHouseCode { get; set; }
         public string Status { get; set; }
         public int PurchaseRequestDocNum { get; set; }
         public int LineNum { get; set; }

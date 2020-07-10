@@ -26,14 +26,18 @@ namespace AtuApi.AutoMapper
 
 
 
-            CreateMap<PurchaseRequest, PurchaseRequestDto>();
+            CreateMap<PurchaseRequest, PurchaseRequestResponseDto>();
             //.ForMember(des => des.Rows, opts => opts.MapFrom(src=>src.Rows));
 
-            CreateMap<PurchaseRequestDto, PurchaseRequest>();
+            CreateMap<PurchaseRequestRequestDto, PurchaseRequest>();
 
 
-            CreateMap<PurchaseRequestRowDto, PurchaseRequestRow>();
-            CreateMap<PurchaseRequestRow, PurchaseRequestRowDto>();
+
+            CreateMap<PurchaseRequestRequestRowDto, PurchaseRequestRow>();
+                    // .ForMember(des => des.WareHouse, opts => opts
+                    //.MapFrom(src => new WareHouse { WareHouseCode = src.WareHouseCode }));
+            CreateMap<PurchaseRequestRow, PurchaseRequestResponseRowDto>();
+           
 
 
             CreateMap<Permission, PermissionDto>();

@@ -7,6 +7,8 @@ using AtuApi.Interfaces;
 using AutoMapper;
 using DataModels.Dtos;
 using DataModels.Models;
+using DataModels.RequestDtos;
+using DataModels.ResponseDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,25 +27,29 @@ namespace AtuApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreatePurchaseRequest(PurchaseRequestDto purchaseRequestDto)
+        public IActionResult CreatePurchaseRequest(PurchaseRequestRequestDto purchaseRequestDto)
         {
             var purchaseRequest = _mapper.Map<PurchaseRequest>(purchaseRequestDto);
-            var emp = _unitOfWork.EmployeeRepository.GetEmployee(purchaseRequestDto.EmployeeId);
+            var originator = _unitOfWork.UserRepository.GetById(purchaseRequestDto.OriginatorId);
+            var creator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
             var project = _unitOfWork.ProjectRepository.GetProject(purchaseRequestDto.ProjectCode);
-            if (emp == null)
+            purchaseRequest.Creator = creator;
+            purchaseRequest.ProjectName = project.ProjectName;
+
+            if (originator == null)
             {
-                return UnprocessableEntity($"EmployeeId : {purchaseRequestDto.EmployeeId} არ არსებობს");
+                return UnprocessableEntity($"originatorId : {purchaseRequestDto.OriginatorId} არ არსებობს");
             }
             if (project == null)
             {
                 return UnprocessableEntity($"ProjectCode : {purchaseRequestDto.ProjectCode} არ არსებობს");
             }
-            foreach (var row in purchaseRequest.Rows)
+            foreach (var row in purchaseRequestDto.Rows)
             {
                 var bp = _unitOfWork.BusinessPartnerRepository.GetBusinessPartner(row.BusinessPartnerCode);
                 var item = _unitOfWork.ItemRepository.GetItem(row.ItemCode);
                 var territory = _unitOfWork.TerritoryRepository.GetTerritory(row.TeritoryId);
-                var wareHouse = _unitOfWork.WareHouseRepository.GetWareHouse(row.WareHouse);
+                var wareHouse = _unitOfWork.WareHouseRepository.GetWareHouse(row.WareHouseCode);
                 if (bp == null)
                 {
                     return UnprocessableEntity($"BusinessPartner : {row.BusinessPartnerCode} არ არსებობს");
@@ -58,18 +64,20 @@ namespace AtuApi.Controllers
                 }
                 if (wareHouse == null)
                 {
-                    return UnprocessableEntity($"wareHouse : {row.WareHouse} არ არსებობს");
+                    return UnprocessableEntity($"wareHouse : {row.WareHouseCode} არ არსებობს");
                 }
             }
-            var res = _unitOfWork.PurchaseRequestRepository.Add(purchaseRequest);
-            return Accepted(res.DocNum);
+
+            PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Add(purchaseRequest);
+            return CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
+
         }
 
         [HttpGet]
         public IActionResult GetPurchaseReques()
         {
             IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll();
-            IEnumerable<PurchaseRequestDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestDto>>(purchaseReqests);
+            IEnumerable<PurchaseRequestResponseDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseReqests);
             Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());
             return Ok(PurchaseRequetDtos);
         }
@@ -77,9 +85,26 @@ namespace AtuApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPurchaseReques(int id)
         {
-            PurchaseRequest purchaseReqests = _unitOfWork.PurchaseRequestRepository.Get(id);            
-            purchaseReqests.project = _unitOfWork.ProjectRepository.GetProject(purchaseReqests.ProjectCode);
-            PurchaseRequestDto PurchaseRequestDto = _mapper.Map<PurchaseRequestDto>(purchaseReqests);
+            PurchaseRequest purchaseReqests = _unitOfWork.PurchaseRequestRepository.Get(id);
+            if (purchaseReqests == null)
+            {
+                NotFound();
+            }
+
+            PurchaseRequestResponseDto PurchaseRequestDto = _mapper.Map<PurchaseRequestResponseDto>(purchaseReqests);         
+            PurchaseRequestDto.Project = _unitOfWork.ProjectRepository.GetProject(purchaseReqests.ProjectCode);
+            PurchaseRequestDto.Originator = _mapper.Map<UserDtoResponse>(_unitOfWork.UserRepository.GetById(purchaseReqests.OriginatorId));
+            PurchaseRequestDto.Originator.Permissions = new List<PermissionDto>();
+            foreach (var rowDto in PurchaseRequestDto.Rows)
+            {
+                rowDto.BusinessPartner = _unitOfWork.BusinessPartnerRepository.GetBusinessPartner(rowDto.BusinessPartnerCode);
+                rowDto.Teritory = _unitOfWork.TerritoryRepository.GetTerritory(rowDto.TeritoryId);
+                rowDto.WareHouse = _unitOfWork.WareHouseRepository.GetWareHouse(rowDto.WareHouseCode);
+                rowDto.Item = _unitOfWork.ItemRepository.GetItem(rowDto.ItemCode);
+            }
+
+
+
             return Ok(PurchaseRequestDto);
         }
     }

@@ -23,7 +23,7 @@ namespace AtuApi.Repositories
 
         public new PurchaseRequest Get(int id)
         {
-            return PurchaseRequestContext.PurchaseRequests.Include(x => x.Rows).FirstOrDefault(y=>y.DocNum == id);
+            return PurchaseRequestContext.PurchaseRequests.Include(x => x.Rows).Include(x=>x.Creator).FirstOrDefault(y=>y.DocNum == id);
         }
 
         private DataContext PurchaseRequestContext => Context as DataContext;
