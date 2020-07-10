@@ -24,5 +24,6 @@ namespace AtuApi.Interfaces
         IItemsWarehousesRepository ItemsWarehousesRepository { get; }
         IUnitOfMeasueRepository UnitOfMeasueRepository { get; }
         IUnitOfMeasueGroupRepository UnitOfMeasueGroupRepository { get; }
+        INotificationHistoryRepository NotificationHistoryRepository { get; }
     }
 }

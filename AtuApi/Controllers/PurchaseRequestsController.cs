@@ -69,6 +69,20 @@ namespace AtuApi.Controllers
             }
 
             PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Add(purchaseRequest);
+            if (res.DocNum != 0)
+            {
+                IEnumerable<ApprovalTemplate> listOfApprovalTemplates = _unitOfWork.ApprovalTemplateRepository.GetAll();
+                IList<ApprovalTemplateResponseDto> listOfApprovalTemplateDtos = _mapper.Map<IList<ApprovalTemplateResponseDto>>(listOfApprovalTemplates);
+
+                var listOfApproversDtosWithOriginator = listOfApprovalTemplateDtos.Where(x => x.Originators.Where(x => x.Id == originator.Id).Count() > 1).Select(x => x.Approvers).Distinct();
+
+                foreach (var user in listOfApproversDtosWithOriginator)
+                {
+
+                }
+
+
+            }
             return CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
 
         }
@@ -91,7 +105,7 @@ namespace AtuApi.Controllers
                 NotFound();
             }
 
-            PurchaseRequestResponseDto PurchaseRequestDto = _mapper.Map<PurchaseRequestResponseDto>(purchaseReqests);         
+            PurchaseRequestResponseDto PurchaseRequestDto = _mapper.Map<PurchaseRequestResponseDto>(purchaseReqests);
             PurchaseRequestDto.Project = _unitOfWork.ProjectRepository.GetProject(purchaseReqests.ProjectCode);
             PurchaseRequestDto.Originator = _mapper.Map<UserDtoResponse>(_unitOfWork.UserRepository.GetById(purchaseReqests.OriginatorId));
             PurchaseRequestDto.Originator.Permissions = new List<PermissionDto>();

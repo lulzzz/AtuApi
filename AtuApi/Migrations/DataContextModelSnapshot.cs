@@ -356,8 +356,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 220, 233, 96, 51, 14, 22, 207, 87, 178, 201, 115, 102, 227, 69, 76, 43, 174, 241, 72, 166, 153, 38, 107, 129, 4, 137, 203, 130, 239, 82, 210, 192, 55, 57, 29, 59, 111, 38, 221, 66, 204, 149, 132, 7, 223, 119, 187, 148, 159, 36, 49, 171, 189, 88, 168, 66, 58, 246, 55, 122, 209, 118, 74, 179 },
-                            PasswordSalt = new byte[] { 71, 80, 7, 86, 131, 156, 163, 243, 246, 104, 243, 80, 184, 59, 146, 233, 251, 35, 208, 129, 103, 222, 13, 90, 244, 134, 163, 72, 38, 136, 202, 4, 45, 238, 3, 240, 182, 109, 209, 79, 9, 180, 36, 209, 187, 85, 114, 55, 195, 161, 208, 23, 117, 154, 55, 163, 103, 102, 73, 187, 113, 6, 177, 162, 60, 69, 228, 59, 203, 189, 231, 225, 88, 106, 25, 146, 132, 28, 107, 52, 176, 69, 147, 180, 199, 193, 167, 139, 35, 46, 120, 55, 254, 10, 25, 51, 53, 213, 94, 30, 39, 231, 92, 4, 224, 52, 154, 222, 170, 35, 37, 207, 15, 78, 131, 34, 68, 187, 94, 165, 117, 172, 161, 182, 2, 73, 159, 43 },
+                            PasswordHash = new byte[] { 166, 142, 190, 52, 134, 0, 9, 164, 206, 29, 95, 207, 226, 188, 47, 81, 21, 171, 198, 128, 215, 71, 217, 98, 120, 65, 164, 191, 162, 74, 129, 134, 223, 5, 208, 158, 94, 12, 207, 40, 163, 42, 187, 5, 52, 252, 146, 13, 98, 251, 99, 45, 87, 161, 22, 187, 226, 110, 116, 166, 187, 86, 141, 35 },
+                            PasswordSalt = new byte[] { 248, 231, 8, 229, 54, 140, 245, 222, 70, 177, 61, 251, 24, 172, 162, 251, 166, 147, 154, 234, 43, 64, 17, 148, 91, 242, 85, 14, 137, 89, 119, 184, 194, 34, 52, 17, 72, 2, 95, 15, 203, 112, 87, 130, 164, 115, 197, 166, 195, 160, 131, 75, 44, 156, 236, 204, 151, 95, 5, 143, 163, 112, 84, 182, 93, 129, 104, 240, 24, 249, 128, 14, 136, 140, 92, 242, 179, 37, 201, 227, 103, 20, 92, 14, 232, 133, 46, 95, 166, 154, 55, 109, 118, 32, 107, 33, 254, 224, 192, 49, 189, 107, 202, 167, 207, 84, 85, 33, 119, 103, 188, 220, 89, 139, 173, 199, 228, 3, 118, 78, 123, 134, 25, 95, 92, 102, 121, 181 },
                             Position = "Manager",
                             RoleId = 1,
                             SapEmployeeId = 0,
@@ -430,6 +430,48 @@ namespace AtuApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DocumentTypes");
+                });
+
+            modelBuilder.Entity("DataModels.Models.NotificationsHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ApproverId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DocId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ObjectTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrignatorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApproverId");
+
+                    b.HasIndex("ObjectTypeId");
+
+                    b.HasIndex("OrignatorId");
+
+                    b.ToTable("NotificationsHistory");
                 });
 
             modelBuilder.Entity("DataModels.Models.PurchaseRequest", b =>
@@ -583,6 +625,27 @@ namespace AtuApi.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DataModels.Models.NotificationsHistory", b =>
+                {
+                    b.HasOne("AtuApi.Models.User", "Approver")
+                        .WithMany("ApproverNotifications")
+                        .HasForeignKey("ApproverId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DataModels.Models.DocumentType", "ObjectType")
+                        .WithMany()
+                        .HasForeignKey("ObjectTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AtuApi.Models.User", "Orignator")
+                        .WithMany("OriginatorNotifications")
+                        .HasForeignKey("OrignatorId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 

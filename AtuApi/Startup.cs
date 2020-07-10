@@ -108,19 +108,19 @@ namespace AtuApi
             services.AddSingleton<IDiManager>(x => new DiManager(appSettings.SqlServerHostName, appSettings.SapDbServerType, appSettings.SapUserName, appSettings.SapPassword, appSettings.SapCompanyDb));
 
 
-            var serviceProvider = services.BuildServiceProvider();
-            var dataBaseConector = serviceProvider.GetService<IUnitOfWork>();
-            var permissions = dataBaseConector.PermissionRepository.GetAll();
+            //var serviceProvider = services.BuildServiceProvider();
+            //var dataBaseConector = serviceProvider.GetService<IUnitOfWork>();
+            //var permissions = dataBaseConector.PermissionRepository.GetAll();
 
-            services.AddAuthorization(options =>
-            {
-                foreach (var permission in permissions)
-                {
+            //services.AddAuthorization(options =>
+            //{
+            //    foreach (var permission in permissions)
+            //    {
 
-                    options.AddPolicy(permission.PermissionName, policy => policy.RequireClaim(permission.PermissionName));
-                }
+            //        options.AddPolicy(permission.PermissionName, policy => policy.RequireClaim(permission.PermissionName));
+            //    }
 
-            });
+            //});
 
             var keyBytes = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(opts =>

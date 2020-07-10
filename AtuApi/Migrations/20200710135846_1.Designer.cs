@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200709152100_first")]
-    partial class first
+    [Migration("20200710135846_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -358,8 +358,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 2, 222, 135, 73, 4, 131, 25, 181, 28, 208, 54, 69, 217, 38, 101, 29, 111, 148, 131, 36, 213, 170, 4, 200, 169, 229, 156, 154, 69, 3, 174, 56, 5, 20, 143, 67, 181, 138, 91, 234, 247, 232, 178, 137, 188, 68, 18, 224, 132, 244, 215, 81, 173, 219, 237, 1, 2, 161, 86, 49, 130, 100, 41, 116 },
-                            PasswordSalt = new byte[] { 149, 234, 75, 43, 254, 255, 69, 89, 7, 82, 26, 15, 136, 213, 113, 171, 47, 7, 227, 2, 252, 165, 133, 89, 146, 91, 146, 95, 59, 88, 166, 3, 72, 195, 67, 156, 50, 229, 199, 145, 72, 26, 246, 13, 38, 240, 66, 159, 237, 95, 93, 6, 123, 49, 174, 115, 55, 244, 198, 30, 35, 128, 35, 106, 130, 254, 29, 46, 36, 238, 136, 104, 11, 157, 58, 189, 219, 94, 13, 11, 29, 56, 97, 117, 201, 227, 236, 88, 39, 6, 61, 119, 117, 14, 82, 140, 181, 108, 175, 142, 91, 148, 11, 95, 152, 157, 31, 92, 123, 180, 86, 243, 128, 18, 15, 226, 91, 162, 184, 94, 71, 42, 97, 26, 142, 144, 88, 102 },
+                            PasswordHash = new byte[] { 166, 142, 190, 52, 134, 0, 9, 164, 206, 29, 95, 207, 226, 188, 47, 81, 21, 171, 198, 128, 215, 71, 217, 98, 120, 65, 164, 191, 162, 74, 129, 134, 223, 5, 208, 158, 94, 12, 207, 40, 163, 42, 187, 5, 52, 252, 146, 13, 98, 251, 99, 45, 87, 161, 22, 187, 226, 110, 116, 166, 187, 86, 141, 35 },
+                            PasswordSalt = new byte[] { 248, 231, 8, 229, 54, 140, 245, 222, 70, 177, 61, 251, 24, 172, 162, 251, 166, 147, 154, 234, 43, 64, 17, 148, 91, 242, 85, 14, 137, 89, 119, 184, 194, 34, 52, 17, 72, 2, 95, 15, 203, 112, 87, 130, 164, 115, 197, 166, 195, 160, 131, 75, 44, 156, 236, 204, 151, 95, 5, 143, 163, 112, 84, 182, 93, 129, 104, 240, 24, 249, 128, 14, 136, 140, 92, 242, 179, 37, 201, 227, 103, 20, 92, 14, 232, 133, 46, 95, 166, 154, 55, 109, 118, 32, 107, 33, 254, 224, 192, 49, 189, 107, 202, 167, 207, 84, 85, 33, 119, 103, 188, 220, 89, 139, 173, 199, 228, 3, 118, 78, 123, 134, 25, 95, 92, 102, 121, 181 },
                             Position = "Manager",
                             RoleId = 1,
                             SapEmployeeId = 0,
@@ -434,6 +434,48 @@ namespace AtuApi.Migrations
                     b.ToTable("DocumentTypes");
                 });
 
+            modelBuilder.Entity("DataModels.Models.NotificationsHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ApproverId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DocId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ObjectTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrignatorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApproverId");
+
+                    b.HasIndex("ObjectTypeId");
+
+                    b.HasIndex("OrignatorId");
+
+                    b.ToTable("NotificationsHistory");
+                });
+
             modelBuilder.Entity("DataModels.Models.PurchaseRequest", b =>
                 {
                     b.Property<int>("DocNum")
@@ -505,7 +547,7 @@ namespace AtuApi.Migrations
                     b.Property<int>("TeritoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("WareHouse")
+                    b.Property<string>("WareHouseCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PurchaseRequestDocNum", "LineNum");
@@ -585,6 +627,27 @@ namespace AtuApi.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DataModels.Models.NotificationsHistory", b =>
+                {
+                    b.HasOne("AtuApi.Models.User", "Approver")
+                        .WithMany("ApproverNotifications")
+                        .HasForeignKey("ApproverId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DataModels.Models.DocumentType", "ObjectType")
+                        .WithMany()
+                        .HasForeignKey("ObjectTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AtuApi.Models.User", "Orignator")
+                        .WithMany("OriginatorNotifications")
+                        .HasForeignKey("OrignatorId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 

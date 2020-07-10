@@ -21,7 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AtuApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -36,14 +36,14 @@ namespace AtuApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("signin-facebook")]
+        [HttpPost]
         public IActionResult AuthenticateFacebook()
         {
             return Ok();
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
+        [HttpPost]
         public IActionResult Authenticate(string userName, string password)
         {
             var user = _unitOfWork.UserRepository.Authenticate(userName, password);
@@ -85,7 +85,7 @@ namespace AtuApi.Controllers
             });
         }
 
-        [HttpPost("Register")]
+        [HttpPost]
         [Authorize(Policy = "CanCreateUsers")]
         public IActionResult Register([FromBody]UserDtoRequest userDto)
         {
@@ -144,7 +144,7 @@ namespace AtuApi.Controllers
 
         [Authorize(Policy = "CanReadUsers")]
         [HttpGet]
-        public IActionResult GetByAll()
+        public IActionResult GetAll()
         {
             var xz = User.Identity;
             var users = _unitOfWork.UserRepository.GetAll();
@@ -210,6 +210,18 @@ namespace AtuApi.Controllers
                 // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [HttpGet]
+        public IActionResult GetPendingRequests()
+        {
+            NotificationsHistory history = new NotificationsHistory();
+            history.ApproverId = 1;
+            history.OrignatorId = 1;
+            history.ObjectTypeId = 1;
+            history.DocId = 1;
+            _unitOfWork.NotificationHistoryRepository.Add(history);
+            return Ok();
         }
     }
 }

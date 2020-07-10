@@ -29,8 +29,7 @@ namespace AtuApi.Repositories
             ItemsWarehousesRepository = new ItemsWarehouseRepository(_dataContext, diManager);
             UnitOfMeasueGroupRepository = new UnitOfMeasueGroupsRepository(_dataContext, diManager);
             UnitOfMeasueRepository = new UnitOfMeasueRepository(_dataContext, diManager);
-
-
+            NotificationHistoryRepository = new NotificationHistoryRepository(_dataContext);
 
         }
         public void SaveChanges()
@@ -52,6 +51,7 @@ namespace AtuApi.Repositories
         public IWareHouseRepository WareHouseRepository { get; }
         public IUnitOfMeasueGroupRepository UnitOfMeasueGroupRepository { get; }
         public IUnitOfMeasueRepository UnitOfMeasueRepository { get; }
+        public INotificationHistoryRepository NotificationHistoryRepository { get; }
 
 
     }

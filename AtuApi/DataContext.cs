@@ -27,10 +27,26 @@ namespace DataContextHelper
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
         public DbSet<ApprovalsDocumentType> ApprovalDocumentTypes { get; set; }
+        public DbSet<NotificationsHistory> NotificationsHistory { get; set; }
         public IConfiguration Configuration { get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<NotificationsHistory>()
+             .HasOne(x => x.Approver)
+             .WithMany(x => x.ApproverNotifications)
+             .HasForeignKey(x => x.ApproverId)
+             .IsRequired()
+             .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<NotificationsHistory>()
+             .HasOne(x => x.Orignator)
+             .WithMany(x => x.OriginatorNotifications)
+             .HasForeignKey(x => x.OrignatorId)
+             .IsRequired()
+             .OnDelete(DeleteBehavior.NoAction);
+
 
             modelBuilder.Entity<ApprovalsDocumentType>()
                .HasKey(x => new { x.ApprovalTemplateTemplateCode, x.DocumentTypeId });
@@ -95,8 +111,8 @@ namespace DataContextHelper
             modelBuilder.Entity<PurchaseRequest>()
             .HasKey(x => x.DocNum);
 
-            modelBuilder.Entity<PurchaseRequest>();        
- 
+            modelBuilder.Entity<PurchaseRequest>();
+
 
             modelBuilder.Entity<PurchaseRequest>()
                 .Property(b => b.CreategDate)
