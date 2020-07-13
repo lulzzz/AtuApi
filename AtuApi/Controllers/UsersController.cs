@@ -94,7 +94,7 @@ namespace AtuApi.Controllers
             var creatorRole = userCreator.Role.RoleName;
 
             Role role = _unitOfWork.RoleRepository.Get(userDto.RoleId);
-            Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);            
+            Branch branch = _unitOfWork.BranchesRepository.Get(userDto.BranchId);
             Employee employee = _unitOfWork.EmployeeRepository.GetEmployee(userDto.SapEmployeeId);
             if (employee == null)
             {
@@ -108,10 +108,10 @@ namespace AtuApi.Controllers
             if (branch == null)
             {
                 branch = _unitOfWork.BranchesRepository.Get(-1);
-            }          
+            }
 
             user.Role = role;
-            user.Branch = branch;        
+            user.Branch = branch;
 
             var creatingRole = user.Role.RoleName;
 
@@ -124,7 +124,7 @@ namespace AtuApi.Controllers
             {
                 var userInDb = _unitOfWork.UserRepository.Create(user, userDto.Password);
                 return CreatedAtAction(nameof(GetById), new { id = userInDb.Id }, userInDb.Id);
-                 
+
             }
             catch (Exception ex)
             {
@@ -184,7 +184,7 @@ namespace AtuApi.Controllers
             {
                 branch = _unitOfWork.BranchesRepository.Get(-1);
             }
-            
+
 
             userToBeUpdated.Branch = branch;
             userToBeUpdated.Role = role;
@@ -213,11 +213,50 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPendingRequests()
+        public IActionResult GetPendingNotifications()
         {
-            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
-            _unitOfWork.NotificationHistoryRepository.Find(x=>x.ApproverId == user.Id && x.Status == "UnRead");
-            return Ok();
+            List<NotificationsHistory> userNotifications = new List<NotificationsHistory>();
+            var user = _unitOfWork.UserRepository.GetById(/*int.Parse(User.Identity.Name)*/2);
+            List<NotificationsHistory> NotificationsList = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.ApproverId == user.Id).ToList();
+            foreach (var notification in NotificationsList)
+            {
+                var notificationsByDoc = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId).ToList();
+                var orderedNotificationsByDoc = notificationsByDoc.OrderBy(x => x.Level);
+                foreach (var n in orderedNotificationsByDoc)
+                {
+                    if (n.ApproverId == user.Id)
+                    {
+                        userNotifications.Add(n);
+                    }
+                    if (n.ApproverStatus == "NoAction")
+                    {
+                        break;
+                    }
+                }
+            }
+            var userNotificationsDto = _mapper.Map<IList<NotificationsHistoryDto>>(userNotifications);
+            return Ok(userNotificationsDto);
+        }
+
+        [HttpPost]
+        public IActionResult ApprovePendingNotification(int NotificationId)
+        {
+            var notiication = _unitOfWork.NotificationHistoryRepository.Get(NotificationId);
+            notiication.ApproverStatus = "Approved";
+            notiication.WatchStatus = "Opend";
+            _unitOfWork.NotificationHistoryRepository.Update(notiication);
+            return Accepted();
+        }
+
+        [HttpPost]
+        public IActionResult RejectPendingNotification(int NotificationId, string Comment)
+        {
+            var notiication = _unitOfWork.NotificationHistoryRepository.Get(NotificationId);
+            notiication.ApproverStatus = "Rejected";
+            notiication.Comment = Comment;
+            notiication.WatchStatus = "Opend";
+            _unitOfWork.NotificationHistoryRepository.Update(notiication);
+            return Accepted();
         }
     }
 }

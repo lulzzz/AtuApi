@@ -78,20 +78,24 @@ namespace AtuApi.Controllers
                 IList<ApprovalTemplateResponseDto> listOfApprovalTemplateDtos = _mapper.Map<IList<ApprovalTemplateResponseDto>>(listOfApprovalTemplates);
 
 
-                var listOfApproversDtosWithOriginator = listOfApprovalTemplateDtos.Where(x => x.Originators.Any(x => x.Id == originator.Id)).SelectMany(x => x.Approvers);
+                var listOfApproversDtosWithOriginator = listOfApprovalTemplates.Where(x => x.UsersAppovalTemplates.Any(x => x.UserId == originator.Id)).SelectMany(x => x.ApprovalsEmployees).OrderBy(x => x.UserLevel);
+
+                //IEnumerable<UserDtoResponse> listOfApproversDtosWithOriginator = listOfApprovalTemplateDtos.Where(x => x.Originators.Any(x => x.Id == originator.Id)).SelectMany(x => x.Approvers);
 
                 foreach (var user in listOfApproversDtosWithOriginator)
                 {
                     NotificationsHistory history = new NotificationsHistory
                     {
                         OrignatorId = originator.Id,
-                        ApproverId = user.Id,
+                        ApproverId = user.UserId,
                         CreateDate = DateTime.Now,
                         DocId = res.DocNum,
                         ModifiedTime = DateTime.Now,
                         ObjectTypeId = res.ObjctType.Id,
+                        Level = user.UserLevel,
                         Text = $"დოკუმენტი დასადასტურებელია : {res.ObjctType.DocDescription} : {res.DocNum}",
-                        Status = "UnRead"
+                        WatchStatus = "UnRead",
+                        ApproverStatus = "NoAction"
                     };
                     _unitOfWork.NotificationHistoryRepository.Add(history);
                 }

@@ -34,6 +34,11 @@ namespace AtuApi.Repositories
             return Context.Set<TEntity>().Where(predicate).FirstOrDefault();
         }
 
+        public IEnumerable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate)
+        {
+            return Context.Set<TEntity>().Where(predicate);
+        }
+
         public TEntity Get(int id)
         {
             return Context.Set<TEntity>().Find(id);

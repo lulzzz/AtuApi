@@ -12,6 +12,7 @@ namespace AtuApi.Interfaces
         TEntity Get(int id);
         IEnumerable<TEntity> GetAll();
         TEntity Find(Expression<Func<TEntity, bool>> predicate);
+        IEnumerable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate);
         TEntity Update(TEntity entity);
 
         TEntity Add(TEntity entity);
