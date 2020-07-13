@@ -58,7 +58,8 @@ namespace AtuApi.AutoMapper
                       opts => opts.MapFrom(
                           src => src.Approvers.Select(pr => new ApprovalsEmployees
                           {
-                              UserId = pr,
+                              UserId = pr.UserId,
+                              UserLevel = pr.UserLevel
                           }
                           )))
                  .ForMember(dest => dest.TemplateCode, opts => opts.Ignore())

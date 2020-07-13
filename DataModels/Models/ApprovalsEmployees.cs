@@ -11,6 +11,7 @@ namespace DataModels.Models
         public int ApprovalTemplateTemplateCode { get; set; }
         public virtual ApprovalTemplate ApprovalTemplate { get; set; }
         public int UserId { get; set; }
+        public int UserLevel { get; set; }
         public virtual User User { get; set; }
 
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using AtuApi.Helpers;
 using AtuApi.Interfaces;
 using AutoMapper;
 using DataModels.Dtos;
@@ -11,6 +11,7 @@ using DataModels.RequestDtos;
 using DataModels.ResponseDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace AtuApi.Controllers
 {
@@ -31,6 +32,7 @@ namespace AtuApi.Controllers
         {
             var purchaseRequest = _mapper.Map<PurchaseRequest>(purchaseRequestDto);
             var originator = _unitOfWork.UserRepository.GetById(purchaseRequestDto.OriginatorId);
+            var originatorDto = _mapper.Map<UserDtoResponse>(originator);
             var creator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
             var project = _unitOfWork.ProjectRepository.GetProject(purchaseRequestDto.ProjectCode);
             purchaseRequest.Creator = creator;
@@ -69,22 +71,38 @@ namespace AtuApi.Controllers
             }
 
             PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Add(purchaseRequest);
+
             if (res.DocNum != 0)
             {
                 IEnumerable<ApprovalTemplate> listOfApprovalTemplates = _unitOfWork.ApprovalTemplateRepository.GetAll();
                 IList<ApprovalTemplateResponseDto> listOfApprovalTemplateDtos = _mapper.Map<IList<ApprovalTemplateResponseDto>>(listOfApprovalTemplates);
 
-                var listOfApproversDtosWithOriginator = listOfApprovalTemplateDtos.Where(x => x.Originators.Where(x => x.Id == originator.Id).Count() > 1).Select(x => x.Approvers).Distinct();
+
+                var listOfApproversDtosWithOriginator = listOfApprovalTemplateDtos.Where(x => x.Originators.Any(x => x.Id == originator.Id)).SelectMany(x => x.Approvers);
 
                 foreach (var user in listOfApproversDtosWithOriginator)
                 {
-
+                    NotificationsHistory history = new NotificationsHistory
+                    {
+                        OrignatorId = originator.Id,
+                        ApproverId = user.Id,
+                        CreateDate = DateTime.Now,
+                        DocId = res.DocNum,
+                        ModifiedTime = DateTime.Now,
+                        ObjectTypeId = res.ObjctType.Id,
+                        Text = $"დოკუმენტი დასადასტურებელია : {res.ObjctType.DocDescription} : {res.DocNum}",
+                        Status = "UnRead"
+                    };
+                    _unitOfWork.NotificationHistoryRepository.Add(history);
                 }
-
-
             }
-            return CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
+            var xz22 = nameof(GetPurchaseReques);
+            var xz = CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
+            var urlx = Url.Link(nameof(GetPurchaseReques), new { id = res.DocNum });
+            var urlx2 = Url.Link(nameof(GetPurchaseReques), res.DocNum);
 
+
+            return CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
         }
 
         [HttpGet]

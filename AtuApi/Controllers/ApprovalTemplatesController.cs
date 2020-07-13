@@ -29,6 +29,11 @@ namespace AtuApi.Controllers
         [HttpPost]
         public IActionResult CreateApprovalTemplate(ApprovalTemplateRequestDto approvalTemplateDto)
         {
+            var templateInDb = _unitOfWork.ApprovalTemplateRepository.Find(x => x.TemplateName == approvalTemplateDto.TemplateName);
+            if (templateInDb != null)
+            {
+                return Conflict($"დადასტურების შაბლონის სახელით : {approvalTemplateDto.TemplateName} უკვე არსებობს");
+            }
             var approvalTemplate = _mapper.Map<ApprovalTemplate>(approvalTemplateDto);
             var result = _unitOfWork.ApprovalTemplateRepository.Add(approvalTemplate);
             return Ok(result.TemplateCode);

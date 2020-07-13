@@ -215,12 +215,8 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetPendingRequests()
         {
-            NotificationsHistory history = new NotificationsHistory();
-            history.ApproverId = 1;
-            history.OrignatorId = 1;
-            history.ObjectTypeId = 1;
-            history.DocId = 1;
-            _unitOfWork.NotificationHistoryRepository.Add(history);
+            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
+            _unitOfWork.NotificationHistoryRepository.Find(x=>x.ApproverId == user.Id && x.Status == "UnRead");
             return Ok();
         }
     }

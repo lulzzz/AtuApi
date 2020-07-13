@@ -4,14 +4,16 @@ using DataContextHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200713070842_2")]
+    partial class _2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,8 +358,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 115, 226, 39, 143, 94, 121, 238, 55, 161, 88, 89, 22, 102, 99, 31, 200, 198, 144, 126, 183, 74, 226, 35, 242, 248, 122, 77, 88, 82, 98, 146, 29, 242, 121, 125, 50, 93, 145, 245, 156, 32, 29, 14, 39, 12, 234, 127, 214, 86, 106, 156, 249, 65, 201, 48, 152, 4, 143, 43, 158, 55, 228, 83, 165 },
-                            PasswordSalt = new byte[] { 96, 205, 246, 49, 60, 203, 187, 92, 87, 252, 43, 255, 85, 204, 27, 7, 254, 241, 109, 172, 153, 39, 127, 111, 140, 123, 220, 149, 47, 152, 236, 241, 221, 250, 45, 88, 48, 174, 173, 214, 40, 216, 117, 150, 30, 157, 16, 237, 200, 127, 181, 224, 84, 218, 85, 170, 53, 112, 37, 138, 19, 26, 236, 190, 45, 98, 39, 100, 39, 117, 220, 124, 205, 140, 51, 147, 131, 50, 220, 237, 78, 90, 32, 6, 145, 56, 35, 198, 16, 175, 206, 62, 41, 56, 211, 99, 218, 32, 114, 68, 100, 142, 155, 26, 113, 213, 23, 26, 117, 116, 84, 6, 19, 185, 42, 184, 162, 227, 210, 16, 188, 40, 220, 73, 124, 77, 225, 107 },
+                            PasswordHash = new byte[] { 243, 152, 46, 48, 47, 61, 51, 133, 32, 112, 38, 227, 173, 4, 42, 94, 56, 112, 73, 235, 138, 223, 84, 106, 116, 247, 151, 9, 46, 250, 174, 156, 101, 70, 228, 95, 107, 165, 93, 105, 70, 161, 246, 10, 48, 139, 144, 95, 96, 44, 228, 43, 244, 246, 149, 128, 105, 133, 170, 157, 17, 17, 176, 167 },
+                            PasswordSalt = new byte[] { 144, 19, 176, 116, 181, 111, 215, 88, 202, 187, 210, 77, 76, 41, 147, 156, 160, 234, 125, 212, 220, 179, 253, 205, 75, 32, 179, 14, 98, 81, 126, 36, 75, 177, 225, 247, 213, 80, 62, 67, 69, 104, 162, 93, 0, 69, 51, 5, 30, 80, 5, 237, 102, 251, 84, 69, 163, 147, 202, 190, 25, 106, 57, 186, 55, 56, 42, 209, 170, 45, 163, 13, 45, 162, 97, 82, 134, 202, 119, 224, 144, 219, 41, 135, 52, 57, 179, 183, 77, 196, 100, 38, 117, 124, 82, 177, 70, 253, 106, 142, 250, 85, 202, 235, 243, 102, 147, 151, 144, 52, 132, 242, 214, 82, 99, 174, 158, 35, 38, 92, 73, 103, 134, 187, 28, 149, 233, 44 },
                             Position = "Manager",
                             RoleId = 1,
                             SapEmployeeId = 0,
@@ -408,9 +410,6 @@ namespace AtuApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserLevel")
                         .HasColumnType("int");
 
                     b.HasKey("ApprovalTemplateTemplateCode", "UserId");
@@ -495,7 +494,7 @@ namespace AtuApi.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ObjctTypeId")
+                    b.Property<int?>("ObjctTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("OriginatorId")
@@ -662,9 +661,7 @@ namespace AtuApi.Migrations
 
                     b.HasOne("DataModels.Models.DocumentType", "ObjctType")
                         .WithMany()
-                        .HasForeignKey("ObjctTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ObjctTypeId");
                 });
 
             modelBuilder.Entity("DataModels.Models.PurchaseRequestRow", b =>
