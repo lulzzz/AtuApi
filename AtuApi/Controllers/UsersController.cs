@@ -226,7 +226,7 @@ namespace AtuApi.Controllers
                 DocumentTypeResponseDto ObjetType = _mapper.Map<DocumentTypeResponseDto>(NotificationsHistoryDoc.First().ObjectType);
                 foreach (var notification in NotificationsHistoryDoc)
                 {
-           
+
                     if (notification.ApproverStatus == "Rejected")
                     {
                         resTemp.Add(new DocumentStatusesResponse
@@ -299,11 +299,20 @@ namespace AtuApi.Controllers
         [HttpPost]
         public IActionResult ApprovePendingNotification(int NotificationId)
         {
-            var notiication = _unitOfWork.NotificationHistoryRepository.Get(NotificationId);
-            notiication.ApproverStatus = "Approved";
-            notiication.WatchStatus = "Opend";
-            _unitOfWork.NotificationHistoryRepository.Update(notiication);
+            var notification = _unitOfWork.NotificationHistoryRepository.Get(NotificationId);
+            notification.ApproverStatus = "Approved";
+            notification.WatchStatus = "Opend";
+            _unitOfWork.NotificationHistoryRepository.Update(notification);
+
+          var isApproved = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId).Select(x => x.ApproverStatus).Distinct().Count()>1;
+            if (notification.ObjectType.DocDescription == "PurchaseRequest" && isApproved)
+            {
+                var pr = _unitOfWork.PurchaseRequestRepository.Get(notification.DocId);
+                pr.Status = "Approved";
+                _unitOfWork.PurchaseRequestRepository.Update(pr);
+            }
             return Accepted();
+
         }
 
         [HttpPost]
