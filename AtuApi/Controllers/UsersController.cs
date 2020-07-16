@@ -213,10 +213,59 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetPurchaseRequestsStatus()
+        {
+            List<DocumentStatusesResponse> res = new List<DocumentStatusesResponse>();
+            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
+            List<PurchaseRequest> purchaseRequests = _unitOfWork.PurchaseRequestRepository.FindAll(x => x.Creator.Id == user.Id).ToList();
+            IEnumerable<PurchaseRequestResponseDto> purchaseRequestsDto = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseRequests);
+            foreach (var purchaseRequest in purchaseRequestsDto)
+            {
+                var notificationsByDocNum = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == purchaseRequest.DocNum);
+                List<DocumentStatusesResponse> resTemp = new List<DocumentStatusesResponse>();
+
+                foreach (var notification in notificationsByDocNum)
+                {
+                    if (notification.ApproverStatus == "Rejected")
+                    {
+                        resTemp.Add(new DocumentStatusesResponse
+                        {
+                            DocId = purchaseRequest.DocNum,
+                            Status = "Rejected",
+                            ObjetType = purchaseRequest.ObjctType
+                        });
+                        break;
+                    }
+                    if (notification.ApproverStatus == "NoAction")
+                    {
+                        resTemp.Add(new DocumentStatusesResponse
+                        {
+                            DocId = purchaseRequest.DocNum,
+                            Status = "Pending",
+                            ObjetType = purchaseRequest.ObjctType
+                        });
+                        break;
+                    }
+                }
+                if (resTemp.Count < 1)
+                {
+                    resTemp.Add(new DocumentStatusesResponse
+                    {
+                        DocId = purchaseRequest.DocNum,
+                        Status = "Approved",
+                        ObjetType = purchaseRequest.ObjctType
+                    });
+                }
+                res.AddRange(resTemp);
+            }
+            return Ok(res);
+        }
+
+        [HttpGet]
         public IActionResult GetPendingNotifications()
         {
             List<NotificationsHistory> userNotifications = new List<NotificationsHistory>();
-            var user = _unitOfWork.UserRepository.GetById(/*int.Parse(User.Identity.Name)*/2);
+            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
             List<NotificationsHistory> NotificationsList = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.ApproverId == user.Id).ToList();
             foreach (var notification in NotificationsList)
             {
@@ -226,12 +275,20 @@ namespace AtuApi.Controllers
                 {
                     if (n.ApproverId == user.Id)
                     {
-                        userNotifications.Add(n);
+                        if (n.ApproverStatus == "NoAction")
+                        {
+                            userNotifications.Add(n);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    if (n.ApproverStatus == "NoAction")
+                    if (n.ApproverStatus == "NoAction" || n.ApproverStatus == "Rejected")
                     {
                         break;
                     }
+
                 }
             }
             var userNotificationsDto = _mapper.Map<IList<NotificationsHistoryDto>>(userNotifications);
@@ -251,11 +308,18 @@ namespace AtuApi.Controllers
         [HttpPost]
         public IActionResult RejectPendingNotification(int NotificationId, string Comment)
         {
-            var notiication = _unitOfWork.NotificationHistoryRepository.Get(NotificationId);
-            notiication.ApproverStatus = "Rejected";
-            notiication.Comment = Comment;
-            notiication.WatchStatus = "Opend";
-            _unitOfWork.NotificationHistoryRepository.Update(notiication);
+            var notification = _unitOfWork.NotificationHistoryRepository.Get(NotificationId);
+            notification.ApproverStatus = "Rejected";
+            notification.Comment = Comment;
+            notification.WatchStatus = "Opend";
+            _unitOfWork.NotificationHistoryRepository.Update(notification);
+            if (notification.ObjectType.DocDescription == "PurchaseRequest")
+            {
+                var pr = _unitOfWork.PurchaseRequestRepository.Get(notification.DocId);
+                pr.Status = "Rejected";
+                _unitOfWork.PurchaseRequestRepository.Update(pr);
+            }
+
             return Accepted();
         }
     }

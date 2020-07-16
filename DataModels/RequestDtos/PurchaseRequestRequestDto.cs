@@ -15,7 +15,13 @@ namespace DataModels.RequestDtos
         public PurchaseRequestRequestDto()
         {
             Rows = new List<PurchaseRequestRequestRowDto>();
+
         }
+
+        public int DocNum { get; set; }
+        public string Remarks { get; set; }
+        public string Status { get; set; }
+
         public string CompanyName = "ასოციაცია ატუ";
         public DateTime PostingDate { get; set; }
         public DateTime CreategDate { get; set; }

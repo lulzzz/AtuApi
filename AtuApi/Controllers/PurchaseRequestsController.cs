@@ -15,7 +15,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace AtuApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[Action]")]
     [ApiController]
     public class PurchaseRequestsController : ControllerBase
     {
@@ -31,6 +31,7 @@ namespace AtuApi.Controllers
         public IActionResult CreatePurchaseRequest(PurchaseRequestRequestDto purchaseRequestDto)
         {
             var purchaseRequest = _mapper.Map<PurchaseRequest>(purchaseRequestDto);
+            purchaseRequest.DocNum = 0;
             var originator = _unitOfWork.UserRepository.GetById(purchaseRequestDto.OriginatorId);
             var originatorDto = _mapper.Map<UserDtoResponse>(originator);
             var creator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
@@ -71,42 +72,41 @@ namespace AtuApi.Controllers
             }
 
             PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Add(purchaseRequest);
-
-            if (res.DocNum != 0)
-            {
-                IEnumerable<ApprovalTemplate> listOfApprovalTemplates = _unitOfWork.ApprovalTemplateRepository.GetAll();
-                IList<ApprovalTemplateResponseDto> listOfApprovalTemplateDtos = _mapper.Map<IList<ApprovalTemplateResponseDto>>(listOfApprovalTemplates);
-
-
-                var listOfApproversDtosWithOriginator = listOfApprovalTemplates.Where(x => x.UsersAppovalTemplates.Any(x => x.UserId == originator.Id)).SelectMany(x => x.ApprovalsEmployees).OrderBy(x => x.UserLevel);
-
-                //IEnumerable<UserDtoResponse> listOfApproversDtosWithOriginator = listOfApprovalTemplateDtos.Where(x => x.Originators.Any(x => x.Id == originator.Id)).SelectMany(x => x.Approvers);
-
-                foreach (var user in listOfApproversDtosWithOriginator)
-                {
-                    NotificationsHistory history = new NotificationsHistory
-                    {
-                        OrignatorId = originator.Id,
-                        ApproverId = user.UserId,
-                        CreateDate = DateTime.Now,
-                        DocId = res.DocNum,
-                        ModifiedTime = DateTime.Now,
-                        ObjectTypeId = res.ObjctType.Id,
-                        Level = user.UserLevel,
-                        Text = $"დოკუმენტი დასადასტურებელია : {res.ObjctType.DocDescription} : {res.DocNum}",
-                        WatchStatus = "UnRead",
-                        ApproverStatus = "NoAction"
-                    };
-                    _unitOfWork.NotificationHistoryRepository.Add(history);
-                }
-            }
-            var xz22 = nameof(GetPurchaseReques);
-            var xz = CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
-            var urlx = Url.Link(nameof(GetPurchaseReques), new { id = res.DocNum });
-            var urlx2 = Url.Link(nameof(GetPurchaseReques), res.DocNum);
-
-
             return CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
+        }
+
+        [HttpPost]
+        public IActionResult PostPurchaseRequest(int docNum)
+        {
+            var purchaseRequest = _unitOfWork.PurchaseRequestRepository.Get(docNum);
+            IEnumerable<ApprovalTemplate> listOfApprovalTemplates = _unitOfWork.ApprovalTemplateRepository.GetAll();
+            IList<ApprovalTemplateResponseDto> listOfApprovalTemplateDtos = _mapper.Map<IList<ApprovalTemplateResponseDto>>(listOfApprovalTemplates);
+
+            var listOfApproversDtosWithOriginator = listOfApprovalTemplates.Where(x => x.UsersAppovalTemplates.Any(x => x.UserId == purchaseRequest.Creator.Id)).SelectMany(x => x.ApprovalsEmployees).OrderBy(x => x.UserLevel);
+
+            if (listOfApproversDtosWithOriginator.Count() < 1)
+            {
+                listOfApproversDtosWithOriginator = listOfApprovalTemplates.Where(x => x.IsActive).SelectMany(x => x.ApprovalsEmployees).OrderBy(x => x.UserLevel);
+            }
+
+            foreach (var user in listOfApproversDtosWithOriginator)
+            {
+                NotificationsHistory history = new NotificationsHistory
+                {
+                    OrignatorId = purchaseRequest.Creator.Id,
+                    ApproverId = user.UserId,
+                    CreateDate = DateTime.Now,
+                    DocId = docNum,
+                    ModifiedTime = DateTime.Now,
+                    ObjectTypeId = purchaseRequest.ObjctTypeId,
+                    Level = user.UserLevel,
+                    Text = $"დოკუმენტი დასადასტურებელია : {purchaseRequest.ObjctType.DocDescription} : {docNum}",
+                    WatchStatus = "UnRead",
+                    ApproverStatus = "NoAction"
+                };
+                _unitOfWork.NotificationHistoryRepository.Add(history);
+            }
+            return Accepted();
         }
 
         [HttpGet]
@@ -119,7 +119,7 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetPurchaseReques(int id)
+        public IActionResult GetPurchaseRequest(int id)
         {
             PurchaseRequest purchaseReqests = _unitOfWork.PurchaseRequestRepository.Get(id);
             if (purchaseReqests == null)
@@ -143,5 +143,104 @@ namespace AtuApi.Controllers
 
             return Ok(PurchaseRequestDto);
         }
+
+        [HttpPut]
+        public IActionResult ModifyPurchaseRequest(PurchaseRequestRequestDto purchaseRequestDto)
+        {
+            var purchaseRequest = _mapper.Map<PurchaseRequest>(purchaseRequestDto);
+            var purchaseRequestDb = _unitOfWork.PurchaseRequestRepository.Get(purchaseRequestDto.DocNum);
+            var originator = _unitOfWork.UserRepository.GetById(purchaseRequestDto.OriginatorId);
+            var originatorDto = _mapper.Map<UserDtoResponse>(originator);
+            var creator = _unitOfWork.UserRepository.GetById(2);
+            var project = _unitOfWork.ProjectRepository.GetProject(purchaseRequestDto.ProjectCode);
+          
+
+            if (originator == null)
+            {
+                return UnprocessableEntity($"originatorId : {purchaseRequestDto.OriginatorId} არ არსებობს");
+            }
+            if (project == null)
+            {
+                return UnprocessableEntity($"ProjectCode : {purchaseRequestDto.ProjectCode} არ არსებობს");
+            }
+            foreach (var row in purchaseRequestDto.Rows)
+            {
+                var bp = _unitOfWork.BusinessPartnerRepository.GetBusinessPartner(row.BusinessPartnerCode);
+                var item = _unitOfWork.ItemRepository.GetItem(row.ItemCode);
+                var territory = _unitOfWork.TerritoryRepository.GetTerritory(row.TeritoryId);
+                var wareHouse = _unitOfWork.WareHouseRepository.GetWareHouse(row.WareHouseCode);
+                if (bp == null)
+                {
+                    return UnprocessableEntity($"BusinessPartner : {row.BusinessPartnerCode} არ არსებობს");
+                }
+                if (item == null)
+                {
+                    return UnprocessableEntity($"item : {row.ItemCode} არ არსებობს");
+                }
+                if (territory == null)
+                {
+                    return UnprocessableEntity($"territory : {row.TeritoryId} არ არსებობს");
+                }
+                if (wareHouse == null)
+                {
+                    return UnprocessableEntity($"wareHouse : {row.WareHouseCode} არ არსებობს");
+                }
+            }
+            purchaseRequestDb.Creator = creator;
+            purchaseRequestDb.ProjectName = project.ProjectName;
+            var rowsDto = _mapper.Map<IList<PurchaseRequestRow>>(purchaseRequestDto.Rows).ToList();
+            purchaseRequestDb.Rows = rowsDto;
+            purchaseRequestDb.Status = purchaseRequestDto.Status;
+            purchaseRequestDb.Remarks = purchaseRequestDto.Remarks;
+            PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Update(purchaseRequestDb);
+            return CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
+        }
+
+        //[HttpGet("{id}")]
+        //public IActionResult GetPurchaseRequestsStatus(int id)
+        //{
+        //    DocumentStatusesResponse res = new DocumentStatusesResponse();
+        //    var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
+        //    PurchaseRequest purchaseRequests = _unitOfWork.PurchaseRequestRepository.Get(id);
+        //    PurchaseRequestResponseDto purchaseRequestsDto = _mapper.Map<PurchaseRequestResponseDto>(purchaseRequests);
+
+        //    var notificationsByDocNum = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == purchaseRequestsDto.DocNum);
+
+        //    foreach (var notification in notificationsByDocNum)
+        //    {
+        //        if (notification.ApproverStatus == "Rejected")
+        //        {
+        //            res = (new DocumentStatusesResponse
+        //            {
+        //                DocId = purchaseRequestsDto.DocNum,
+        //                Status = "Rejected",
+        //                ObjetType = purchaseRequestsDto.ObjctType
+        //            });
+        //            break;
+        //        }
+        //        if (notification.ApproverStatus == "NoAction")
+        //        {
+        //            res = (new DocumentStatusesResponse
+        //            {
+        //                DocId = purchaseRequestsDto.DocNum,
+        //                Status = "Pending",
+        //                ObjetType = purchaseRequestsDto.ObjctType
+        //            });
+        //            break;
+        //        }
+        //    }
+        //    if (res.DocId != id)
+        //    {
+        //        res = (new DocumentStatusesResponse
+        //        {
+        //            DocId = purchaseRequestsDto.DocNum,
+        //            Status = "Approved",
+        //            ObjetType = purchaseRequestsDto.ObjctType
+        //        });
+        //    }
+
+
+        //    return Ok(res);
+        //}
     }
 }

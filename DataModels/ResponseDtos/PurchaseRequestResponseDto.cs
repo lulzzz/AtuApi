@@ -21,6 +21,11 @@ namespace DataModels.ResponseDtos
         public Project Project { get; set; }
         public int OriginatorId { get; set; }
         public UserDtoResponse Originator { get; set; }
+        public UserDtoResponse Creator { get; set; }
+        public int CreatorId { get; set; }
+        public DocumentTypeResponseDto ObjctType { get; set; }
+        public string Remarks { get; set; }
+        public string Status { get; set; }
         public List<PurchaseRequestResponseRowDto> Rows { get; set; }
     }
 }

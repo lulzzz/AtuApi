@@ -26,6 +26,8 @@ namespace DataModels.Models
         public virtual User Creator { get; set; }
         public DocumentType ObjctType { get; set; }
         public int ObjctTypeId { get; set; }
+        public string Remarks { get; set; }
+        public string Status { get; set; }
         public List<PurchaseRequestRow> Rows { get; set; }
     }
 }
