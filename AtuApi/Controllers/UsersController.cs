@@ -213,26 +213,27 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPurchaseRequestsStatus()
+        public IActionResult GetDocsStatus()
         {
             List<DocumentStatusesResponse> res = new List<DocumentStatusesResponse>();
-            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
-            List<PurchaseRequest> purchaseRequests = _unitOfWork.PurchaseRequestRepository.FindAll(x => x.Creator.Id == user.Id).ToList();
-            IEnumerable<PurchaseRequestResponseDto> purchaseRequestsDto = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseRequests);
-            foreach (var purchaseRequest in purchaseRequestsDto)
-            {
-                var notificationsByDocNum = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == purchaseRequest.DocNum);
-                List<DocumentStatusesResponse> resTemp = new List<DocumentStatusesResponse>();
+            var user = _unitOfWork.UserRepository.GetById(2);
+            var NotificationsHistoryGrouped = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.OrignatorId == user.Id).GroupBy(x => x.DocId);
 
-                foreach (var notification in notificationsByDocNum)
+            foreach (var NotificationsHistoryDoc in NotificationsHistoryGrouped)
+            {
+
+                List<DocumentStatusesResponse> resTemp = new List<DocumentStatusesResponse>();
+                DocumentTypeResponseDto ObjetType = _mapper.Map<DocumentTypeResponseDto>(NotificationsHistoryDoc.First().ObjectType);
+                foreach (var notification in NotificationsHistoryDoc)
                 {
+           
                     if (notification.ApproverStatus == "Rejected")
                     {
                         resTemp.Add(new DocumentStatusesResponse
                         {
-                            DocId = purchaseRequest.DocNum,
+                            DocId = NotificationsHistoryDoc.Key,
                             Status = "Rejected",
-                            ObjetType = purchaseRequest.ObjctType
+                            ObjetType = ObjetType
                         });
                         break;
                     }
@@ -240,9 +241,9 @@ namespace AtuApi.Controllers
                     {
                         resTemp.Add(new DocumentStatusesResponse
                         {
-                            DocId = purchaseRequest.DocNum,
+                            DocId = NotificationsHistoryDoc.Key,
                             Status = "Pending",
-                            ObjetType = purchaseRequest.ObjctType
+                            ObjetType = ObjetType
                         });
                         break;
                     }
@@ -251,9 +252,9 @@ namespace AtuApi.Controllers
                 {
                     resTemp.Add(new DocumentStatusesResponse
                     {
-                        DocId = purchaseRequest.DocNum,
+                        DocId = NotificationsHistoryDoc.Key,
                         Status = "Approved",
-                        ObjetType = purchaseRequest.ObjctType
+                        ObjetType = ObjetType
                     });
                 }
                 res.AddRange(resTemp);
@@ -319,7 +320,6 @@ namespace AtuApi.Controllers
                 pr.Status = "Rejected";
                 _unitOfWork.PurchaseRequestRepository.Update(pr);
             }
-
             return Accepted();
         }
     }

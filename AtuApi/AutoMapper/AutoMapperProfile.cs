@@ -84,8 +84,10 @@ namespace AtuApi.AutoMapper
                   opts => opts.MapFrom(
                       src => src.ApprovalsDocumentTypes.Select(usr => usr.DocumentType)));
 
-            CreateMap<DocumentType, DocumentTypeResponseDto>();
+            CreateMap<DocumentType, DocumentTypeResponseDto>();      
             CreateMap<NotificationsHistory, NotificationsHistoryDto>();
+            CreateMap<DocumentTypeResponseDto, DocumentType>();
+            CreateMap<DocumentType, DocumentTypeResponseDto>();
 
         }
     }
