@@ -216,7 +216,7 @@ namespace AtuApi.Controllers
         public IActionResult GetDocsStatus()
         {
             List<DocumentStatusesResponse> res = new List<DocumentStatusesResponse>();
-            var user = _unitOfWork.UserRepository.GetById(2);
+            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
             var NotificationsHistoryGrouped = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.OrignatorId == user.Id).GroupBy(x => x.DocId);
 
             foreach (var NotificationsHistoryDoc in NotificationsHistoryGrouped)

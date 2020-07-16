@@ -151,7 +151,7 @@ namespace AtuApi.Controllers
             var purchaseRequestDb = _unitOfWork.PurchaseRequestRepository.Get(purchaseRequestDto.DocNum);
             var originator = _unitOfWork.UserRepository.GetById(purchaseRequestDto.OriginatorId);
             var originatorDto = _mapper.Map<UserDtoResponse>(originator);
-            var creator = _unitOfWork.UserRepository.GetById(2);
+            var creator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
             var project = _unitOfWork.ProjectRepository.GetProject(purchaseRequestDto.ProjectCode);
           
 
