@@ -17,5 +17,7 @@ namespace DataModels.RequestDtos
         public string WareHouseCode { get; set; }
         public int DocNum { get; set; }
         public int LineNum { get; set; }
+        public string Remarks { get; set; }
+
     }
 }

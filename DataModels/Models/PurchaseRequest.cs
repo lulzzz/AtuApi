@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using static DataModels.Enums.Enums;
 
 namespace DataModels.Models
 {
@@ -23,11 +24,11 @@ namespace DataModels.Models
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
         public int OriginatorId { get; set; }
+        public int CreatorId { get; set; }
         public virtual User Creator { get; set; }
         public DocumentType ObjctType { get; set; }
         public int ObjctTypeId { get; set; }
-        public string Remarks { get; set; }
-        public string Status { get; set; }
+        public DocStatuses Status { get; set; }
         public List<PurchaseRequestRow> Rows { get; set; }
     }
 }

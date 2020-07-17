@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using AtuApi.Filters;
 using AtuApi.Helpers;
 using AtuApi.Interfaces;
 using AutoMapper;
@@ -12,6 +14,7 @@ using DataModels.ResponseDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic.CompilerServices;
+using static DataModels.Enums.Enums;
 
 namespace AtuApi.Controllers
 {
@@ -71,8 +74,9 @@ namespace AtuApi.Controllers
                 }
             }
 
+
             PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Add(purchaseRequest);
-            return CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
+            return CreatedAtAction(nameof(GetPurchaseRequests), new { id = res.DocNum }, res.DocNum);
         }
 
         [HttpPost]
@@ -101,8 +105,8 @@ namespace AtuApi.Controllers
                     ObjectTypeId = purchaseRequest.ObjctTypeId,
                     Level = user.UserLevel,
                     Text = $"დოკუმენტი დასადასტურებელია : {purchaseRequest.ObjctType.DocDescription} : {docNum}",
-                    WatchStatus = "UnRead",
-                    ApproverStatus = "NoAction"
+                    WatchStatus = NotificationWatchStatuses.UnRead,
+                    ApproverStatus = NotificationStatuses.NoAction
                 };
                 _unitOfWork.NotificationHistoryRepository.Add(history);
             }
@@ -110,13 +114,24 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPurchaseReques()
+        public IActionResult GetPurchaseRequests()
         {
             IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll();
             IEnumerable<PurchaseRequestResponseDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseReqests);
             Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());
             return Ok(PurchaseRequetDtos);
         }
+
+        [HttpGet]
+        public IActionResult GetPurchaseRequesByStatus([FromQuery] PurchaseRequestFilter filter)
+        {
+            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll().Where(x => x.Status == filter.docStatus && x.OriginatorId == filter.OriginatorId && x.CreatorId == filter.CreatorId);
+
+            IEnumerable<PurchaseRequestResponseDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseReqests);
+            Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());
+            return Ok(PurchaseRequetDtos);
+        }
+
 
         [HttpGet("{id}")]
         public IActionResult GetPurchaseRequest(int id)
@@ -138,9 +153,6 @@ namespace AtuApi.Controllers
                 rowDto.WareHouse = _unitOfWork.WareHouseRepository.GetWareHouse(rowDto.WareHouseCode);
                 rowDto.Item = _unitOfWork.ItemRepository.GetItem(rowDto.ItemCode);
             }
-
-
-
             return Ok(PurchaseRequestDto);
         }
 
@@ -153,7 +165,7 @@ namespace AtuApi.Controllers
             var originatorDto = _mapper.Map<UserDtoResponse>(originator);
             var creator = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
             var project = _unitOfWork.ProjectRepository.GetProject(purchaseRequestDto.ProjectCode);
-          
+
 
             if (originator == null)
             {
@@ -191,9 +203,8 @@ namespace AtuApi.Controllers
             var rowsDto = _mapper.Map<IList<PurchaseRequestRow>>(purchaseRequestDto.Rows).ToList();
             purchaseRequestDb.Rows = rowsDto;
             purchaseRequestDb.Status = purchaseRequestDto.Status;
-            purchaseRequestDb.Remarks = purchaseRequestDto.Remarks;
             PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Update(purchaseRequestDb);
-            return CreatedAtAction(nameof(GetPurchaseReques), new { id = res.DocNum }, res.DocNum);
+            return CreatedAtAction(nameof(GetPurchaseRequests), new { id = res.DocNum }, res.DocNum);
         }
 
         //[HttpGet("{id}")]

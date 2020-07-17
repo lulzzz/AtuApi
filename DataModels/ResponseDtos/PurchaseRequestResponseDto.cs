@@ -3,6 +3,7 @@ using DataModels.RequestDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static DataModels.Enums.Enums;
 
 namespace DataModels.ResponseDtos
 {
@@ -24,8 +25,7 @@ namespace DataModels.ResponseDtos
         public UserDtoResponse Creator { get; set; }
         public int CreatorId { get; set; }
         public DocumentTypeResponseDto ObjctType { get; set; }
-        public string Remarks { get; set; }
-        public string Status { get; set; }
+        public DocStatuses Status { get; set; }
         public List<PurchaseRequestResponseRowDto> Rows { get; set; }
     }
 }

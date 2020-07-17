@@ -22,5 +22,7 @@ namespace DataModels.ResponseDtos
         public WareHouse WareHouse { get; set; }
         public int DocNum { get; set; }
         public int LineNum { get; set; }
+        public string Remarks { get; set; }
+
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static DataModels.Enums.Enums;
 
 namespace DataModels.RequestDtos
 {
@@ -19,8 +20,7 @@ namespace DataModels.RequestDtos
         }
 
         public int DocNum { get; set; }
-        public string Remarks { get; set; }
-        public string Status { get; set; }
+        public DocStatuses Status { get; set; }
 
         public string CompanyName = "ასოციაცია ატუ";
         public DateTime PostingDate { get; set; }

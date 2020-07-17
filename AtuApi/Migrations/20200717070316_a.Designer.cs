@@ -4,14 +4,16 @@ using DataContextHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200717070316_a")]
+    partial class a
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,8 +358,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 193, 65, 15, 16, 254, 192, 7, 246, 158, 238, 100, 248, 95, 95, 158, 21, 0, 225, 198, 140, 134, 165, 87, 154, 185, 99, 224, 227, 196, 252, 225, 29, 247, 246, 247, 38, 141, 167, 96, 48, 247, 211, 156, 241, 16, 198, 18, 49, 182, 112, 163, 127, 194, 118, 104, 251, 144, 167, 67, 19, 241, 21, 168, 228 },
-                            PasswordSalt = new byte[] { 208, 248, 0, 189, 19, 87, 163, 76, 13, 23, 28, 246, 181, 26, 3, 162, 253, 80, 147, 203, 195, 110, 249, 32, 251, 93, 93, 97, 171, 188, 35, 206, 212, 111, 28, 242, 211, 202, 196, 66, 72, 14, 134, 249, 98, 86, 164, 214, 6, 16, 143, 103, 159, 50, 109, 166, 4, 71, 250, 2, 104, 175, 201, 129, 196, 172, 229, 197, 24, 240, 101, 8, 116, 163, 114, 32, 5, 152, 236, 134, 43, 147, 135, 48, 236, 134, 73, 62, 200, 124, 34, 1, 73, 54, 254, 121, 255, 158, 162, 68, 183, 186, 208, 77, 131, 227, 58, 68, 2, 57, 240, 133, 22, 145, 192, 208, 240, 231, 92, 214, 57, 103, 179, 157, 208, 213, 24, 111 },
+                            PasswordHash = new byte[] { 227, 94, 231, 179, 115, 154, 194, 216, 211, 44, 208, 158, 69, 219, 189, 220, 245, 14, 201, 189, 10, 210, 156, 196, 98, 0, 145, 161, 56, 129, 80, 233, 108, 147, 172, 127, 50, 160, 95, 83, 93, 238, 8, 69, 255, 74, 42, 171, 98, 99, 85, 40, 134, 167, 109, 176, 127, 68, 174, 198, 116, 6, 81, 99 },
+                            PasswordSalt = new byte[] { 187, 7, 111, 18, 31, 96, 246, 130, 91, 43, 126, 7, 135, 61, 112, 237, 22, 123, 226, 184, 110, 241, 174, 161, 197, 214, 14, 81, 221, 52, 91, 77, 49, 121, 39, 15, 235, 163, 117, 18, 214, 250, 185, 110, 207, 234, 181, 29, 158, 154, 141, 235, 224, 35, 171, 202, 87, 78, 46, 201, 212, 141, 150, 37, 101, 6, 195, 159, 236, 203, 224, 232, 210, 141, 90, 245, 39, 161, 42, 77, 27, 113, 94, 143, 162, 33, 151, 121, 79, 81, 36, 232, 124, 150, 94, 165, 197, 209, 71, 126, 35, 233, 74, 1, 116, 141, 60, 36, 236, 185, 43, 117, 69, 169, 23, 52, 250, 40, 176, 78, 24, 113, 240, 120, 105, 5, 3, 183 },
                             Position = "Manager",
                             RoleId = 1,
                             SapEmployeeId = 0,
@@ -445,8 +447,8 @@ namespace AtuApi.Migrations
                     b.Property<int>("ApproverId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ApproverStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("ApproverStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -472,8 +474,8 @@ namespace AtuApi.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("WatchStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("WatchStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -498,7 +500,7 @@ namespace AtuApi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("CreatorId")
+                    b.Property<int?>("CreatorId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DueDate")
@@ -519,8 +521,8 @@ namespace AtuApi.Migrations
                     b.Property<string>("ProjectName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DocNum");
 
@@ -667,9 +669,7 @@ namespace AtuApi.Migrations
                 {
                     b.HasOne("AtuApi.Models.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatorId");
 
                     b.HasOne("DataModels.Models.DocumentType", "ObjctType")
                         .WithMany()

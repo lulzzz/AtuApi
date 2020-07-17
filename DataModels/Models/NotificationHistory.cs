@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using static DataModels.Enums.Enums;
 
 namespace DataModels.Models
 {
@@ -17,8 +18,8 @@ namespace DataModels.Models
         public int OrignatorId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifiedTime { get; set; }
-        public string WatchStatus { get; set; }
-        public string ApproverStatus { get; set; }
+        public NotificationWatchStatuses WatchStatus { get; set; }
+        public NotificationStatuses ApproverStatus { get; set; }
         public int ObjectTypeId { get; set; }
         public DocumentType ObjectType { get; set; }
         public int Level { get; set; }

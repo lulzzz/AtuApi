@@ -23,5 +23,7 @@ namespace DataModels.Models
         public string WareHouseCode { get; set; }
         public int PurchaseRequestDocNum { get; set; }
         public int LineNum { get; set; }
+        public string Remarks { get; set; }
+
     }
 }

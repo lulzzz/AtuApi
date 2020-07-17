@@ -18,7 +18,7 @@ namespace DataModels.ResponseDtos
         public string WatchStatus { get; set; }
         public string ApproverStatus { get; set; }
         public int ObjectTypeId { get; set; }
-        public DocumentType ObjectType { get; set; }
+        public DocumentTypeResponseDto ObjectType { get; set; }
         public int Level { get; set; }
         public int DocId { get; set; }
     }
