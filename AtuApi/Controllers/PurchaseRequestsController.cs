@@ -105,8 +105,8 @@ namespace AtuApi.Controllers
                     ObjectTypeId = purchaseRequest.ObjctTypeId,
                     Level = user.UserLevel,
                     Text = $"დოკუმენტი დასადასტურებელია : {purchaseRequest.ObjctType.DocDescription} : {docNum}",
-                    WatchStatus = NotificationWatchStatuses.UnRead,
-                    ApproverStatus = NotificationStatuses.NoAction
+                    WatchStatus = NotificationWatchStatus.UnRead,
+                    ApproverStatus = NotificationStatus.NoAction
                 };
                 _unitOfWork.NotificationHistoryRepository.Add(history);
             }
@@ -123,9 +123,10 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPurchaseRequesByStatus([FromQuery] PurchaseRequestFilter filter)
+        public IActionResult GetPurchaseRequesFilter([FromQuery] PurchaseRequestFilter filter)
         {
-            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll().Where(x => x.Status == filter.docStatus && x.OriginatorId == filter.OriginatorId && x.CreatorId == filter.CreatorId);
+            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll().Where(x => (x.Status == filter.docStatus || filter.docStatus == null) && (x.OriginatorId == filter.OriginatorId 
+           || filter.OriginatorId == null) && (x.CreatorId == filter.CreatorId || filter.CreatorId == null));
 
             IEnumerable<PurchaseRequestResponseDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseReqests);
             Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());
@@ -207,51 +208,5 @@ namespace AtuApi.Controllers
             return CreatedAtAction(nameof(GetPurchaseRequests), new { id = res.DocNum }, res.DocNum);
         }
 
-        //[HttpGet("{id}")]
-        //public IActionResult GetPurchaseRequestsStatus(int id)
-        //{
-        //    DocumentStatusesResponse res = new DocumentStatusesResponse();
-        //    var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
-        //    PurchaseRequest purchaseRequests = _unitOfWork.PurchaseRequestRepository.Get(id);
-        //    PurchaseRequestResponseDto purchaseRequestsDto = _mapper.Map<PurchaseRequestResponseDto>(purchaseRequests);
-
-        //    var notificationsByDocNum = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == purchaseRequestsDto.DocNum);
-
-        //    foreach (var notification in notificationsByDocNum)
-        //    {
-        //        if (notification.ApproverStatus == "Rejected")
-        //        {
-        //            res = (new DocumentStatusesResponse
-        //            {
-        //                DocId = purchaseRequestsDto.DocNum,
-        //                Status = "Rejected",
-        //                ObjetType = purchaseRequestsDto.ObjctType
-        //            });
-        //            break;
-        //        }
-        //        if (notification.ApproverStatus == "NoAction")
-        //        {
-        //            res = (new DocumentStatusesResponse
-        //            {
-        //                DocId = purchaseRequestsDto.DocNum,
-        //                Status = "Pending",
-        //                ObjetType = purchaseRequestsDto.ObjctType
-        //            });
-        //            break;
-        //        }
-        //    }
-        //    if (res.DocId != id)
-        //    {
-        //        res = (new DocumentStatusesResponse
-        //        {
-        //            DocId = purchaseRequestsDto.DocNum,
-        //            Status = "Approved",
-        //            ObjetType = purchaseRequestsDto.ObjctType
-        //        });
-        //    }
-
-
-        //    return Ok(res);
-        //}
     }
 }

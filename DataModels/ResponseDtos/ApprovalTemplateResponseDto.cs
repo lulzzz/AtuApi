@@ -11,7 +11,7 @@ namespace DataModels.ResponseDtos
         public int TemplateCode { get; set; }
         public string TemplateName { get; set; }
         public bool IsActive { get; set; }
-        public List<UserDtoResponse> Approvers { get; set; }
+        public List<ApproverLevelsResponse> Approvers { get; set; }
         public List<UserDtoResponse> Originators { get; set; }
         public List<DocumentTypeResponseDto> DocumentTypes { get; set; }
     }

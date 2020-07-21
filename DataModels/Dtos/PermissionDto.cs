@@ -10,5 +10,7 @@ namespace DataModels.Dtos
     {
         public int Id { get; set; }
         public string PermissionName { get; set; }
+        public string PermissionDescription { get; set; }
+        
     }
 }

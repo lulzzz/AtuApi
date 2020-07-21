@@ -7,23 +7,23 @@ namespace DataModels.Enums
 {
     public class Enums
     {
-        public enum DocStatuses
+        public enum DocStatus
         {
-            Draft = 1,
-            PendingForApproval = 2,
-            Approved = 3,
-            Rejected = 4,
-        };
-        public enum NotificationStatuses
-        {
-            NoAction = 1,
+            Draft = 0,
+            PendingForApproval = 1,
             Approved = 2,
-            Rejected = 3
+            Rejected = 3,
         };
-        public enum NotificationWatchStatuses
+        public enum NotificationStatus
         {
-            Open = 1,
-            UnRead = 2,
+            NoAction = 0,
+            Approved = 1,
+            Rejected = 2
+        };
+        public enum NotificationWatchStatus
+        {
+            Open = 0,
+            UnRead = 1,
         };
     }
 }

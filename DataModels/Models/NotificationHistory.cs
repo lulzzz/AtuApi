@@ -18,8 +18,8 @@ namespace DataModels.Models
         public int OrignatorId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifiedTime { get; set; }
-        public NotificationWatchStatuses WatchStatus { get; set; }
-        public NotificationStatuses ApproverStatus { get; set; }
+        public NotificationWatchStatus WatchStatus { get; set; }
+        public NotificationStatus ApproverStatus { get; set; }
         public int ObjectTypeId { get; set; }
         public DocumentType ObjectType { get; set; }
         public int Level { get; set; }

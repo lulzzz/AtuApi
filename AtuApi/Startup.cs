@@ -51,7 +51,7 @@ namespace AtuApi
             });
 
             services.AddSignalR();
- 
+
 
             services.AddControllers(setupActin =>
             {
@@ -116,7 +116,6 @@ namespace AtuApi
             {
                 foreach (var permission in permissions)
                 {
-
                     options.AddPolicy(permission.PermissionName, policy => policy.RequireClaim(permission.PermissionName));
                 }
 
@@ -163,7 +162,7 @@ namespace AtuApi
                 app.UseDeveloperExceptionPage();
             }
 
-          
+
 
             app.UseCors(
         optionsx => optionsx.WithOrigins("*").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataModels.Models
+namespace DataModels.RequestDtos
 {
-    public class ApproverLevels
+    public class ApproverLevelsRequest
     {
         public int UserId { get; set; }
         public int UserLevel { get; set; }

@@ -34,10 +34,10 @@ namespace AtuApi.AutoMapper
 
 
             CreateMap<PurchaseRequestRequestRowDto, PurchaseRequestRow>();
-                    // .ForMember(des => des.WareHouse, opts => opts
-                    //.MapFrom(src => new WareHouse { WareHouseCode = src.WareHouseCode }));
+            // .ForMember(des => des.WareHouse, opts => opts
+            //.MapFrom(src => new WareHouse { WareHouseCode = src.WareHouseCode }));
             CreateMap<PurchaseRequestRow, PurchaseRequestResponseRowDto>();
-           
+
 
 
             CreateMap<Permission, PermissionDto>();
@@ -74,7 +74,18 @@ namespace AtuApi.AutoMapper
                 .ForMember(
                     des => des.Approvers,
                     opts => opts.MapFrom(
-                        src => src.ApprovalsEmployees.Select(appr => appr.User).ToList()))
+                        src => src.ApprovalsEmployees.Select(
+                            appr =>
+                            new ApproverLevelsResponse
+                            {
+                                FirstName = appr.User.FirstName,
+                                LastName = appr.User.LastName,
+                                UserId = appr.UserId,
+                                UserLevel = appr.UserLevel,
+                                UserName = appr.User.UserName
+                            }
+                            )
+                        .ToList()))
                 .ForMember(
                   des => des.Originators,
                   opts => opts.MapFrom(
@@ -84,7 +95,7 @@ namespace AtuApi.AutoMapper
                   opts => opts.MapFrom(
                       src => src.ApprovalsDocumentTypes.Select(usr => usr.DocumentType)));
 
-            CreateMap<DocumentType, DocumentTypeResponseDto>();      
+            CreateMap<DocumentType, DocumentTypeResponseDto>();
             CreateMap<NotificationsHistory, NotificationsHistoryDto>();
             CreateMap<DocumentTypeResponseDto, DocumentType>();
             CreateMap<DocumentType, DocumentTypeResponseDto>();

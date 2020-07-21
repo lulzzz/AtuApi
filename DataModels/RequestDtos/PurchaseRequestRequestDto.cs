@@ -20,7 +20,7 @@ namespace DataModels.RequestDtos
         }
 
         public int DocNum { get; set; }
-        public DocStatuses Status { get; set; }
+        public DocStatus Status { get; set; }
 
         public string CompanyName = "ასოციაცია ატუ";
         public DateTime PostingDate { get; set; }

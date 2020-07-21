@@ -8,7 +8,7 @@ namespace AtuApi.Filters
 {
     public class PurchaseRequestFilter : IFilter
     {
-        public DocStatuses? docStatus { get; set; }
+        public DocStatus? docStatus { get; set; }
         public int? OriginatorId { get; set; }
         public int? CreatorId { get; set; }
     }

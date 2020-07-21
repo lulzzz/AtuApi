@@ -25,7 +25,7 @@ namespace DataModels.ResponseDtos
         public UserDtoResponse Creator { get; set; }
         public int CreatorId { get; set; }
         public DocumentTypeResponseDto ObjctType { get; set; }
-        public DocStatuses Status { get; set; }
+        public DocStatus Status { get; set; }
         public List<PurchaseRequestResponseRowDto> Rows { get; set; }
     }
 }

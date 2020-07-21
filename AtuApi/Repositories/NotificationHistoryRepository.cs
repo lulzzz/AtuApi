@@ -16,6 +16,11 @@ namespace AtuApi.Repositories
         public NotificationHistoryRepository(DataContext context) : base(context)
         {
         }
+
+        public new NotificationsHistory Get(int id)
+        {
+            return NotificationHistoryContext.NotificationsHistory.Where(x => x.Id == id).Include(x => x.ObjectType).FirstOrDefault();
+        }
         public new IEnumerable<NotificationsHistory> FindAll(Expression<Func<NotificationsHistory, bool>> predicate)
         {
            return NotificationHistoryContext.NotificationsHistory.Where(predicate).Include(x=>x.Orignator).Include(x=>x.ObjectType).ToList();
