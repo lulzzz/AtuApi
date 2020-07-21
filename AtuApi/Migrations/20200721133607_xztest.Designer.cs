@@ -4,14 +4,16 @@ using DataContextHelper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AtuApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200721133607_xztest")]
+    partial class xztest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -359,8 +361,8 @@ namespace AtuApi.Migrations
                             FirstName = "Jason",
                             IsActive = false,
                             LastName = "Buttler",
-                            PasswordHash = new byte[] { 65, 226, 199, 167, 242, 69, 129, 127, 181, 56, 57, 125, 134, 58, 54, 202, 150, 26, 173, 173, 166, 59, 229, 58, 99, 131, 54, 237, 65, 107, 5, 226, 142, 127, 224, 138, 13, 248, 157, 98, 81, 255, 168, 47, 206, 87, 89, 237, 86, 200, 94, 147, 30, 23, 253, 243, 39, 33, 55, 172, 244, 94, 48, 142 },
-                            PasswordSalt = new byte[] { 8, 217, 221, 69, 209, 124, 156, 149, 156, 101, 163, 34, 149, 84, 75, 180, 139, 198, 146, 28, 209, 225, 187, 4, 43, 31, 15, 250, 169, 7, 210, 239, 19, 104, 232, 199, 18, 232, 196, 16, 207, 0, 52, 94, 99, 243, 79, 25, 162, 235, 40, 31, 165, 249, 149, 74, 115, 109, 112, 49, 21, 233, 85, 121, 146, 196, 187, 9, 189, 186, 64, 89, 195, 89, 87, 35, 182, 87, 138, 73, 104, 27, 37, 238, 252, 254, 249, 232, 45, 216, 64, 22, 191, 215, 9, 234, 138, 245, 168, 9, 201, 28, 88, 10, 81, 43, 165, 108, 90, 186, 123, 214, 11, 133, 52, 11, 198, 151, 213, 184, 253, 52, 162, 91, 130, 145, 101, 244 },
+                            PasswordHash = new byte[] { 177, 192, 72, 87, 30, 71, 82, 32, 142, 140, 242, 119, 7, 2, 122, 253, 189, 133, 22, 249, 99, 35, 86, 65, 84, 233, 202, 123, 181, 212, 48, 81, 3, 172, 185, 110, 70, 202, 50, 227, 50, 232, 4, 141, 145, 143, 52, 31, 34, 183, 31, 130, 135, 132, 3, 143, 138, 182, 163, 56, 143, 63, 46, 249 },
+                            PasswordSalt = new byte[] { 107, 136, 212, 239, 103, 8, 121, 43, 56, 108, 14, 168, 53, 64, 175, 69, 132, 245, 46, 169, 215, 135, 199, 45, 177, 188, 228, 212, 178, 202, 188, 137, 245, 24, 220, 53, 19, 191, 107, 244, 208, 104, 145, 137, 113, 208, 145, 17, 145, 137, 89, 114, 197, 183, 137, 50, 145, 59, 95, 188, 58, 49, 172, 181, 56, 152, 79, 26, 212, 103, 87, 202, 234, 193, 166, 28, 136, 84, 135, 221, 105, 24, 128, 98, 165, 191, 178, 96, 30, 22, 29, 137, 118, 187, 83, 40, 151, 130, 145, 152, 69, 225, 87, 250, 110, 1, 58, 99, 8, 147, 120, 63, 236, 83, 163, 100, 10, 94, 161, 220, 250, 142, 13, 121, 201, 14, 5, 0 },
                             Position = "Manager",
                             RoleId = 1,
                             SapEmployeeId = 0,
@@ -445,9 +447,6 @@ namespace AtuApi.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
                     b.Property<int>("ApproverId")
                         .HasColumnType("int");
 
@@ -475,9 +474,6 @@ namespace AtuApi.Migrations
                     b.Property<int>("OrignatorId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RejectedResonsId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
@@ -491,8 +487,6 @@ namespace AtuApi.Migrations
                     b.HasIndex("ObjectTypeId");
 
                     b.HasIndex("OrignatorId");
-
-                    b.HasIndex("RejectedResonsId");
 
                     b.ToTable("NotificationsHistory");
                 });
@@ -695,10 +689,6 @@ namespace AtuApi.Migrations
                         .HasForeignKey("OrignatorId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("DataModels.Models.RejectResons", "RejectedResons")
-                        .WithMany()
-                        .HasForeignKey("RejectedResonsId");
                 });
 
             modelBuilder.Entity("DataModels.Models.PurchaseRequest", b =>

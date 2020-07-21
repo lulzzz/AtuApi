@@ -24,5 +24,7 @@ namespace DataModels.Models
         public DocumentType ObjectType { get; set; }
         public int Level { get; set; }
         public int DocId { get; set; }
+        public NotificationActiveStatus ActiveStatus { get; set; }
+        public RejectResons RejectedResons { get; set; }
     }
 }

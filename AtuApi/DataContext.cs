@@ -28,6 +28,9 @@ namespace DataContextHelper
         public DbSet<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
         public DbSet<ApprovalsDocumentType> ApprovalDocumentTypes { get; set; }
         public DbSet<NotificationsHistory> NotificationsHistory { get; set; }
+        public DbSet<RejectResons> RejectResons { get; set; }
+
+        
         public IConfiguration Configuration { get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,6 +42,12 @@ namespace DataContextHelper
              .HasForeignKey(x => x.ApproverId)
              .IsRequired()
              .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<RejectResons>()
+             .HasOne(x => x.Rejector)
+             .WithMany(x => x.RejectResons)
+             .HasForeignKey(x => x.RejectorId);
+             
 
             modelBuilder.Entity<NotificationsHistory>()
              .HasOne(x => x.Orignator)

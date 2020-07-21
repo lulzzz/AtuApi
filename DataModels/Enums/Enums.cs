@@ -18,7 +18,12 @@ namespace DataModels.Enums
         {
             NoAction = 0,
             Approved = 1,
-            Rejected = 2
+            Rejected = 2,
+        };
+        public enum NotificationActiveStatus
+        {
+            Deactivated = 0,
+            Activated = 1,
         };
         public enum NotificationWatchStatus
         {

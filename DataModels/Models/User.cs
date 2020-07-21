@@ -23,6 +23,7 @@ namespace AtuApi.Models
         public ICollection<UsersAppovalTemplate> UsersAppovalTemplates { get; set; }
         public ICollection<NotificationsHistory> ApproverNotifications { get; set; }
         public ICollection<NotificationsHistory> OriginatorNotifications { get; set; }
+        public ICollection<RejectResons> RejectResons { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }
