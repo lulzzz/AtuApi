@@ -213,18 +213,12 @@ namespace AtuApi.Controllers
             }
         }
 
-        //[HttpGet]
-        //public IActionResult GetDocsByStatus(DocStatuses docStatuses)
-        //{
-        //    var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
-        //}
-
         [HttpGet]
         public IActionResult GetDocsStatus()
         {
             List<DocumentStatusesResponse> res = new List<DocumentStatusesResponse>();
-            var user = _unitOfWork.UserRepository.GetById(1);
-            var NotificationsHistoryGrouped = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.OrignatorId == user.Id).GroupBy(x => x.DocId);
+            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
+            var NotificationsHistoryGrouped = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.OrignatorId == user.Id && x.ActiveStatus == NotificationActiveStatus.Activated).GroupBy(x => x.DocId);
 
             foreach (var NotificationsHistoryDoc in NotificationsHistoryGrouped)
             {
@@ -236,12 +230,16 @@ namespace AtuApi.Controllers
 
                     if (notification.ApproverStatus == NotificationStatus.Rejected)
                     {
-                        resTemp.Add(new DocumentStatusesResponse
+                        var DocumentStatusesResponse = new DocumentStatusesResponse
                         {
                             DocId = NotificationsHistoryDoc.Key,
                             Status = "Rejected",
-                            ObjetType = ObjetType
-                        });
+                            ObjetType = ObjetType,
+                            RejectResons = _mapper.Map<RejectResonsResponseDto>(notification.RejectedResons),
+                            RejectResonsId = notification.RejectedResons.Id
+                        };
+                        DocumentStatusesResponse.RejectResons.Rejector.Permissions = null;
+                        resTemp.Add(DocumentStatusesResponse);
                         break;
                     }
                     if (notification.ApproverStatus == NotificationStatus.NoAction)
@@ -274,11 +272,15 @@ namespace AtuApi.Controllers
         {
             List<NotificationsHistory> userNotifications = new List<NotificationsHistory>();
             var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
-            List<NotificationsHistory> NotificationsList = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.ApproverId == user.Id).ToList();
+            List<NotificationsHistory> NotificationsList = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.ApproverId == user.Id && x.ActiveStatus == NotificationActiveStatus.Activated).ToList();
+
             foreach (var notification in NotificationsList)
             {
-                var notificationsByDoc = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId).ToList();
-                var orderedNotificationsByDoc = notificationsByDoc.OrderBy(x => x.Level);
+                var notificationsByDocActive = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId && x.ActiveStatus == NotificationActiveStatus.Activated).ToList();
+
+                //var notificationsByDocDeactivated = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId && x.ActiveStatus == NotificationActiveStatus.Deactivated && x.ApproverStatus == NotificationStatus.Rejected).ToList();
+
+                var orderedNotificationsByDoc = notificationsByDocActive.OrderBy(x => x.Level);
                 foreach (var notificationHistory in orderedNotificationsByDoc)
                 {
                     if (notificationHistory.ApproverId == user.Id)
@@ -307,11 +309,15 @@ namespace AtuApi.Controllers
         public IActionResult ApprovePendingNotification(int NotificationId)
         {
             var notification = _unitOfWork.NotificationHistoryRepository.Get(NotificationId);
+            if (notification.ApproverId != int.Parse(User.Identity.Name))
+            {
+                return Forbid("სხვის შეტყობინებას ვერ დაადასტურებ");
+            }
             notification.ApproverStatus = NotificationStatus.Approved;
             notification.WatchStatus = NotificationWatchStatus.Open;
             _unitOfWork.NotificationHistoryRepository.Update(notification);
 
-          var isApproved = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId).Select(x => x.ApproverStatus).Distinct().Count()>1;
+            var isApproved = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId).Select(x => x.ApproverStatus).Distinct().Count() == 1;
             if (notification.ObjectType.DocDescription == "PurchaseRequest" && isApproved)
             {
                 var pr = _unitOfWork.PurchaseRequestRepository.Get(notification.DocId);
@@ -325,11 +331,39 @@ namespace AtuApi.Controllers
         [HttpPost]
         public IActionResult RejectPendingNotification(int NotificationId, string Comment)
         {
+            if (string.IsNullOrWhiteSpace(Comment))
+            {
+                return BadRequest("უარყოფის მიზეზი აუცილებელია");
+            }
             var notification = _unitOfWork.NotificationHistoryRepository.Get(NotificationId);
+            if (notification.ApproverId != int.Parse(User.Identity.Name))
+            {
+                return Forbid("სხვის შეტყობინებას ვერ დაადასტურებ");
+            }
             notification.ApproverStatus = NotificationStatus.Rejected;
             notification.WatchStatus = NotificationWatchStatus.Open;
             notification.Comment = Comment;
+
             _unitOfWork.NotificationHistoryRepository.Update(notification);
+
+
+
+            var notificationByDoc = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId);
+            var rejectedNotification = notificationByDoc.First(x => x.ApproverStatus == NotificationStatus.Rejected);
+
+            RejectResons rej = new RejectResons
+            {
+                DocId = notification.DocId,
+                RejectorId = rejectedNotification.Approver.Id,
+                RejectReason = rejectedNotification.Comment
+            };
+            foreach (var not in notificationByDoc)
+            {
+                not.ActiveStatus = NotificationActiveStatus.Activated;
+                not.RejectedResons = rej;
+                _unitOfWork.NotificationHistoryRepository.Update(not);
+            }
+
             if (notification.ObjectType.DocDescription == "PurchaseRequest")
             {
                 var pr = _unitOfWork.PurchaseRequestRepository.Get(notification.DocId);

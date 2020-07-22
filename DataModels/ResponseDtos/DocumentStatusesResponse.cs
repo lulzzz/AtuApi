@@ -10,5 +10,7 @@ namespace DataModels.ResponseDtos
         public int DocId { get; set; }
         public DocumentTypeResponseDto ObjetType { get; set; }
         public string Status { get; set; }
+        public RejectResonsResponseDto RejectResons { get; set; }
+        public int RejectResonsId { get; set; }
     }
 }

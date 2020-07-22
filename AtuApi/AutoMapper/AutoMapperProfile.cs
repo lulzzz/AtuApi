@@ -99,7 +99,8 @@ namespace AtuApi.AutoMapper
             CreateMap<NotificationsHistory, NotificationsHistoryDto>();
             CreateMap<DocumentTypeResponseDto, DocumentType>();
             CreateMap<DocumentType, DocumentTypeResponseDto>();
-
+            CreateMap<RejectResons, RejectResonsResponseDto>();
+            
         }
     }
 }

@@ -106,7 +106,8 @@ namespace AtuApi.Controllers
                     Level = user.UserLevel,
                     Text = $"დოკუმენტი დასადასტურებელია : {purchaseRequest.ObjctType.DocDescription} : {docNum}",
                     WatchStatus = NotificationWatchStatus.UnRead,
-                    ApproverStatus = NotificationStatus.NoAction
+                    ApproverStatus = NotificationStatus.NoAction,
+                    ActiveStatus = NotificationActiveStatus.Activated
                 };
                 _unitOfWork.NotificationHistoryRepository.Add(history);
             }
@@ -205,6 +206,49 @@ namespace AtuApi.Controllers
             purchaseRequestDb.Rows = rowsDto;
             purchaseRequestDb.Status = purchaseRequestDto.Status;
             PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Update(purchaseRequestDb);
+
+
+
+            var notificationByDoc = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == res.DocNum);
+            var rejectedNotification = notificationByDoc.First(x => x.ApproverStatus == NotificationStatus.Rejected);
+
+          
+            foreach (var not in notificationByDoc)
+            {
+                not.ActiveStatus = NotificationActiveStatus.Deactivated;                 
+                _unitOfWork.NotificationHistoryRepository.Update(not);
+            }
+
+            IEnumerable<ApprovalTemplate> listOfApprovalTemplates = _unitOfWork.ApprovalTemplateRepository.GetAll();
+            IList<ApprovalTemplateResponseDto> listOfApprovalTemplateDtos = _mapper.Map<IList<ApprovalTemplateResponseDto>>(listOfApprovalTemplates);
+
+            var listOfApproversDtosWithOriginator = listOfApprovalTemplates.Where(x => x.UsersAppovalTemplates.Any(x => x.UserId == res.Creator.Id)).SelectMany(x => x.ApprovalsEmployees).OrderBy(x => x.UserLevel);
+
+            if (listOfApproversDtosWithOriginator.Count() < 1)
+            {
+                listOfApproversDtosWithOriginator = listOfApprovalTemplates.Where(x => x.IsActive).SelectMany(x => x.ApprovalsEmployees).OrderBy(x => x.UserLevel);
+            }
+
+            foreach (var user in listOfApproversDtosWithOriginator)
+            {
+                NotificationsHistory history = new NotificationsHistory
+                {
+                    OrignatorId = res.Creator.Id,
+                    ApproverId = user.UserId,
+                    CreateDate = DateTime.Now,
+                    DocId = res.DocNum,
+                    ModifiedTime = DateTime.Now,
+                    ObjectTypeId = purchaseRequest.ObjctTypeId,
+                    Level = user.UserLevel,
+                    Text = $"დოკუმენტი დასადასტურებელია : {res.ObjctType.DocDescription} : {res.DocNum}",
+                    WatchStatus = NotificationWatchStatus.UnRead,
+                    ApproverStatus = NotificationStatus.NoAction,
+                    ActiveStatus = NotificationActiveStatus.Activated
+                };
+                _unitOfWork.NotificationHistoryRepository.Add(history);
+            }
+
+
             return CreatedAtAction(nameof(GetPurchaseRequests), new { id = res.DocNum }, res.DocNum);
         }
 

@@ -23,7 +23,7 @@ namespace AtuApi.Repositories
         }
         public new IEnumerable<NotificationsHistory> FindAll(Expression<Func<NotificationsHistory, bool>> predicate)
         {
-           return NotificationHistoryContext.NotificationsHistory.Where(predicate).Include(x=>x.Orignator).Include(x=>x.ObjectType).ToList();
+           return NotificationHistoryContext.NotificationsHistory.Where(predicate).Include(x=>x.Orignator).Include(x=>x.ObjectType).Include(x=>x.RejectedResons).Include(x=>x.Approver).ToList();
         }
         private DataContext NotificationHistoryContext => Context as DataContext;
     }
