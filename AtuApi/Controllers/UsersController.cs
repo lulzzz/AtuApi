@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
+using AtuApi.Filters;
 using AtuApi.Interfaces;
 using AtuApi.Models;
 using AutoMapper;
@@ -214,11 +216,18 @@ namespace AtuApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDocsStatus()
+        public IActionResult GetDocsStatus([FromQuery]GetDocStatusFilter filter)
         {
             List<DocumentStatusesResponse> res = new List<DocumentStatusesResponse>();
             var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
-            var NotificationsHistoryGrouped = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.OrignatorId == user.Id && x.ActiveStatus == NotificationActiveStatus.Activated).GroupBy(x => x.DocId);
+            var NotificationsHistoryGrouped = _unitOfWork.NotificationHistoryRepository
+                .FindAll(x => x.OriginatorId == user.Id
+                           && x.ActiveStatus == NotificationActiveStatus.Activated
+                           && (filter.CreateDate == DateTime.MinValue || filter.CreateDate.Year == x.CreateDate.Year && filter.CreateDate.Month == x.CreateDate.Month && filter.CreateDate.Day == x.CreateDate.Day)
+                           && (filter.OriginatorId == null || x.OriginatorId == filter.OriginatorId)
+                            && (filter.ObjectTypeId == null || x.ObjectTypeId == filter.ObjectTypeId)
+                           )
+                .GroupBy(x => x.DocId);
 
             foreach (var NotificationsHistoryDoc in NotificationsHistoryGrouped)
             {

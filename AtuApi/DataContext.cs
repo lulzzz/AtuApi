@@ -50,9 +50,9 @@ namespace DataContextHelper
              
 
             modelBuilder.Entity<NotificationsHistory>()
-             .HasOne(x => x.Orignator)
+             .HasOne(x => x.Originator)
              .WithMany(x => x.OriginatorNotifications)
-             .HasForeignKey(x => x.OrignatorId)
+             .HasForeignKey(x => x.OriginatorId)
              .IsRequired()
              .OnDelete(DeleteBehavior.NoAction);
 

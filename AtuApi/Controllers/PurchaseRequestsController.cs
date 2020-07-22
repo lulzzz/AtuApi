@@ -97,7 +97,7 @@ namespace AtuApi.Controllers
             {
                 NotificationsHistory history = new NotificationsHistory
                 {
-                    OrignatorId = purchaseRequest.Creator.Id,
+                    OriginatorId = purchaseRequest.Creator.Id,
                     ApproverId = user.UserId,
                     CreateDate = DateTime.Now,
                     DocId = docNum,
@@ -233,7 +233,7 @@ namespace AtuApi.Controllers
             {
                 NotificationsHistory history = new NotificationsHistory
                 {
-                    OrignatorId = res.Creator.Id,
+                    OriginatorId = res.Creator.Id,
                     ApproverId = user.UserId,
                     CreateDate = DateTime.Now,
                     DocId = res.DocNum,

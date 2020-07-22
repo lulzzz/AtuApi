@@ -14,8 +14,8 @@ namespace DataModels.Models
         public string Comment { get; set; }
         public User Approver { get; set; }
         public int ApproverId { get; set; }
-        public User Orignator { get; set; }
-        public int OrignatorId { get; set; }
+        public User Originator { get; set; }
+        public int OriginatorId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifiedTime { get; set; }
         public NotificationWatchStatus WatchStatus { get; set; }
