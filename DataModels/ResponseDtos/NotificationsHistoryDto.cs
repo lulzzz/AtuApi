@@ -20,6 +20,7 @@ namespace DataModels.ResponseDtos
         public int ObjectTypeId { get; set; }
         public DocumentTypeResponseDto ObjectType { get; set; }
         public int Level { get; set; }
+        public string Comment { get; set; }
         public int DocId { get; set; }
     }
 }

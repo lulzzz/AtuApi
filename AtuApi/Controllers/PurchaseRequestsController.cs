@@ -119,6 +119,12 @@ namespace AtuApi.Controllers
         {
             IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll();
             IEnumerable<PurchaseRequestResponseDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseReqests);
+
+            foreach (var dto in PurchaseRequetDtos)
+            {
+                var user = _unitOfWork.UserRepository.Find(x => x.Id == dto.OriginatorId);
+                dto.OriginatonFullName = $"{user.FirstName} {user.LastName}";
+            }
             Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());
             return Ok(PurchaseRequetDtos);
         }
@@ -126,7 +132,7 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetPurchaseRequesFilter([FromQuery] PurchaseRequestFilter filter)
         {
-            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll().Where(x => (x.Status == filter.docStatus || filter.docStatus == null) && (x.OriginatorId == filter.OriginatorId 
+            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll().Where(x => (x.Status == filter.docStatus || filter.docStatus == null) && (x.OriginatorId == filter.OriginatorId
            || filter.OriginatorId == null) && (x.CreatorId == filter.CreatorId || filter.CreatorId == null));
 
             IEnumerable<PurchaseRequestResponseDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseReqests);
@@ -212,10 +218,10 @@ namespace AtuApi.Controllers
             var notificationByDoc = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == res.DocNum);
             var rejectedNotification = notificationByDoc.First(x => x.ApproverStatus == NotificationStatus.Rejected);
 
-          
+
             foreach (var not in notificationByDoc)
             {
-                not.ActiveStatus = NotificationActiveStatus.Deactivated;                 
+                not.ActiveStatus = NotificationActiveStatus.Deactivated;
                 _unitOfWork.NotificationHistoryRepository.Update(not);
             }
 

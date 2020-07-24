@@ -12,13 +12,14 @@ namespace AtuApi.Filters
     {
 
         #nullable enable
-        public int? ObjectTypeId { get; set; }
-        public int? OriginatorId { get; set; } 
+        public List<int>? ObjectTypeId { get; set; }
+        public List<int>? OriginatorId { get; set; } 
         public NotificationWatchStatus? WatchStatus { get; set; }
         public NotificationStatus? ApproverStatus { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDateStart { get; set; }
+        public DateTime CreateDateEnd { get; set; }
         public DateTime ModifiedTime { get; set; }     
-        public int? ApproverId { get; set; }
+        public List<int>? ApproverId { get; set; }
 
     }
 }

@@ -223,9 +223,10 @@ namespace AtuApi.Controllers
             var NotificationsHistoryGrouped = _unitOfWork.NotificationHistoryRepository
                 .FindAll(x => x.OriginatorId == user.Id
                            && x.ActiveStatus == NotificationActiveStatus.Activated
-                           && (filter.CreateDate == DateTime.MinValue || filter.CreateDate.Year == x.CreateDate.Year && filter.CreateDate.Month == x.CreateDate.Month && filter.CreateDate.Day == x.CreateDate.Day)
-                           && (filter.OriginatorId == null || x.OriginatorId == filter.OriginatorId)
-                            && (filter.ObjectTypeId == null || x.ObjectTypeId == filter.ObjectTypeId)
+                           && (filter.CreateDateStart == DateTime.MinValue || filter.CreateDateStart.Year <= x.CreateDate.Year && filter.CreateDateStart.Month <= x.CreateDate.Month && filter.CreateDateStart.Day <= x.CreateDate.Day)
+                           && (filter.CreateDateEnd == DateTime.MinValue || filter.CreateDateEnd.Year >= x.CreateDate.Year && filter.CreateDateEnd.Month >= x.CreateDate.Month && filter.CreateDateEnd.Day >= x.CreateDate.Day)
+                           && (filter.OriginatorId == null || filter.OriginatorId.Contains(x.OriginatorId))
+                            && (filter.ObjectTypeId == null || filter.OriginatorId.Contains(x.ObjectTypeId))
                            )
                 .GroupBy(x => x.DocId);
 
@@ -280,7 +281,7 @@ namespace AtuApi.Controllers
         public IActionResult GetPendingNotifications()
         {
             List<NotificationsHistory> userNotifications = new List<NotificationsHistory>();
-            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
+            var user = _unitOfWork.UserRepository.GetById(2);
             List<NotificationsHistory> NotificationsList = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.ApproverId == user.Id && x.ActiveStatus == NotificationActiveStatus.Activated).ToList();
 
             foreach (var notification in NotificationsList)
@@ -357,7 +358,7 @@ namespace AtuApi.Controllers
 
 
 
-            var notificationByDoc = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId);
+            var notificationByDoc = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.DocId == notification.DocId).ToList();
             var rejectedNotification = notificationByDoc.First(x => x.ApproverStatus == NotificationStatus.Rejected);
 
             RejectResons rej = new RejectResons

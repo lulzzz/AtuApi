@@ -21,6 +21,7 @@ namespace DataModels.ResponseDtos
         public string ProjectCode { get; set; }
         public Project Project { get; set; }
         public int OriginatorId { get; set; }
+        public string OriginatonFullName { get; set; }
         public UserDtoResponse Originator { get; set; }
         public UserDtoResponse Creator { get; set; }
         public int CreatorId { get; set; }
