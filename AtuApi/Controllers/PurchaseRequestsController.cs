@@ -132,8 +132,13 @@ namespace AtuApi.Controllers
         [HttpGet]
         public IActionResult GetPurchaseRequesFilter([FromQuery] PurchaseRequestFilter filter)
         {
-            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll().Where(x => (x.Status == filter.docStatus || filter.docStatus == null) && (x.OriginatorId == filter.OriginatorId
-           || filter.OriginatorId == null) && (x.CreatorId == filter.CreatorId || filter.CreatorId == null));
+            IEnumerable<PurchaseRequest> purchaseReqests = _unitOfWork.PurchaseRequestRepository.GetAll()
+                .Where(x => (x.Status == filter.docStatus || filter.docStatus == null)
+                && (x.OriginatorId == filter.OriginatorId || filter.OriginatorId == null) 
+                && (x.CreatorId == filter.CreatorId || filter.CreatorId == null)
+                && (x.CreategDate <= filter.StartDate || filter.StartDate == DateTime.MinValue)
+                && (x.CreategDate >= filter.EndDate || filter.EndDate == DateTime.MinValue)
+                );
 
             IEnumerable<PurchaseRequestResponseDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseReqests);
             Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());

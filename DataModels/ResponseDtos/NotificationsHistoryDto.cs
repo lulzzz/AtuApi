@@ -11,8 +11,8 @@ namespace DataModels.ResponseDtos
         public string Text { get; set; }
         public UserDtoResponse Approver { get; set; }
         public int ApproverId { get; set; }
-        public UserDtoResponse Orignator { get; set; }
-        public int OrignatorId { get; set; }
+        public UserDtoResponse Originator { get; set; }
+        public int OriginatorId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifiedTime { get; set; }
         public string WatchStatus { get; set; }

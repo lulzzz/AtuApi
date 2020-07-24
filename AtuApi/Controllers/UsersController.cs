@@ -281,7 +281,7 @@ namespace AtuApi.Controllers
         public IActionResult GetPendingNotifications()
         {
             List<NotificationsHistory> userNotifications = new List<NotificationsHistory>();
-            var user = _unitOfWork.UserRepository.GetById(2);
+            var user = _unitOfWork.UserRepository.GetById(int.Parse(User.Identity.Name));
             List<NotificationsHistory> NotificationsList = _unitOfWork.NotificationHistoryRepository.FindAll(x => x.ApproverId == user.Id && x.ActiveStatus == NotificationActiveStatus.Activated).ToList();
 
             foreach (var notification in NotificationsList)
@@ -311,6 +311,7 @@ namespace AtuApi.Controllers
 
                 }
             }
+          
             var userNotificationsDto = _mapper.Map<IList<NotificationsHistoryDto>>(userNotifications);
             return Ok(userNotificationsDto);
         }

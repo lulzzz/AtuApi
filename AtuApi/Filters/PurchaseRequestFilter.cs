@@ -11,5 +11,7 @@ namespace AtuApi.Filters
         public DocStatus? docStatus { get; set; }
         public int? OriginatorId { get; set; }
         public int? CreatorId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }
