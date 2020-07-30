@@ -19,14 +19,14 @@ namespace AtuApi.Repositories
         public TEntity Add(TEntity entity)
         {
             Context.Set<TEntity>().Add(entity);
-            Context.SaveChanges();
+            //Context.SaveChanges();
             return entity;
         }
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
             Context.Set<TEntity>().AddRange(entities);
-            Context.SaveChanges();
+            //Context.SaveChanges();
         }
 
         public TEntity Find(Expression<Func<TEntity, bool>> predicate)
@@ -52,19 +52,19 @@ namespace AtuApi.Repositories
         public void Remove(TEntity entiry)
         {
             Context.Set<TEntity>().Remove(entiry);
-            Context.SaveChanges();
+            //Context.SaveChanges();
         }
 
         public void RemovRange(IEnumerable<TEntity> entities)
         {
             Context.Set<TEntity>().RemoveRange(entities);
-            Context.SaveChanges();
+            //Context.SaveChanges();
         }
 
         public TEntity Update(TEntity entity)
         {
             Context.Set<TEntity>().Update(entity);
-            Context.SaveChanges();
+            //Context.SaveChanges();
             return entity;
         }
     }

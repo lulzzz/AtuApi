@@ -149,6 +149,8 @@ namespace AtuApi.Controllers
             }
             roleInDb.RoleName = roleDto.RoleName;
             _unitOfWork.RoleRepository.Update(roleInDb);
+            _unitOfWork.SaveChanges();
+
             RoleDto RolesDto = _mapper.Map<RoleDto>(roleInDb);
             return Accepted(RolesDto);
 
@@ -165,6 +167,8 @@ namespace AtuApi.Controllers
             }
 
             _unitOfWork.RoleRepository.Remove(RolesInDb);
+
+            _unitOfWork.SaveChanges();
 
             return new ObjectResult(RolesInDb)
             {

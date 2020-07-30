@@ -56,6 +56,8 @@ namespace AtuApi.Controllers
                 var item = _unitOfWork.ItemRepository.GetItem(row.ItemCode);
                 var territory = _unitOfWork.TerritoryRepository.GetTerritory(row.TeritoryId);
                 var wareHouse = _unitOfWork.WareHouseRepository.GetWareHouse(row.WareHouseCode);
+                var uomCode = _unitOfWork.UnitOfMeasueRepository.GetUnitOfMeasure(row.UomEntry);
+                
                 if (bp == null)
                 {
                     return UnprocessableEntity($"BusinessPartner : {row.BusinessPartnerCode} არ არსებობს");
@@ -72,10 +74,15 @@ namespace AtuApi.Controllers
                 {
                     return UnprocessableEntity($"wareHouse : {row.WareHouseCode} არ არსებობს");
                 }
+                if(uomCode == null)
+                {
+                    return UnprocessableEntity($"uomEntry : {row.UomEntry} არ არსებობს");
+                }
             }
 
 
             PurchaseRequest res = _unitOfWork.PurchaseRequestRepository.Add(purchaseRequest);
+            _unitOfWork.SaveChanges();
             return CreatedAtAction(nameof(GetPurchaseRequests), new { id = res.DocNum }, res.DocNum);
         }
 
@@ -111,6 +118,8 @@ namespace AtuApi.Controllers
                 };
                 _unitOfWork.NotificationHistoryRepository.Add(history);
             }
+            _unitOfWork.SaveChanges();
+
             return Accepted();
         }
 
@@ -259,7 +268,7 @@ namespace AtuApi.Controllers
                 _unitOfWork.NotificationHistoryRepository.Add(history);
             }
 
-
+            _unitOfWork.SaveChanges();
             return CreatedAtAction(nameof(GetPurchaseRequests), new { id = res.DocNum }, res.DocNum);
         }
 

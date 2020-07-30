@@ -334,7 +334,11 @@ namespace AtuApi.Controllers
                 var pr = _unitOfWork.PurchaseRequestRepository.Get(notification.DocId);
                 pr.Status = DocStatus.Approved;
                 _unitOfWork.PurchaseRequestRepository.Update(pr);
+                _unitOfWork.SaveChanges();
+
             }
+            _unitOfWork.SaveChanges();
+
             return Accepted();
 
         }
@@ -381,6 +385,9 @@ namespace AtuApi.Controllers
                 pr.Status = DocStatus.Rejected;
                 _unitOfWork.PurchaseRequestRepository.Update(pr);
             }
+
+            _unitOfWork.SaveChanges();
+
             return Accepted();
         }
     }

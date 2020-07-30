@@ -24,6 +24,9 @@ namespace DataModels.Models
         public int PurchaseRequestDocNum { get; set; }
         public int LineNum { get; set; }
         public string Remarks { get; set; }
+        public int UomEntry { get; set; }
+        public string UomCode { get; set; }
+        public string UomName { get; set; }
 
     }
 }

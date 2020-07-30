@@ -36,6 +36,7 @@ namespace AtuApi.Controllers
             }
             var approvalTemplate = _mapper.Map<ApprovalTemplate>(approvalTemplateDto);
             var result = _unitOfWork.ApprovalTemplateRepository.Add(approvalTemplate);
+            _unitOfWork.SaveChanges();
             return Ok(result.TemplateCode);
         }
 
@@ -68,6 +69,8 @@ namespace AtuApi.Controllers
             template.UsersAppovalTemplates = approvalTemplate.UsersAppovalTemplates;
             template.ApprovalsDocumentTypes = approvalTemplate.ApprovalsDocumentTypes;
             _unitOfWork.ApprovalTemplateRepository.Update(template);
+
+            _unitOfWork.SaveChanges();
             return Ok();
         }
 
