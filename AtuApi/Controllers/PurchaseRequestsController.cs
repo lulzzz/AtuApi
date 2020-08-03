@@ -221,7 +221,11 @@ namespace AtuApi.Controllers
                 }
             }
             purchaseRequestDb.Creator = creator;
+            purchaseRequestDb.project = project;
+            purchaseRequestDb.ProjectCode = project.ProjectCode;
             purchaseRequestDb.ProjectName = project.ProjectName;
+
+
             var rowsDto = _mapper.Map<IList<PurchaseRequestRow>>(purchaseRequestDto.Rows).ToList();
             purchaseRequestDb.Rows = rowsDto;
             purchaseRequestDb.Status = purchaseRequestDto.Status;
