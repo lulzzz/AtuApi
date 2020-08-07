@@ -14,5 +14,8 @@ namespace DataModels.Models
         public string Position { get; set; }
         public string Department { get; set; }
         public int DepartmentCode { get; set; }
+        public string EmplId { get; set; }
+
+
     }
 }

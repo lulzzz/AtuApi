@@ -101,6 +101,7 @@ namespace AtuApi.Controllers
             role.PermissionRoles = permissionRoles;
 
             var addedRole = _unitOfWork.RoleRepository.Add(role);
+            _unitOfWork.SaveChanges();
             var action = CreatedAtAction(nameof(GetRoles), new { id = addedRole.Id }, addedRole.Id);
             return action;
 

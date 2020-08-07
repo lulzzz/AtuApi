@@ -142,9 +142,10 @@ namespace SapDataAccess
                                                dept,
                                                OUDP.Name as [Department Name],
                                                govID,
+                                               U_EmplId,
                                                EmpId
                                         FROM OHEM
-                                             LEFT JOIN OUDP ON OUDP.Code = OHEM.dept ");
+                                             LEFT JOIN OUDP ON OUDP.Code = OHEM.dept  ");
             while (!EmployeesRecordSet.EoF)
             {
                 Employee Employee = new Employee
@@ -156,6 +157,7 @@ namespace SapDataAccess
                     Position = EmployeesRecordSet.Fields.Item("JobTitle").Value.ToString(),
                     DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
                     EmpId = (int)EmployeesRecordSet.Fields.Item("EmpId").Value,
+                    EmplId = EmployeesRecordSet.Fields.Item("U_EmplId").Value.ToString()
                 };
                 Employees.Add(Employee);
                 EmployeesRecordSet.MoveNext();
@@ -176,6 +178,7 @@ namespace SapDataAccess
                                                dept,
                                                OUDP.Name as [Department Name],
                                                govID,
+                                               U_EmplId,
                                                EmpId
                                         FROM OHEM
                                              LEFT JOIN OUDP ON OUDP.Code = OHEM.dept                                            
@@ -191,6 +194,8 @@ namespace SapDataAccess
                     Position = EmployeesRecordSet.Fields.Item("JobTitle").Value.ToString(),
                     DepartmentCode = (int)EmployeesRecordSet.Fields.Item("dept").Value,
                     EmpId = (int)EmployeesRecordSet.Fields.Item("EmpId").Value,
+                    EmplId = EmployeesRecordSet.Fields.Item("U_EmplId").Value.ToString()
+
                 };
                 return Employee;
             }

@@ -145,11 +145,16 @@ namespace AtuApi.Controllers
                 .Where(x => (x.Status == filter.docStatus || filter.docStatus == null)
                 && (x.OriginatorId == filter.OriginatorId || filter.OriginatorId == null) 
                 && (x.CreatorId == filter.CreatorId || filter.CreatorId == null)
-                && (x.CreategDate <= filter.StartDate || filter.StartDate == DateTime.MinValue)
-                && (x.CreategDate >= filter.EndDate || filter.EndDate == DateTime.MinValue)
+                && (x.CreategDate >= filter.StartDate || filter.StartDate == DateTime.MinValue)
+                && (x.CreategDate <= filter.EndDate || filter.EndDate == DateTime.MinValue)
                 );
 
             IEnumerable<PurchaseRequestResponseDto> PurchaseRequetDtos = _mapper.Map<IEnumerable<PurchaseRequestResponseDto>>(purchaseReqests);
+            foreach (var dto in PurchaseRequetDtos)
+            {
+                var user = _unitOfWork.UserRepository.Find(x => x.Id == dto.OriginatorId);
+                dto.OriginatonFullName = $"{user.FirstName} {user.LastName}";
+            }
             Request.HttpContext.Response.Headers.Add("Total-Count", purchaseReqests.Count().ToString());
             return Ok(PurchaseRequetDtos);
         }
